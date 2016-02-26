@@ -12,7 +12,7 @@ namespace yigame.epoker {
     using UnityEngine;
     
     
-    public class CoreGameView : CoreGameViewBase {
+    public class CoreGameRootView : CoreGameRootViewBase {
         
         protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
             base.InitializeViewModel(model);

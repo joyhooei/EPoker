@@ -18,9 +18,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a471da125caffd341b0f24225146e40c, type: 2}
   _projectNamespace: yigame.epoker
   _currentTabs:
-  - _graphIdentifier: ab918cee-3306-416d-b84d-a03efecd546e
-    _graphName: MainMVVM
-    _path: []
   - _graphIdentifier: 986f579f-3723-4b3a-999b-976735719022
     _graphName: CoreGame
     _path: []

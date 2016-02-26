@@ -22,7 +22,7 @@ namespace yigame.epoker {
     using UnityEngine;
     
     
-    public class CoreGameViewBase : uFrame.MVVM.ViewBase {
+    public class CoreGameRootViewBase : uFrame.MVVM.ViewBase {
         
         public override string DefaultIdentifier {
             get {

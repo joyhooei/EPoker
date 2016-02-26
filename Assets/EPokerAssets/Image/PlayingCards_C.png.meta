@@ -1,0 +1,391 @@
+fileFormatVersion: 2
+guid: 8803e070972282a4c991c179329d1437
+timeCreated: 1456500116
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: PlayingCards_C_0
+    21300002: PlayingCards_C_1
+    21300004: PlayingCards_C_2
+    21300006: PlayingCards_C_3
+    21300008: PlayingCards_C_4
+    21300010: PlayingCards_C_5
+    21300012: PlayingCards_C_6
+    21300014: PlayingCards_C_7
+    21300016: PlayingCards_C_8
+    21300018: PlayingCards_C_9
+    21300020: PlayingCards_C_10
+    21300022: PlayingCards_C_11
+    21300024: PlayingCards_C_12
+    21300026: PlayingCards_C_13
+    21300028: PlayingCards_C_14
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: PlayingCards_C_0
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 565
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 121.5}
+        - {x: 86, y: 124.5}
+        - {x: 85, y: 125.5}
+        - {x: -85, y: 125.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -118.5}
+        - {x: -85, y: -124.5}
+        - {x: -84, y: -124.5}
+        - {x: -83, y: -125.5}
+        - {x: 85, y: -125.5}
+        - {x: 90, y: -119.5}
+    - name: PlayingCards_C_1
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 565
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 120.5}
+        - {x: 85, y: 125.5}
+        - {x: -84, y: 125.5}
+        - {x: -90, y: 121.5}
+        - {x: -90, y: -119.5}
+        - {x: -85, y: -125.5}
+        - {x: 83, y: -125.5}
+        - {x: 89, y: -120.5}
+        - {x: 90, y: -119.5}
+    - name: PlayingCards_C_2
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 565
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 119.5}
+        - {x: 84, y: 125.5}
+        - {x: -85, y: 125.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -120.5}
+        - {x: -84, y: -125.5}
+        - {x: 85, y: -125.5}
+        - {x: 90, y: -120.5}
+    - name: PlayingCards_C_3
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 565
+        width: 181
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90.5, y: 118.5}
+        - {x: 89.5, y: 121.5}
+        - {x: 85.5, y: 125.5}
+        - {x: -85.5, y: 125.5}
+        - {x: -89.5, y: 120.5}
+        - {x: -90.5, y: 119.5}
+        - {x: -90.5, y: -118.5}
+        - {x: -89.5, y: -121.5}
+        - {x: -86.5, y: -124.5}
+        - {x: -83.5, y: -125.5}
+        - {x: 83.5, y: -125.5}
+        - {x: 88.5, y: -121.5}
+        - {x: 88.5, y: -120.5}
+        - {x: 90.5, y: -118.5}
+    - name: PlayingCards_C_4
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 565
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 120.5}
+        - {x: 85, y: 125.5}
+        - {x: -84, y: 125.5}
+        - {x: -89, y: 121.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -120.5}
+        - {x: -85, y: -125.5}
+        - {x: 85, y: -125.5}
+        - {x: 90, y: -120.5}
+    - name: PlayingCards_C_5
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 299
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -83, y: 125.5}
+        - {x: -86, y: 124.5}
+        - {x: -89, y: 121.5}
+        - {x: -90, y: 118.5}
+        - {x: -90, y: -120.5}
+        - {x: -84, y: -125.5}
+        - {x: 85, y: -125.5}
+        - {x: 90, y: -121.5}
+        - {x: 90, y: 119.5}
+        - {x: 85, y: 125.5}
+    - name: PlayingCards_C_6
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 299
+        width: 181
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90.5, y: 119.5}
+        - {x: 84.5, y: 125.5}
+        - {x: -83.5, y: 125.5}
+        - {x: -88.5, y: 121.5}
+        - {x: -90.5, y: 118.5}
+        - {x: -90.5, y: -120.5}
+        - {x: -85.5, y: -125.5}
+        - {x: 85.5, y: -125.5}
+        - {x: 89.5, y: -121.5}
+        - {x: 90.5, y: -118.5}
+    - name: PlayingCards_C_7
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 299
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 120.5}
+        - {x: 85, y: 125.5}
+        - {x: -84, y: 125.5}
+        - {x: -85, y: 124.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -120.5}
+        - {x: -84, y: -125.5}
+        - {x: 84, y: -125.5}
+        - {x: 89, y: -121.5}
+        - {x: 89, y: -120.5}
+        - {x: 90, y: -119.5}
+    - name: PlayingCards_C_8
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 299
+        width: 181
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90.5, y: 119.5}
+        - {x: 84.5, y: 125.5}
+        - {x: -84.5, y: 125.5}
+        - {x: -90.5, y: 119.5}
+        - {x: -90.5, y: -120.5}
+        - {x: -85.5, y: -125.5}
+        - {x: 84.5, y: -125.5}
+        - {x: 89.5, y: -121.5}
+        - {x: 90.5, y: -119.5}
+    - name: PlayingCards_C_9
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 299
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 86, y: 124.5}
+        - {x: 83, y: 125.5}
+        - {x: -85, y: 125.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -119.5}
+        - {x: -86, y: -124.5}
+        - {x: -85, y: -125.5}
+        - {x: 84, y: -125.5}
+        - {x: 90, y: -120.5}
+        - {x: 90, y: 118.5}
+    - name: PlayingCards_C_10
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 32
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 85, y: 125.5}
+        - {x: -85, y: 125.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -118.5}
+        - {x: -89, y: -121.5}
+        - {x: -86, y: -124.5}
+        - {x: -83, y: -125.5}
+        - {x: 85, y: -125.5}
+        - {x: 90, y: -119.5}
+        - {x: 90, y: 121.5}
+    - name: PlayingCards_C_11
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 32
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 120.5}
+        - {x: 85, y: 125.5}
+        - {x: -86, y: 125.5}
+        - {x: -90, y: 121.5}
+        - {x: -90, y: -119.5}
+        - {x: -85, y: -125.5}
+        - {x: 84, y: -125.5}
+        - {x: 89, y: -121.5}
+        - {x: 90, y: -119.5}
+    - name: PlayingCards_C_12
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 32
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 119.5}
+        - {x: 86, y: 124.5}
+        - {x: 85, y: 124.5}
+        - {x: 84, y: 125.5}
+        - {x: -84, y: 125.5}
+        - {x: -90, y: 120.5}
+        - {x: -90, y: -120.5}
+        - {x: -85, y: -124.5}
+        - {x: -84, y: -125.5}
+        - {x: 85, y: -125.5}
+        - {x: 90, y: -120.5}
+    - name: PlayingCards_C_13
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 32
+        width: 181
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90.5, y: 118.5}
+        - {x: 89.5, y: 121.5}
+        - {x: 85.5, y: 125.5}
+        - {x: -85.5, y: 125.5}
+        - {x: -89.5, y: 120.5}
+        - {x: -90.5, y: 119.5}
+        - {x: -90.5, y: -118.5}
+        - {x: -86.5, y: -123.5}
+        - {x: -85.5, y: -123.5}
+        - {x: -83.5, y: -125.5}
+        - {x: 84.5, y: -125.5}
+        - {x: 90.5, y: -119.5}
+    - name: PlayingCards_C_14
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 32
+        width: 180
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 90, y: 120.5}
+        - {x: 84, y: 125.5}
+        - {x: -84, y: 125.5}
+        - {x: -89, y: 121.5}
+        - {x: -89, y: 120.5}
+        - {x: -90, y: 119.5}
+        - {x: -90, y: -120.5}
+        - {x: -85, y: -125.5}
+        - {x: 83, y: -125.5}
+        - {x: 89, y: -120.5}
+        - {x: 90, y: -119.5}
+    outline: []
+  spritePackingTag: core
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
