@@ -24,6 +24,11 @@ namespace yigame.epoker {
     
     public class CoreGameRootViewBase : uFrame.MVVM.ViewBase {
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public uFrame.MVVM.ViewBase _BackGround;
+        
         public override string DefaultIdentifier {
             get {
                 return "CoreGameRoot";
@@ -47,11 +52,48 @@ namespace yigame.epoker {
             // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
             // var vm = model as CoreGameRootViewModel;
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var coregamerootview = ((CoreGameRootViewModel)model);
+            coregamerootview.BackGround = this._BackGround == null ? null :  ViewService.FetchViewModel(this._BackGround) as BackGroundViewModel;
         }
         
         public override void Bind() {
             base.Bind();
             // Use this.CoreGameRoot to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
+        }
+    }
+    
+    public class BackGroundViewBase : uFrame.MVVM.ViewBase {
+        
+        public override string DefaultIdentifier {
+            get {
+                return base.DefaultIdentifier;
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(BackGroundViewModel);
+            }
+        }
+        
+        public BackGroundViewModel BackGround {
+            get {
+                return (BackGroundViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as BackGroundViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.BackGround to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
         }

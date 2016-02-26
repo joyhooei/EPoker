@@ -81,4 +81,66 @@ namespace yigame.epoker {
             CoreGameRootViewModelManager.Remove(viewModel);
         }
     }
+    
+    public class BackGroundControllerBase : uFrame.MVVM.Controller {
+        
+        private uFrame.MVVM.IViewModelManager _BackGroundViewModelManager;
+        
+        private CoreGameRootViewModel _CoreGameRoot;
+        
+        [uFrame.IOC.InjectAttribute("BackGround")]
+        public uFrame.MVVM.IViewModelManager BackGroundViewModelManager {
+            get {
+                return _BackGroundViewModelManager;
+            }
+            set {
+                _BackGroundViewModelManager = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("CoreGameRoot")]
+        public CoreGameRootViewModel CoreGameRoot {
+            get {
+                return _CoreGameRoot;
+            }
+            set {
+                _CoreGameRoot = value;
+            }
+        }
+        
+        public IEnumerable<BackGroundViewModel> BackGroundViewModels {
+            get {
+                return BackGroundViewModelManager.OfType<BackGroundViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializeBackGround(((BackGroundViewModel)(viewModel)));
+        }
+        
+        public virtual BackGroundViewModel CreateBackGround() {
+            return ((BackGroundViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new BackGroundViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializeBackGround(BackGroundViewModel viewModel) {
+            // This is called when a BackGroundViewModel is created
+            BackGroundViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            BackGroundViewModelManager.Remove(viewModel);
+        }
+    }
 }

@@ -24,7 +24,66 @@ namespace yigame.epoker {
     
     public partial class CoreGameRootViewModelBase : uFrame.MVVM.ViewModel {
         
+        private P<BackGroundViewModel> _BackGroundProperty;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual P<BackGroundViewModel> BackGroundProperty {
+            get {
+                return _BackGroundProperty;
+            }
+            set {
+                _BackGroundProperty = value;
+            }
+        }
+        
+        public virtual BackGroundViewModel BackGround {
+            get {
+                return BackGroundProperty.Value;
+            }
+            set {
+                BackGroundProperty.Value = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+            		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+            if (stream.DeepSerialize) stream.SerializeObject("BackGround", this.BackGround);;
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_BackGroundProperty, true, false, false, false));
+        }
+    }
+    
+    public partial class CoreGameRootViewModel {
+        
+        public CoreGameRootViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
+    
+    public partial class BackGroundViewModelBase : uFrame.MVVM.ViewModel {
+        
+        public BackGroundViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
         
@@ -49,9 +108,9 @@ namespace yigame.epoker {
         }
     }
     
-    public partial class CoreGameRootViewModel {
+    public partial class BackGroundViewModel {
         
-        public CoreGameRootViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+        public BackGroundViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
     }
