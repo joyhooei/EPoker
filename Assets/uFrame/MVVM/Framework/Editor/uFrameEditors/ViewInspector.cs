@@ -199,7 +199,7 @@ public class ViewInspector : uFrameInspector
         GUIHelpers.IsInsepctor = false;
     }
 
-    private void DoGroupField(KeyValuePair<string, List<FieldInfo>> groupField, ViewBase t)
+	private void DoGroupField(KeyValuePair<string, List<FieldInfo>> groupField, ViewBase t)
     {
         if (EditorPrefs.GetBool(groupField.Key, false))
         {
@@ -229,9 +229,11 @@ public class ViewInspector : uFrameInspector
                             property.vector3Value = newValue;
                         }
                     }
-                    else
+					else
                     {
-                        EditorGUILayout.PropertyField(property);
+						if (DoFieldExtra(property.type) == false) {
+							EditorGUILayout.PropertyField(property);
+						}
                     }
                 }
                 catch (Exception ex)
@@ -241,6 +243,11 @@ public class ViewInspector : uFrameInspector
             }
         }
     }
+
+	// Extend for custom class.
+	public virtual bool DoFieldExtra(string propertyType) {
+		return false;
+	}
 
     private void DoBindingsSection()
     {

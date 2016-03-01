@@ -20,6 +20,7 @@ namespace yigame.epoker {
     using uFrame.Serialization;
     using UnityEngine;
     using UniRx;
+    using yigame.epoker;
     
     
     public partial class CoreGameRootViewModelBase : uFrame.MVVM.ViewModel {
@@ -111,6 +112,113 @@ namespace yigame.epoker {
     public partial class BackGroundViewModel {
         
         public BackGroundViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
+    
+    public partial class CardViewModelBase : uFrame.MVVM.ViewModel {
+        
+        private P<CardInfo> _InfoProperty;
+        
+        private P<CardFace> _FaceProperty;
+        
+        private P<CardPlace> _PlaceProperty;
+        
+        public CardViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual P<CardInfo> InfoProperty {
+            get {
+                return _InfoProperty;
+            }
+            set {
+                _InfoProperty = value;
+            }
+        }
+        
+        public virtual P<CardFace> FaceProperty {
+            get {
+                return _FaceProperty;
+            }
+            set {
+                _FaceProperty = value;
+            }
+        }
+        
+        public virtual P<CardPlace> PlaceProperty {
+            get {
+                return _PlaceProperty;
+            }
+            set {
+                _PlaceProperty = value;
+            }
+        }
+        
+        public virtual CardInfo Info {
+            get {
+                return InfoProperty.Value;
+            }
+            set {
+                InfoProperty.Value = value;
+            }
+        }
+        
+        public virtual CardFace Face {
+            get {
+                return FaceProperty.Value;
+            }
+            set {
+                FaceProperty.Value = value;
+            }
+        }
+        
+        public virtual CardPlace Place {
+            get {
+                return PlaceProperty.Value;
+            }
+            set {
+                PlaceProperty.Value = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            _InfoProperty = new P<CardInfo>(this, "Info");
+            _FaceProperty = new P<CardFace>(this, "Face");
+            _PlaceProperty = new P<CardPlace>(this, "Place");
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+            this.Face = (CardFace)stream.DeserializeInt("Face");;
+            this.Place = (CardPlace)stream.DeserializeInt("Place");;
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+            stream.SerializeInt("Face", (int)this.Face);;
+            stream.SerializeInt("Place", (int)this.Place);;
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_InfoProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_FaceProperty, false, false, true, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PlaceProperty, false, false, true, false));
+        }
+    }
+    
+    public partial class CardViewModel {
+        
+        public CardViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
     }

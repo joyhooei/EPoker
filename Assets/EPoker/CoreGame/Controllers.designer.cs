@@ -17,6 +17,7 @@ namespace yigame.epoker {
     using uFrame.IOC;
     using uFrame.MVVM;
     using uFrame.Serialization;
+    using yigame.epoker;
     using UniRx;
     
     
@@ -141,6 +142,68 @@ namespace yigame.epoker {
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             BackGroundViewModelManager.Remove(viewModel);
+        }
+    }
+    
+    public class CardControllerBase : uFrame.MVVM.Controller {
+        
+        private uFrame.MVVM.IViewModelManager _CardViewModelManager;
+        
+        private CoreGameRootViewModel _CoreGameRoot;
+        
+        [uFrame.IOC.InjectAttribute("Card")]
+        public uFrame.MVVM.IViewModelManager CardViewModelManager {
+            get {
+                return _CardViewModelManager;
+            }
+            set {
+                _CardViewModelManager = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("CoreGameRoot")]
+        public CoreGameRootViewModel CoreGameRoot {
+            get {
+                return _CoreGameRoot;
+            }
+            set {
+                _CoreGameRoot = value;
+            }
+        }
+        
+        public IEnumerable<CardViewModel> CardViewModels {
+            get {
+                return CardViewModelManager.OfType<CardViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializeCard(((CardViewModel)(viewModel)));
+        }
+        
+        public virtual CardViewModel CreateCard() {
+            return ((CardViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new CardViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializeCard(CardViewModel viewModel) {
+            // This is called when a CardViewModel is created
+            CardViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            CardViewModelManager.Remove(viewModel);
         }
     }
 }

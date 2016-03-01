@@ -20,6 +20,7 @@ namespace yigame.epoker {
     using uFrame.Serialization;
     using UniRx;
     using UnityEngine;
+    using yigame.epoker;
     
     
     public class CoreGameRootViewBase : uFrame.MVVM.ViewBase {
@@ -96,6 +97,76 @@ namespace yigame.epoker {
             // Use this.BackGround to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
+        }
+    }
+    
+    public class CardViewBase : uFrame.MVVM.ViewBase {
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public CardInfo _Info;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public CardFace _Face;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public CardPlace _Place;
+        
+        [UFToggleGroup("Info")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindInfo = true;
+        
+        [UFGroup("Info")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_InfoonlyWhenChanged")]
+        protected bool _InfoOnlyWhenChanged;
+        
+        public override string DefaultIdentifier {
+            get {
+                return base.DefaultIdentifier;
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(CardViewModel);
+            }
+        }
+        
+        public CardViewModel Card {
+            get {
+                return (CardViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as CardViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var cardview = ((CardViewModel)model);
+            cardview.Info = this._Info;
+            cardview.Face = this._Face;
+            cardview.Place = this._Place;
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.Card to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
+            if (_BindInfo) {
+                this.BindProperty(this.Card.InfoProperty, this.InfoChanged, _InfoOnlyWhenChanged);
+            }
+        }
+        
+        public virtual void InfoChanged(CardInfo arg1) {
         }
     }
 }
