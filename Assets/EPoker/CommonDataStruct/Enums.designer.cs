@@ -57,6 +57,10 @@ namespace yigame.epoker {
         NV_QUEEN,
         
         NV_KING,
+        
+        NV_SMALL_JOKER,
+        
+        NV_BIG_JOKER,
     }
     
     public enum CardFace {

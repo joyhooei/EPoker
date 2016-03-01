@@ -11,9 +11,11 @@ namespace yigame.epoker {
     using UniRx;
     using UnityEngine;
     
-    
     public class CardView : CardViewBase {
         
+		public Transform MainBody;
+		public Transform Shadow;
+
         protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
             base.InitializeViewModel(model);
             // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
@@ -27,9 +29,20 @@ namespace yigame.epoker {
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
         }
+
+		public override void AfterBind ()
+		{
+			base.AfterBind ();
+
+			this.Card.Info = new CardInfo () {
+				Suit = Suit.HEART,
+				NumericalValue = NumericalValue.NV_JACK
+			};
+		}
     
 	    public override void InfoChanged(CardInfo arg1) {
 			Debug.LogFormat ("InfoChanged: {0}", arg1);
 	    }
+
     }
 }
