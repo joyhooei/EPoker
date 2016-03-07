@@ -29,6 +29,8 @@ namespace yigame.epoker {
         
         private CardController _CardController;
         
+        private PlayerController _PlayerController;
+        
         [uFrame.IOC.InjectAttribute("CoreGameRoot")]
         public virtual CoreGameRootViewModel CoreGameRoot {
             get {
@@ -80,6 +82,19 @@ namespace yigame.epoker {
             }
         }
         
+        [uFrame.IOC.InjectAttribute()]
+        public virtual PlayerController PlayerController {
+            get {
+                if (_PlayerController==null) {
+                    _PlayerController = Container.CreateInstance(typeof(PlayerController)) as PlayerController;;
+                }
+                return _PlayerController;
+            }
+            set {
+                _PlayerController = value;
+            }
+        }
+        
         public override void Load() {
             Container.RegisterViewModelManager<CoreGameRootViewModel>(new ViewModelManager<CoreGameRootViewModel>());
             Container.RegisterController<CoreGameRootController>(CoreGameRootController);
@@ -87,6 +102,8 @@ namespace yigame.epoker {
             Container.RegisterController<BackGroundController>(BackGroundController);
             Container.RegisterViewModelManager<CardViewModel>(new ViewModelManager<CardViewModel>());
             Container.RegisterController<CardController>(CardController);
+            Container.RegisterViewModelManager<PlayerViewModel>(new ViewModelManager<PlayerViewModel>());
+            Container.RegisterController<PlayerController>(PlayerController);
             Container.RegisterViewModel<CoreGameRootViewModel>(CoreGameRoot, "CoreGameRoot");
         }
     }

@@ -206,4 +206,66 @@ namespace yigame.epoker {
             CardViewModelManager.Remove(viewModel);
         }
     }
+    
+    public class PlayerControllerBase : uFrame.MVVM.Controller {
+        
+        private uFrame.MVVM.IViewModelManager _PlayerViewModelManager;
+        
+        private CoreGameRootViewModel _CoreGameRoot;
+        
+        [uFrame.IOC.InjectAttribute("Player")]
+        public uFrame.MVVM.IViewModelManager PlayerViewModelManager {
+            get {
+                return _PlayerViewModelManager;
+            }
+            set {
+                _PlayerViewModelManager = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("CoreGameRoot")]
+        public CoreGameRootViewModel CoreGameRoot {
+            get {
+                return _CoreGameRoot;
+            }
+            set {
+                _CoreGameRoot = value;
+            }
+        }
+        
+        public IEnumerable<PlayerViewModel> PlayerViewModels {
+            get {
+                return PlayerViewModelManager.OfType<PlayerViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializePlayer(((PlayerViewModel)(viewModel)));
+        }
+        
+        public virtual PlayerViewModel CreatePlayer() {
+            return ((PlayerViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new PlayerViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializePlayer(PlayerViewModel viewModel) {
+            // This is called when a PlayerViewModel is created
+            PlayerViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            PlayerViewModelManager.Remove(viewModel);
+        }
+    }
 }

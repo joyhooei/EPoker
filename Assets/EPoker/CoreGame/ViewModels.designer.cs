@@ -222,4 +222,104 @@ namespace yigame.epoker {
                 base(aggregator) {
         }
     }
+    
+    public partial class PlayerViewModelBase : uFrame.MVVM.ViewModel {
+        
+        private PlayerStatus _StatusProperty;
+        
+        private P<String> _IdProperty;
+        
+        private ModelCollection<CardViewModel> _HandCards;
+        
+        public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual PlayerStatus StatusProperty {
+            get {
+                return _StatusProperty;
+            }
+            set {
+                _StatusProperty = value;
+            }
+        }
+        
+        public virtual Invert.StateMachine.State Status {
+            get {
+                return StatusProperty.Value;
+            }
+            set {
+                StatusProperty.Value = value;
+            }
+        }
+        
+        public virtual P<String> IdProperty {
+            get {
+                return _IdProperty;
+            }
+            set {
+                _IdProperty = value;
+            }
+        }
+        
+        public virtual String Id {
+            get {
+                return IdProperty.Value;
+            }
+            set {
+                IdProperty.Value = value;
+            }
+        }
+        
+        public virtual ModelCollection<CardViewModel> HandCards {
+            get {
+                return _HandCards;
+            }
+            set {
+                _HandCards = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            _IdProperty = new P<String>(this, "Id");
+            _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
+            _StatusProperty = new PlayerStatus(this, "Status");
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+            this._StatusProperty.SetState(stream.DeserializeString("Status"));
+            if (stream.DeepSerialize) {
+                this.HandCards.Clear();
+                this.HandCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("HandCards"));
+            }
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+            stream.SerializeString("Status", this.Status.Name);;
+            if (stream.DeepSerialize) stream.SerializeArray("HandCards", this.HandCards);
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_IdProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_StatusProperty, false, false, false, false));
+            list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
+        }
+    }
+    
+    public partial class PlayerViewModel {
+        
+        public PlayerViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
 }
