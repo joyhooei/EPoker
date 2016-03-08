@@ -74,12 +74,20 @@ namespace yigame.epoker {
         
         public virtual void InitializeCoreGameRoot(CoreGameRootViewModel viewModel) {
             // This is called when a CoreGameRootViewModel is created
+            viewModel.ResetPlayerCount.Action = this.ResetPlayerCountHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             CoreGameRootViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
+            this.ResetPlayerCount(command.Sender as CoreGameRootViewModel, command.Argument);
+        }
+        
+        public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel, Int32 arg) {
         }
     }
     

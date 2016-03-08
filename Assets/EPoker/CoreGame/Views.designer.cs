@@ -30,6 +30,27 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public uFrame.MVVM.ViewBase _BackGround;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _PlayerCount;
+        
+        [UFToggleGroup("PlayerCollection")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindPlayerCollection = true;
+        
+        [UFGroup("PlayerCollection")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerCollectionparent")]
+        protected UnityEngine.Transform _PlayerCollectionParent;
+        
+        [UFGroup("PlayerCollection")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerCollectionviewFirst")]
+        protected bool _PlayerCollectionViewFirst;
+        
         public override string DefaultIdentifier {
             get {
                 return "CoreGameRoot";
@@ -55,6 +76,7 @@ namespace yigame.epoker {
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
             var coregamerootview = ((CoreGameRootViewModel)model);
             coregamerootview.BackGround = this._BackGround == null ? null :  ViewService.FetchViewModel(this._BackGround) as BackGroundViewModel;
+            coregamerootview.PlayerCount = this._PlayerCount;
         }
         
         public override void Bind() {
@@ -62,6 +84,28 @@ namespace yigame.epoker {
             // Use this.CoreGameRoot to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
+            if (_BindPlayerCollection) {
+                this.BindToViewCollection(this.CoreGameRoot.PlayerCollection, this.PlayerCollectionCreateView, this.PlayerCollectionAdded, this.PlayerCollectionRemoved, _PlayerCollectionParent, _PlayerCollectionViewFirst);
+            }
+        }
+        
+        public virtual uFrame.MVVM.ViewBase PlayerCollectionCreateView(uFrame.MVVM.ViewModel viewModel) {
+            return InstantiateView(viewModel);
+        }
+        
+        public virtual void PlayerCollectionAdded(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void PlayerCollectionRemoved(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.ResetPlayerCount.OnNext(command);
+        }
+        
+        public virtual void ExecuteResetPlayerCount(Int32 arg) {
+            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot, Argument = arg });
         }
     }
     
@@ -167,6 +211,48 @@ namespace yigame.epoker {
         }
         
         public virtual void InfoChanged(CardInfo arg1) {
+        }
+    }
+    
+    public class PlayerViewBase : uFrame.MVVM.ViewBase {
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _Id;
+        
+        public override string DefaultIdentifier {
+            get {
+                return base.DefaultIdentifier;
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(PlayerViewModel);
+            }
+        }
+        
+        public PlayerViewModel Player {
+            get {
+                return (PlayerViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as PlayerViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var playerview = ((PlayerViewModel)model);
+            playerview.Id = this._Id;
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.Player to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
         }
     }
 }

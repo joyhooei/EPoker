@@ -27,6 +27,12 @@ namespace yigame.epoker {
         
         private P<BackGroundViewModel> _BackGroundProperty;
         
+        private P<Int32> _PlayerCountProperty;
+        
+        private ModelCollection<PlayerViewModel> _PlayerCollection;
+        
+        private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -40,6 +46,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Int32> PlayerCountProperty {
+            get {
+                return _PlayerCountProperty;
+            }
+            set {
+                _PlayerCountProperty = value;
+            }
+        }
+        
         public virtual BackGroundViewModel BackGround {
             get {
                 return BackGroundProperty.Value;
@@ -49,29 +64,74 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Int32 PlayerCount {
+            get {
+                return PlayerCountProperty.Value;
+            }
+            set {
+                PlayerCountProperty.Value = value;
+            }
+        }
+        
+        public virtual ModelCollection<PlayerViewModel> PlayerCollection {
+            get {
+                return _PlayerCollection;
+            }
+            set {
+                _PlayerCollection = value;
+            }
+        }
+        
+        public virtual Signal<ResetPlayerCountCommand> ResetPlayerCount {
+            get {
+                return _ResetPlayerCount;
+            }
+            set {
+                _ResetPlayerCount = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
+            _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
+            _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
+        }
+        
+        public virtual void ExecuteResetPlayerCount(Int32 argument) {
+            this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand(){Argument = argument});
         }
         
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
+            this.PlayerCount = stream.DeserializeInt("PlayerCount");;
+            if (stream.DeepSerialize) {
+                this.PlayerCollection.Clear();
+                this.PlayerCollection.AddRange(stream.DeserializeObjectArray<PlayerViewModel>("PlayerCollection"));
+            }
         }
         
         public override void Write(ISerializerStream stream) {
             base.Write(stream);
             if (stream.DeepSerialize) stream.SerializeObject("BackGround", this.BackGround);;
+            stream.SerializeInt("PlayerCount", this.PlayerCount);
+            if (stream.DeepSerialize) stream.SerializeArray("PlayerCollection", this.PlayerCollection);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(Int32) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
             base.FillProperties(list);
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_BackGroundProperty, true, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PlayerCountProperty, false, false, false, false));
+            list.Add(new ViewModelPropertyInfo(_PlayerCollection, true, true, false, false));
         }
     }
     
