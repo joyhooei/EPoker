@@ -35,9 +35,6 @@ namespace uFrame.MVVM.Services
 
             this.OnEvent<ViewDestroyedEvent>()
                 .Subscribe(ViewDestroyed);
-
-            this.OnEvent<ViewModelDestroyedEvent>()
-                .Subscribe(ViewModelDestroyed);
         }
 
         public List<ViewBase> Views
@@ -99,7 +96,7 @@ namespace uFrame.MVVM.Services
             if (view.ViewModelObject == null && view.BindOnStart)
             {
                 var viewModel = FetchViewModel(viewCreatedEvent.View);
-
+                
             }
             Views.Add(view);
         }
@@ -117,14 +114,6 @@ namespace uFrame.MVVM.Services
             }
         }
 
-        protected virtual void ViewModelDestroyed(ViewModelDestroyedEvent data)
-        {
-            var instanceIndex = uFrameKernel.Container.Instances.FirstOrDefault(x => x.Key.Item2 == data.ViewModel.Identifier);
-        
-            uFrameKernel.Container.Instances.Remove(instanceIndex.Key);
-
-        }
-
         /// <summary>
         /// This is method is called by each view in order to get it's view-model as well as place it in
         /// the SceneContext if the "Save & Load" option is checked in it's inspector
@@ -137,7 +126,7 @@ namespace uFrame.MVVM.Services
             {
                 return viewBase.ViewModelObject;
             }
-
+            
             // Attempt to resolve it by the identifier 
             //var contextViewModel = uFrameMVVMKernel.Container.Resolve<ViewModel>(viewBase.Identifier);
             // It now only registers under the viewmodeltype to allow multip different view-models with the same identifier
@@ -173,7 +162,7 @@ namespace uFrame.MVVM.Services
                 }
                 return viewBase.ViewModelObject = contextViewModel;
             }
-
+          
             return contextViewModel;
         }
 

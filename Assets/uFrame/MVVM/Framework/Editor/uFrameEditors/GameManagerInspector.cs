@@ -30,12 +30,12 @@ public class GameManagerInspector : ManagerInspector<SceneManager>
                     if (GUIHelpers.DoTriggerButton(new UFStyle()
                     {
                         Label =
-                            string.Format("'{0}': {1}->{2}", instance.Key.Item1, instance.Key.Item2,
-                                instance.Value.GetType().Name),
+                            string.Format("'{0}': {1}->{2}", instance.Name, instance.Base.Name,
+                                instance.Instance.GetType().Name),
                         BackgroundStyle = ElementDesignerStyles.EventButtonStyleSmall
                     }))
                     {
-                        Debug.Log(instance.Value);
+                        Debug.Log(instance.Instance);
                     }
 
 
@@ -50,7 +50,7 @@ public class GameManagerInspector : ManagerInspector<SceneManager>
                     if (GUIHelpers.DoTriggerButton(new UFStyle()
                     {
                         BackgroundStyle = ElementDesignerStyles.EventButtonStyleSmall,
-                        Label = string.Format("{0}: {1}->{2}", instance.Key.Item2, instance.Key.Item1.Name, instance.Value.Name)
+                        Label = string.Format("{0}: {1}->{2}", instance.Name, instance.From.Name, instance.To.Name)
                     }))
                     {
 

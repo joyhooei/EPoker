@@ -438,16 +438,11 @@ namespace uFrame.MVVM.Templates
             var computed = Ctx.ItemAs<ComputedPropertyNode>();
             foreach (var item in computed.InputsFrom<PropertiesChildItem>())
             {
-                if (!computed.SubProperties.Any())
-                {
-                    Ctx._("yield return {0}", item.Name.AsSubscribableProperty());
-                    continue;
-                }
-                    
+
+                Ctx._("yield return {0}", item.Name.AsSubscribableProperty());
                 var relatedNode = item.RelatedTypeNode;
                 if (relatedNode != null)
                 {
-                    Ctx._("{0}.Take(1).Subscribe(_ => Reset{1}())", item.Name.AsSubscribableProperty(), computed.Name);
                     var conditionStatements = Ctx._if("{0}.Value != null", item.Name.AsSubscribableProperty())
                         .TrueStatements;
                     foreach (var p in computed.SubProperties.Where(p => p.SourceItem.Node == relatedNode))
