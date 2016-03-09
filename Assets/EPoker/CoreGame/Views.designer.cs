@@ -51,6 +51,10 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerCollectionviewFirst")]
         protected bool _PlayerCollectionViewFirst;
         
+        [UFToggleGroup("TestSth")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindTestSth = true;
+        
         public override string DefaultIdentifier {
             get {
                 return "CoreGameRoot";
@@ -87,6 +91,9 @@ namespace yigame.epoker {
             if (_BindPlayerCollection) {
                 this.BindToViewCollection(this.CoreGameRoot.PlayerCollection, this.PlayerCollectionCreateView, this.PlayerCollectionAdded, this.PlayerCollectionRemoved, _PlayerCollectionParent, _PlayerCollectionViewFirst);
             }
+            if (_BindTestSth) {
+                this.BindCommandExecuted(this.CoreGameRoot.TestSth, this.TestSthExecuted);
+            }
         }
         
         public virtual uFrame.MVVM.ViewBase PlayerCollectionCreateView(uFrame.MVVM.ViewModel viewModel) {
@@ -99,9 +106,21 @@ namespace yigame.epoker {
         public virtual void PlayerCollectionRemoved(uFrame.MVVM.ViewBase view) {
         }
         
+        public virtual void TestSthExecuted(TestSthCommand command) {
+        }
+        
+        public virtual void ExecuteTestSth() {
+            CoreGameRoot.TestSth.OnNext(new TestSthCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.ResetPlayerCount.OnNext(command);
+        }
+        
+        public virtual void ExecuteTestSth(TestSthCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.TestSth.OnNext(command);
         }
         
         public virtual void ExecuteResetPlayerCount(Int32 arg) {
@@ -221,6 +240,21 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public String _Id;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _PosId;
+        
+        [UFToggleGroup("Status")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindStatus = true;
+        
+        [UFGroup("Status")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_StatusonlyWhenChanged")]
+        protected bool _StatusOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -246,6 +280,7 @@ namespace yigame.epoker {
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
             var playerview = ((PlayerViewModel)model);
             playerview.Id = this._Id;
+            playerview.PosId = this._PosId;
         }
         
         public override void Bind() {
@@ -253,6 +288,60 @@ namespace yigame.epoker {
             // Use this.Player to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
+            if (_BindStatus) {
+                this.BindStateProperty(this.Player.StatusProperty, this.StatusChanged, _StatusOnlyWhenChanged);
+            }
+        }
+        
+        public virtual void StatusChanged(Invert.StateMachine.State arg1) {
+            if (arg1 is Init) {
+                this.OnInit();
+            }
+            if (arg1 is Ready) {
+                this.OnReady();
+            }
+            if (arg1 is MatchPrepare) {
+                this.OnMatchPrepare();
+            }
+            if (arg1 is MatchIdle) {
+                this.OnMatchIdle();
+            }
+            if (arg1 is MatchDeal) {
+                this.OnMatchDeal();
+            }
+            if (arg1 is MatchWin) {
+                this.OnMatchWin();
+            }
+            if (arg1 is MatchOver) {
+                this.OnMatchOver();
+            }
+            if (arg1 is Wait) {
+                this.OnWait();
+            }
+        }
+        
+        public virtual void OnInit() {
+        }
+        
+        public virtual void OnReady() {
+        }
+        
+        public virtual void OnMatchPrepare() {
+        }
+        
+        public virtual void OnMatchIdle() {
+        }
+        
+        public virtual void OnMatchDeal() {
+        }
+        
+        public virtual void OnMatchWin() {
+        }
+        
+        public virtual void OnMatchOver() {
+        }
+        
+        public virtual void OnWait() {
         }
     }
 }

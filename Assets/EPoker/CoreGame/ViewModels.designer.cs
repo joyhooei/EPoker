@@ -33,6 +33,8 @@ namespace yigame.epoker {
         
         private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
         
+        private Signal<TestSthCommand> _TestSth;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -91,9 +93,19 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<TestSthCommand> TestSth {
+            get {
+                return _TestSth;
+            }
+            set {
+                _TestSth = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
+            this.TestSth = new Signal<TestSthCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
@@ -101,6 +113,10 @@ namespace yigame.epoker {
         
         public virtual void ExecuteResetPlayerCount(Int32 argument) {
             this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand(){Argument = argument});
+        }
+        
+        public virtual void ExecuteTestSth() {
+            this.TestSth.OnNext(new TestSthCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -123,6 +139,7 @@ namespace yigame.epoker {
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(Int32) });
+            list.Add(new ViewModelCommandInfo("TestSth", TestSth) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -289,6 +306,8 @@ namespace yigame.epoker {
         
         private P<String> _IdProperty;
         
+        private P<String> _PosIdProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
@@ -322,12 +341,30 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<String> PosIdProperty {
+            get {
+                return _PosIdProperty;
+            }
+            set {
+                _PosIdProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
             }
             set {
                 IdProperty.Value = value;
+            }
+        }
+        
+        public virtual String PosId {
+            get {
+                return PosIdProperty.Value;
+            }
+            set {
+                PosIdProperty.Value = value;
             }
         }
         
@@ -343,6 +380,7 @@ namespace yigame.epoker {
         public override void Bind() {
             base.Bind();
             _IdProperty = new P<String>(this, "Id");
+            _PosIdProperty = new P<String>(this, "PosId");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
         }
@@ -372,6 +410,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_IdProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_StatusProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PosIdProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }

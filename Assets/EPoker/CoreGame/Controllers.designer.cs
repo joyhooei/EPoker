@@ -13,12 +13,12 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using uFrame.Kernel;
-    using uFrame.IOC;
-    using uFrame.MVVM;
-    using uFrame.Serialization;
     using yigame.epoker;
     using UniRx;
+    using uFrame.Serialization;
+    using uFrame.IOC;
+    using uFrame.Kernel;
+    using uFrame.MVVM;
     
     
     public class CoreGameRootControllerBase : uFrame.MVVM.Controller {
@@ -75,6 +75,7 @@ namespace yigame.epoker {
         public virtual void InitializeCoreGameRoot(CoreGameRootViewModel viewModel) {
             // This is called when a CoreGameRootViewModel is created
             viewModel.ResetPlayerCount.Action = this.ResetPlayerCountHandler;
+            viewModel.TestSth.Action = this.TestSthHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -83,8 +84,15 @@ namespace yigame.epoker {
             CoreGameRootViewModelManager.Remove(viewModel);
         }
         
+        public virtual void TestSth(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
             this.ResetPlayerCount(command.Sender as CoreGameRootViewModel, command.Argument);
+        }
+        
+        public virtual void TestSthHandler(TestSthCommand command) {
+            this.TestSth(command.Sender as CoreGameRootViewModel);
         }
         
         public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel, Int32 arg) {
