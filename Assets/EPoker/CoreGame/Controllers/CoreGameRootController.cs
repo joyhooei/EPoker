@@ -9,7 +9,6 @@ namespace yigame.epoker {
     using uFrame.Serialization;
     using UniRx;
     
-    
     public class CoreGameRootController : CoreGameRootControllerBase {
         
         public override void InitializeCoreGameRoot(CoreGameRootViewModel viewModel) {
@@ -26,7 +25,7 @@ namespace yigame.epoker {
 			viewModel.PlayerCollection.Clear ();
 
 			for (int i = 0; i < arg; i++) {
-				var player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
+				PlayerViewModel player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
 				viewModel.PlayerCollection.Add (player);
 			}
 		}

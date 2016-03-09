@@ -451,8 +451,8 @@ MonoBehaviour:
     \"y\":430}, \"2cab5828-1721-42b6-bc89-1b305a85f3ed\":{\"x\":440, \"y\":270}, \"0fd85bfa-f258-48cf-ab95-86722fb4d0a5\":{\"x\":620,
     \"y\":270}, \"15ce4497-8a59-4183-b165-0feb5c3ed266\":{\"x\":810, \"y\":350}, \"cf6f8be9-57c2-4d01-9e3b-5252fae8bf03\":{\"x\":460,
     \"y\":50}}}, \"FilterState\":{\"_CLRType\":\"FilterState, Invert.Core.GraphDesigner,
-    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\", \"FilterStack\":[  ]},
-    \"Settings\":{\"_CLRType\":\"ElementDiagramSettings, Invert.Core.GraphDesigner,
+    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\", \"FilterStack\":[ \"da25ba42-0dfe-45b8-9b30-447520294df2\"
+    ]}, \"Settings\":{\"_CLRType\":\"ElementDiagramSettings, Invert.Core.GraphDesigner,
     Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\", \"CodeGenDisabled\":false,
     \"SnapSize\":10, \"Snap\":true, \"CodePathStrategyName\":\"Default\", \"GridLinesColor\":{\"r\":\"0.271\",
     \"g\":\"0.271\", \"b\":\"0.271\", \"a\":1}, \"GridLinesColorSecondary\":{\"r\":\"0.169\",
