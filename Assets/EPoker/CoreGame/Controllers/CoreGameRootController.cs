@@ -33,6 +33,8 @@ namespace yigame.epoker
 		{
 			base.ResetPlayerCount (viewModel, arg);
 
+			arg = 4;
+
 			JObject jArrange = JObject.Parse (posid_arrange_player_count);
 			JArray jArrangeItem = jArrange [arg.ToString ()] as JArray;
 

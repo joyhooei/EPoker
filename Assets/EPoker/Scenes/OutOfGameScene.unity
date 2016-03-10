@@ -1114,6 +1114,8 @@ MonoBehaviour:
   _BindOnStart: 1
   _DisposeOnDestroy: 0
   _overrideViewModel: 0
+  _BindPanelIn: 1
+  _BindPanelOut: 1
 --- !u!1 &988818049
 GameObject:
   m_ObjectHideFlags: 0
