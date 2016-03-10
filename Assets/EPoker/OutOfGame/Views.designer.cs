@@ -303,7 +303,7 @@ namespace yigame.epoker {
         }
     }
     
-    public class LobbyPanelViewBase : uFrame.MVVM.ViewBase {
+    public class LobbyPanelViewBase : PanelView {
         
         public override string DefaultIdentifier {
             get {
@@ -335,24 +335,6 @@ namespace yigame.epoker {
             // Use this.LobbyPanel to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
-        }
-        
-        public virtual void ExecutePanelIn() {
-            LobbyPanel.PanelIn.OnNext(new PanelInCommand() { Sender = LobbyPanel });
-        }
-        
-        public virtual void ExecutePanelOut() {
-            LobbyPanel.PanelOut.OnNext(new PanelOutCommand() { Sender = LobbyPanel });
-        }
-        
-        public virtual void ExecutePanelIn(PanelInCommand command) {
-            command.Sender = LobbyPanel;
-            LobbyPanel.PanelIn.OnNext(command);
-        }
-        
-        public virtual void ExecutePanelOut(PanelOutCommand command) {
-            command.Sender = LobbyPanel;
-            LobbyPanel.PanelOut.OnNext(command);
         }
     }
     

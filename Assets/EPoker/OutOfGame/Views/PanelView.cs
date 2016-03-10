@@ -35,12 +35,20 @@ namespace yigame.epoker
 
 		public override void PanelInExecuted (PanelInCommand command)
 		{
-//			this.gameObject.GetComponent<Image> ().enabled = true;
+			this.gameObject.GetComponent<Image> ().enabled = true;
+			for (int i = 0; i < this.transform.childCount; i++) {
+				Transform child = this.transform.GetChild (i);
+				child.gameObject.SetActive (true);
+			}
 		}
 
 		public override void PanelOutExecuted (PanelOutCommand command)
 		{
-//			this.gameObject.GetComponent<Image> ().enabled = true;
+			this.gameObject.GetComponent<Image> ().enabled = false;
+			for (int i = 0; i < this.transform.childCount; i++) {
+				Transform child = this.transform.GetChild (i);
+				child.gameObject.SetActive (false);
+			}
 		}
 	}
 }

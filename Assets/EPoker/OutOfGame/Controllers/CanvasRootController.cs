@@ -29,7 +29,7 @@ namespace yigame.epoker
 				if (arg.OpenPanels.Exists (t => t == panelVM.GetType ())) {
 					panelVM.ExecutePanelIn ();
 				}
-				if (arg.OpenPanels.Exists (t => t == panelVM.GetType ())) {
+				if (arg.ClosePanels.Exists (t => t == panelVM.GetType ())) {
 					panelVM.ExecutePanelOut ();
 				}
 			});
