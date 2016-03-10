@@ -50,11 +50,5 @@ namespace yigame.epoker
 			Debug.Log ("PlayerCollectionRemoved");
 			Destroy (view.gameObject);
 		}
-
-    
-		public override void TestSthExecuted (TestSthCommand command)
-		{
-			Debug.LogFormat ("GameService.TestStr = {0}", GameSrv.TestStr);
-		}
 	}
 }

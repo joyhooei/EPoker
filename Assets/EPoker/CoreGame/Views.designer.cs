@@ -51,10 +51,6 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerCollectionviewFirst")]
         protected bool _PlayerCollectionViewFirst;
         
-        [UFToggleGroup("TestSth")]
-        [UnityEngine.HideInInspector()]
-        public bool _BindTestSth = true;
-        
         public override string DefaultIdentifier {
             get {
                 return "CoreGameRoot";
@@ -91,9 +87,6 @@ namespace yigame.epoker {
             if (_BindPlayerCollection) {
                 this.BindToViewCollection(this.CoreGameRoot.PlayerCollection, this.PlayerCollectionCreateView, this.PlayerCollectionAdded, this.PlayerCollectionRemoved, _PlayerCollectionParent, _PlayerCollectionViewFirst);
             }
-            if (_BindTestSth) {
-                this.BindCommandExecuted(this.CoreGameRoot.TestSth, this.TestSthExecuted);
-            }
         }
         
         public virtual uFrame.MVVM.ViewBase PlayerCollectionCreateView(uFrame.MVVM.ViewModel viewModel) {
@@ -106,21 +99,9 @@ namespace yigame.epoker {
         public virtual void PlayerCollectionRemoved(uFrame.MVVM.ViewBase view) {
         }
         
-        public virtual void TestSthExecuted(TestSthCommand command) {
-        }
-        
-        public virtual void ExecuteTestSth() {
-            CoreGameRoot.TestSth.OnNext(new TestSthCommand() { Sender = CoreGameRoot });
-        }
-        
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.ResetPlayerCount.OnNext(command);
-        }
-        
-        public virtual void ExecuteTestSth(TestSthCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.TestSth.OnNext(command);
         }
         
         public virtual void ExecuteResetPlayerCount(Int32 arg) {

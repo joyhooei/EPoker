@@ -47,10 +47,5 @@ namespace yigame.epoker
 				viewModel.PlayerCollection.Add (player);
 			}
 		}
-
-		public override void TestSth (CoreGameRootViewModel viewModel)
-		{
-			base.TestSth (viewModel);
-		}
 	}
 }

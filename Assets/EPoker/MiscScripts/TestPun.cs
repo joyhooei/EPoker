@@ -6,11 +6,16 @@ using PlayFab.ClientModels;
 
 public class TestPun : MonoBehaviour
 {
+	public readonly string TitleId = "4214";
+	public readonly string CustomId = "customid001";
+	public readonly string PhotonApplicationId = "60090e03-9030-4321-b497-270418f42a37";
+
+	public string PlayFabId;
 
 	// Use this for initialization
 	void Start ()
 	{
-		PlayFabSettings.TitleId = "4214";
+		PlayFabSettings.TitleId = TitleId;
 		LoginToPlayFab ();
 	}
 	
@@ -23,19 +28,17 @@ public class TestPun : MonoBehaviour
 	{
 		Debug.Log ("Using demo device id");
 		LoginWithCustomIDRequest request = new LoginWithCustomIDRequest ();
-		request.TitleId = "4214";
+		request.TitleId = TitleId;
 		request.CreateAccount = true;
-		request.CustomId = "customid001";
+		request.CustomId = CustomId;
 		PlayFabClientAPI.LoginWithCustomID (request, OnLoginSuccess, OnPlayFabError);
 	}
 
 	void OnLoginSuccess (LoginResult result)
 	{
-//		Debug.Log(result.PlayFabId);
-//		StartCoroutine(GetUserStats());
-//		this.playfabId = result.PlayFabId;
+		PlayFabId = result.PlayFabId;
 		GetPhotonAuthenticationTokenRequest request = new GetPhotonAuthenticationTokenRequest ();
-		request.PhotonApplicationId = "60090e03-9030-4321-b497-270418f42a37";
+		request.PhotonApplicationId = PhotonApplicationId;
 //		// get an authentication ticket to pass on to Photon 
 		PlayFabClientAPI.GetPhotonAuthenticationToken (request, OnPhotonAuthenticationSuccess, OnPlayFabError);
 	}
@@ -44,7 +47,7 @@ public class TestPun : MonoBehaviour
 	{
 		Debug.LogFormat ("GetPhotonAuthenticationTokenResult = {0} | {1}", result.CustomData, result.PhotonCustomAuthenticationToken);
 
-		new LoadbalancingPeer (ConnectionProtocol.Udp);
+		PhotonNetwork.ConnectToMasterServerWithAuthParams (PlayFabId, result.PhotonCustomAuthenticationToken, PhotonApplicationId, "0.1");
 	}
 
 	void OnPlayFabError (PlayFabError error)
@@ -54,3 +57,4 @@ public class TestPun : MonoBehaviour
 
 
 }
+

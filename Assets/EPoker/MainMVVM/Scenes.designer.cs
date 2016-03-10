@@ -47,4 +47,33 @@ namespace yigame.epoker {
             yield break;
         }
     }
+    
+    public class OutOfGameSceneBase : uFrame.Kernel.Scene {
+        
+        public override string DefaultKernelScene {
+            get {
+                return "EPokerRepositoryKernelScene";
+            }
+        }
+        
+        public virtual OutOfGameSceneSettings Settings {
+            get {
+                return _SettingsObject as OutOfGameSceneSettings;
+            }
+            set {
+                _SettingsObject = value;
+            }
+        }
+    }
+    
+    public class OutOfGameSceneLoaderBase : SceneLoader<OutOfGameScene> {
+        
+        protected override IEnumerator LoadScene(OutOfGameScene scene, Action<float, string> progressDelegate) {
+            yield break;
+        }
+        
+        protected override IEnumerator UnloadScene(OutOfGameScene scene, Action<float, string> progressDelegate) {
+            yield break;
+        }
+    }
 }

@@ -75,7 +75,6 @@ namespace yigame.epoker {
         public virtual void InitializeCoreGameRoot(CoreGameRootViewModel viewModel) {
             // This is called when a CoreGameRootViewModel is created
             viewModel.ResetPlayerCount.Action = this.ResetPlayerCountHandler;
-            viewModel.TestSth.Action = this.TestSthHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -84,15 +83,8 @@ namespace yigame.epoker {
             CoreGameRootViewModelManager.Remove(viewModel);
         }
         
-        public virtual void TestSth(CoreGameRootViewModel viewModel) {
-        }
-        
         public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
             this.ResetPlayerCount(command.Sender as CoreGameRootViewModel, command.Argument);
-        }
-        
-        public virtual void TestSthHandler(TestSthCommand command) {
-            this.TestSth(command.Sender as CoreGameRootViewModel);
         }
         
         public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel, Int32 arg) {

@@ -33,8 +33,6 @@ namespace yigame.epoker {
         
         private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
         
-        private Signal<TestSthCommand> _TestSth;
-        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -93,19 +91,9 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual Signal<TestSthCommand> TestSth {
-            get {
-                return _TestSth;
-            }
-            set {
-                _TestSth = value;
-            }
-        }
-        
         public override void Bind() {
             base.Bind();
             this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
-            this.TestSth = new Signal<TestSthCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
@@ -113,10 +101,6 @@ namespace yigame.epoker {
         
         public virtual void ExecuteResetPlayerCount(Int32 argument) {
             this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand(){Argument = argument});
-        }
-        
-        public virtual void ExecuteTestSth() {
-            this.TestSth.OnNext(new TestSthCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -139,7 +123,6 @@ namespace yigame.epoker {
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(Int32) });
-            list.Add(new ViewModelCommandInfo("TestSth", TestSth) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

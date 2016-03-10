@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/EPoker/Scenes/EPokerRepositoryKernelScene.unity
   - enabled: 1
     path: Assets/EPoker/Scenes/CoreGameScene.unity
+  - enabled: 1
+    path: Assets/EPoker/Scenes/OutOfGameScene.unity

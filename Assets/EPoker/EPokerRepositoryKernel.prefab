@@ -44,6 +44,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 436140}
   - 114: {fileID: 11433888}
+  - 114: {fileID: 11464268}
   m_Layer: 0
   m_Name: SystemLoaders
   m_TagString: Untagged
@@ -60,6 +61,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 460434}
   - 114: {fileID: 11441012}
+  - 114: {fileID: 11472820}
   m_Layer: 0
   m_Name: SceneLoaders
   m_TagString: Untagged
@@ -160,6 +162,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 400c6efa856ee144da1ae077f9100374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TestStr: Hello World!
+--- !u!114 &11464268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 154644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682c18e4ea4d444fba5184ac7c3e63b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11472820
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 191448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ebe62028a8ae472cbb8aa24116d42dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11474254

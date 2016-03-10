@@ -31,7 +31,4 @@ namespace yigame.epoker {
             }
         }
     }
-    
-    public partial class TestSthCommand : uFrame.MVVM.ViewModelCommand {
-    }
 }
