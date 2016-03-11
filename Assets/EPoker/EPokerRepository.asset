@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a471da125caffd341b0f24225146e40c, type: 2}
   - {fileID: 11400000, guid: c909684140fdf6644a30612578c4c32f, type: 2}
   - {fileID: 11400000, guid: 91bf14eaae2e144f799a634fa6061cef, type: 2}
-  - {fileID: 11400000, guid: a084264a7066b46f9b5ce8a2b7d09dc9, type: 2}
+  - {fileID: 11400000, guid: 594e4da74d1fa47c19876da083a5da44, type: 2}
   _projectNamespace: yigame.epoker
   _currentTabs:
   - _graphIdentifier: 986f579f-3723-4b3a-999b-976735719022
@@ -33,6 +33,6 @@ MonoBehaviour:
   - _graphIdentifier: b8b33b37-cc3f-411b-bb91-3d273c743688
     _graphName: OutOfGame
     _path: []
-  - _graphIdentifier: be3c5d18-a2d2-4a67-8ec8-73241cc7cc09
-    _graphName: PlayFabService
+  - _graphIdentifier: 0f3e817a-bce2-4a46-acf7-bad2b0145b6b
+    _graphName: Network
     _path: []
