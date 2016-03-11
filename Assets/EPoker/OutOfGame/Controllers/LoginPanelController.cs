@@ -16,5 +16,9 @@ namespace yigame.epoker {
             base.InitializeLoginPanel(viewModel);
             // This is called when a LoginPanelViewModel is created
         }
+    
+    public override void Login(LoginPanelViewModel viewModel) {
+        base.Login(viewModel);
+    }
     }
 }

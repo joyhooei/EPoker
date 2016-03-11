@@ -270,6 +270,31 @@ namespace yigame.epoker {
     
     public class LoginPanelViewBase : PanelView {
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _CustomId;
+        
+        [UFToggleGroup("CustomId")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindCustomId = true;
+        
+        [UFGroup("CustomId")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_CustomIdinput")]
+        protected UnityEngine.UI.InputField _CustomIdInput;
+        
+        [UFToggleGroup("Login")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindLogin = true;
+        
+        [UFGroup("Login")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_Loginbutton")]
+        protected UnityEngine.UI.Button _LoginButton;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -293,6 +318,8 @@ namespace yigame.epoker {
             // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
             // var vm = model as LoginPanelViewModel;
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var loginpanelview = ((LoginPanelViewModel)model);
+            loginpanelview.CustomId = this._CustomId;
         }
         
         public override void Bind() {
@@ -300,10 +327,50 @@ namespace yigame.epoker {
             // Use this.LoginPanel to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
+            if (_BindCustomId) {
+                this.BindInputFieldToProperty(_CustomIdInput, this.LoginPanel.CustomIdProperty);
+            }
+            if (_BindLogin) {
+                this.BindButtonToCommand(_LoginButton, this.LoginPanel.Login);
+            }
+        }
+        
+        public virtual void ExecuteLogin() {
+            LoginPanel.Login.OnNext(new LoginCommand() { Sender = LoginPanel });
+        }
+        
+        public virtual void ExecuteLogin(LoginCommand command) {
+            command.Sender = LoginPanel;
+            LoginPanel.Login.OnNext(command);
         }
     }
     
     public class LobbyPanelViewBase : PanelView {
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _RoomId;
+        
+        [UFToggleGroup("RoomId")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRoomId = true;
+        
+        [UFGroup("RoomId")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_RoomIdinput")]
+        protected UnityEngine.UI.InputField _RoomIdInput;
+        
+        [UFToggleGroup("EnterRoom")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindEnterRoom = true;
+        
+        [UFGroup("EnterRoom")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_EnterRoombutton")]
+        protected UnityEngine.UI.Button _EnterRoomButton;
         
         public override string DefaultIdentifier {
             get {
@@ -328,6 +395,8 @@ namespace yigame.epoker {
             // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
             // var vm = model as LobbyPanelViewModel;
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var lobbypanelview = ((LobbyPanelViewModel)model);
+            lobbypanelview.RoomId = this._RoomId;
         }
         
         public override void Bind() {
@@ -335,10 +404,35 @@ namespace yigame.epoker {
             // Use this.LobbyPanel to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
+            if (_BindRoomId) {
+                this.BindInputFieldToProperty(_RoomIdInput, this.LobbyPanel.RoomIdProperty);
+            }
+            if (_BindEnterRoom) {
+                this.BindButtonToCommand(_EnterRoomButton, this.LobbyPanel.EnterRoom);
+            }
+        }
+        
+        public virtual void ExecuteEnterRoom() {
+            LobbyPanel.EnterRoom.OnNext(new EnterRoomCommand() { Sender = LobbyPanel });
+        }
+        
+        public virtual void ExecuteEnterRoom(EnterRoomCommand command) {
+            command.Sender = LobbyPanel;
+            LobbyPanel.EnterRoom.OnNext(command);
         }
     }
     
     public class RoomPanelViewBase : PanelView {
+        
+        [UFToggleGroup("QuitRoom")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindQuitRoom = true;
+        
+        [UFGroup("QuitRoom")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_QuitRoombutton")]
+        protected UnityEngine.UI.Button _QuitRoomButton;
         
         public override string DefaultIdentifier {
             get {
@@ -370,6 +464,18 @@ namespace yigame.epoker {
             // Use this.RoomPanel to access the viewmodel.
             // Use this method to subscribe to the view-model.
             // Any designer bindings are created in the base implementation.
+            if (_BindQuitRoom) {
+                this.BindButtonToCommand(_QuitRoomButton, this.RoomPanel.QuitRoom);
+            }
+        }
+        
+        public virtual void ExecuteQuitRoom() {
+            RoomPanel.QuitRoom.OnNext(new QuitRoomCommand() { Sender = RoomPanel });
+        }
+        
+        public virtual void ExecuteQuitRoom(QuitRoomCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.QuitRoom.OnNext(command);
         }
     }
 }

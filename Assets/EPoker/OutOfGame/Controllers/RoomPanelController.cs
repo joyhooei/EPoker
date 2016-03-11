@@ -16,5 +16,9 @@ namespace yigame.epoker {
             base.InitializeRoomPanel(viewModel);
             // This is called when a RoomPanelViewModel is created
         }
+    
+    public override void QuitRoom(RoomPanelViewModel viewModel) {
+        base.QuitRoom(viewModel);
+    }
     }
 }

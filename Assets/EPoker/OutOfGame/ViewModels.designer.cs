@@ -300,12 +300,49 @@ namespace yigame.epoker {
     
     public partial class LoginPanelViewModelBase : PanelViewModel {
         
+        private P<String> _CustomIdProperty;
+        
+        private Signal<LoginCommand> _Login;
+        
         public LoginPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
         
+        public virtual P<String> CustomIdProperty {
+            get {
+                return _CustomIdProperty;
+            }
+            set {
+                _CustomIdProperty = value;
+            }
+        }
+        
+        public virtual String CustomId {
+            get {
+                return CustomIdProperty.Value;
+            }
+            set {
+                CustomIdProperty.Value = value;
+            }
+        }
+        
+        public virtual Signal<LoginCommand> Login {
+            get {
+                return _Login;
+            }
+            set {
+                _Login = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.Login = new Signal<LoginCommand>(this);
+            _CustomIdProperty = new P<String>(this, "CustomId");
+        }
+        
+        public virtual void ExecuteLogin() {
+            this.Login.OnNext(new LoginCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -318,10 +355,13 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("Login", Login) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
             base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_CustomIdProperty, false, false, false, false));
         }
     }
     
@@ -334,12 +374,49 @@ namespace yigame.epoker {
     
     public partial class LobbyPanelViewModelBase : PanelViewModel {
         
+        private P<String> _RoomIdProperty;
+        
+        private Signal<EnterRoomCommand> _EnterRoom;
+        
         public LobbyPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
         
+        public virtual P<String> RoomIdProperty {
+            get {
+                return _RoomIdProperty;
+            }
+            set {
+                _RoomIdProperty = value;
+            }
+        }
+        
+        public virtual String RoomId {
+            get {
+                return RoomIdProperty.Value;
+            }
+            set {
+                RoomIdProperty.Value = value;
+            }
+        }
+        
+        public virtual Signal<EnterRoomCommand> EnterRoom {
+            get {
+                return _EnterRoom;
+            }
+            set {
+                _EnterRoom = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.EnterRoom = new Signal<EnterRoomCommand>(this);
+            _RoomIdProperty = new P<String>(this, "RoomId");
+        }
+        
+        public virtual void ExecuteEnterRoom() {
+            this.EnterRoom.OnNext(new EnterRoomCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -352,10 +429,13 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("EnterRoom", EnterRoom) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
             base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_RoomIdProperty, false, false, false, false));
         }
     }
     
@@ -368,12 +448,28 @@ namespace yigame.epoker {
     
     public partial class RoomPanelViewModelBase : PanelViewModel {
         
+        private Signal<QuitRoomCommand> _QuitRoom;
+        
         public RoomPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
         
+        public virtual Signal<QuitRoomCommand> QuitRoom {
+            get {
+                return _QuitRoom;
+            }
+            set {
+                _QuitRoom = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.QuitRoom = new Signal<QuitRoomCommand>(this);
+        }
+        
+        public virtual void ExecuteQuitRoom() {
+            this.QuitRoom.OnNext(new QuitRoomCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -386,6 +482,7 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("QuitRoom", QuitRoom) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

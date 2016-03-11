@@ -13,12 +13,12 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using uFrame.Serialization;
-    using yigame.epoker;
-    using UniRx;
     using uFrame.IOC;
     using uFrame.Kernel;
     using uFrame.MVVM;
+    using uFrame.Serialization;
+    using UniRx;
+    using yigame.epoker;
     
     
     public class OutOfGameRootControllerBase : uFrame.MVVM.Controller {
@@ -296,12 +296,20 @@ namespace yigame.epoker {
         
         public virtual void InitializeLoginPanel(LoginPanelViewModel viewModel) {
             // This is called when a LoginPanelViewModel is created
+            viewModel.Login.Action = this.LoginHandler;
             LoginPanelViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             LoginPanelViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void Login(LoginPanelViewModel viewModel) {
+        }
+        
+        public virtual void LoginHandler(LoginCommand command) {
+            this.Login(command.Sender as LoginPanelViewModel);
         }
     }
     
@@ -346,12 +354,20 @@ namespace yigame.epoker {
         
         public virtual void InitializeLobbyPanel(LobbyPanelViewModel viewModel) {
             // This is called when a LobbyPanelViewModel is created
+            viewModel.EnterRoom.Action = this.EnterRoomHandler;
             LobbyPanelViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             LobbyPanelViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void EnterRoom(LobbyPanelViewModel viewModel) {
+        }
+        
+        public virtual void EnterRoomHandler(EnterRoomCommand command) {
+            this.EnterRoom(command.Sender as LobbyPanelViewModel);
         }
     }
     
@@ -396,12 +412,20 @@ namespace yigame.epoker {
         
         public virtual void InitializeRoomPanel(RoomPanelViewModel viewModel) {
             // This is called when a RoomPanelViewModel is created
+            viewModel.QuitRoom.Action = this.QuitRoomHandler;
             RoomPanelViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             RoomPanelViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void QuitRoom(RoomPanelViewModel viewModel) {
+        }
+        
+        public virtual void QuitRoomHandler(QuitRoomCommand command) {
+            this.QuitRoom(command.Sender as RoomPanelViewModel);
         }
     }
 }

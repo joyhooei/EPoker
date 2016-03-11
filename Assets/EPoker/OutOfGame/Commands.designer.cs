@@ -34,6 +34,15 @@ namespace yigame.epoker {
     public partial class PanelOutCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class LoginCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class EnterRoomCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class QuitRoomCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class OpenClosePanelCommand : ViewModelCommand {
         
         private List<Type> _OpenPanels;

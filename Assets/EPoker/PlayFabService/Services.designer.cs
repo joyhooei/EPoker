@@ -20,7 +20,7 @@ namespace yigame.epoker {
     using uFrame.Kernel;
     
     
-    public class CommonDataStructBase : uFrame.Kernel.SystemServiceMonoBehavior {
+    public class PlayFabServiceBase : uFrame.Kernel.SystemServiceMonoBehavior {
         
         /// <summary>
         /// This method is invoked whenever the kernel is loading.

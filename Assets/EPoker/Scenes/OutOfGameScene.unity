@@ -295,7 +295,7 @@ MonoBehaviour:
   _BindOnStart: 1
   _DisposeOnDestroy: 0
   _overrideViewModel: 1
-  _CanvasRoot: {fileID: 0}
+  _CanvasRoot: {fileID: 1833475707}
   _BindUIFlowStatus: 1
   _UIFlowStatusOnlyWhenChanged: 0
 --- !u!1 &405908933
@@ -454,6 +454,8 @@ MonoBehaviour:
   _overrideViewModel: 0
   _BindPanelIn: 1
   _BindPanelOut: 1
+  _BindQuitRoom: 1
+  _QuitRoomButton: {fileID: 1931671935}
   PanelTransform: {fileID: 887471723}
 --- !u!1 &613279827
 GameObject:
@@ -1081,6 +1083,11 @@ MonoBehaviour:
   _overrideViewModel: 0
   _BindPanelIn: 1
   _BindPanelOut: 1
+  _CustomId: 
+  _BindCustomId: 1
+  _CustomIdInput: {fileID: 722231186}
+  _BindLogin: 1
+  _LoginButton: {fileID: 988818051}
   PanelTransform: {fileID: 1965921858}
 --- !u!1 &985845321
 GameObject:
@@ -1098,7 +1105,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &985845322
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1841,8 +1848,8 @@ MonoBehaviour:
   _DisposeOnDestroy: 0
   _overrideViewModel: 0
   _BindPanelCollection: 1
-  _PanelCollectionParent: {fileID: 31447373}
-  _PanelCollectionViewFirst: 0
+  _PanelCollectionParent: {fileID: 1833475706}
+  _PanelCollectionViewFirst: 1
 --- !u!1 &1850166466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,6 +1896,11 @@ MonoBehaviour:
   _overrideViewModel: 0
   _BindPanelIn: 1
   _BindPanelOut: 1
+  _RoomId: 
+  _BindRoomId: 1
+  _RoomIdInput: {fileID: 1422503235}
+  _BindEnterRoom: 1
+  _EnterRoomButton: {fileID: 405908935}
   PanelTransform: {fileID: 985845322}
 --- !u!1 &1931671933
 GameObject:
@@ -2016,7 +2028,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1965921858
 RectTransform:
   m_ObjectHideFlags: 0
