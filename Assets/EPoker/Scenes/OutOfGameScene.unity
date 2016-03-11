@@ -96,7 +96,6 @@ GameObject:
   - 223: {fileID: 31447376}
   - 114: {fileID: 31447375}
   - 114: {fileID: 31447374}
-  - 114: {fileID: 31447377}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -118,7 +117,7 @@ RectTransform:
   - {fileID: 985845322}
   - {fileID: 887471723}
   m_Father: {fileID: 1450433837}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -179,25 +178,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &31447377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31447372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42414d88c91c94e1ba3ab4d43dc36dc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _viewModelId: 
-  _InjectView: 0
-  _BindOnStart: 1
-  _DisposeOnDestroy: 0
-  _overrideViewModel: 1
-  _BindPanelCollection: 1
-  _PanelCollectionParent: {fileID: 31447373}
-  _PanelCollectionViewFirst: 1
 --- !u!1 &58418736
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +295,7 @@ MonoBehaviour:
   _BindOnStart: 1
   _DisposeOnDestroy: 0
   _overrideViewModel: 1
-  _CanvasRoot: {fileID: 31447377}
+  _CanvasRoot: {fileID: 0}
   _BindUIFlowStatus: 1
   _UIFlowStatusOnlyWhenChanged: 0
 --- !u!1 &405908933
@@ -428,6 +408,53 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 405908933}
+--- !u!1 &470699864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 470699865}
+  - 114: {fileID: 470699866}
+  m_Layer: 0
+  m_Name: RoomPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &470699865
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 470699864}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1833475706}
+  m_RootOrder: 2
+--- !u!114 &470699866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 470699864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9120e1b799543a398f024cca2c529c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewModelId: 
+  _InjectView: 0
+  _BindOnStart: 1
+  _DisposeOnDestroy: 0
+  _overrideViewModel: 0
+  _BindPanelIn: 1
+  _BindPanelOut: 1
+  PanelTransform: {fileID: 887471723}
 --- !u!1 &613279827
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,7 +976,6 @@ GameObject:
   - 224: {fileID: 887471723}
   - 222: {fileID: 887471725}
   - 114: {fileID: 887471724}
-  - 114: {fileID: 887471726}
   m_Layer: 0
   m_Name: Panel_Room
   m_TagString: Untagged
@@ -1009,15 +1035,43 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 887471722}
---- !u!114 &887471726
+--- !u!1 &973534538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 973534539}
+  - 114: {fileID: 973534540}
+  m_Layer: 0
+  m_Name: LoginPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &973534539
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 973534538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1833475706}
+  m_RootOrder: 0
+--- !u!114 &973534540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 887471722}
+  m_GameObject: {fileID: 973534538}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa9120e1b799543a398f024cca2c529c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e52984eddd7b4ad182e93317aed16d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _viewModelId: 
@@ -1027,6 +1081,7 @@ MonoBehaviour:
   _overrideViewModel: 0
   _BindPanelIn: 1
   _BindPanelOut: 1
+  PanelTransform: {fileID: 1965921858}
 --- !u!1 &985845321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,7 +1092,6 @@ GameObject:
   - 224: {fileID: 985845322}
   - 222: {fileID: 985845324}
   - 114: {fileID: 985845323}
-  - 114: {fileID: 985845325}
   m_Layer: 0
   m_Name: Panel_Lobby
   m_TagString: Untagged
@@ -1098,24 +1152,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 985845321}
---- !u!114 &985845325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 985845321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6cf404a3d6734be6a10384632026e4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _viewModelId: 
-  _InjectView: 0
-  _BindOnStart: 1
-  _DisposeOnDestroy: 0
-  _overrideViewModel: 0
-  _BindPanelIn: 1
-  _BindPanelOut: 1
 --- !u!1 &988818049
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,6 +1642,7 @@ Transform:
   m_Children:
   - {fileID: 678405668}
   - {fileID: 269732947}
+  - {fileID: 1833475706}
   - {fileID: 31447373}
   - {fileID: 1712958508}
   m_Father: {fileID: 0}
@@ -1723,7 +1760,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1450433837}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!114 &1712958509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,6 +1793,103 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
+--- !u!1 &1833475705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1833475706}
+  - 114: {fileID: 1833475707}
+  m_Layer: 0
+  m_Name: CanvasRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1833475706
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1833475705}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 973534539}
+  - {fileID: 1850166467}
+  - {fileID: 470699865}
+  m_Father: {fileID: 1450433837}
+  m_RootOrder: 2
+--- !u!114 &1833475707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1833475705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42414d88c91c94e1ba3ab4d43dc36dc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewModelId: 
+  _InjectView: 0
+  _BindOnStart: 1
+  _DisposeOnDestroy: 0
+  _overrideViewModel: 0
+  _BindPanelCollection: 1
+  _PanelCollectionParent: {fileID: 31447373}
+  _PanelCollectionViewFirst: 0
+--- !u!1 &1850166466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1850166467}
+  - 114: {fileID: 1850166468}
+  m_Layer: 0
+  m_Name: LobbyPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1850166467
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1850166466}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1833475706}
+  m_RootOrder: 1
+--- !u!114 &1850166468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1850166466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cf404a3d6734be6a10384632026e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewModelId: 
+  _InjectView: 0
+  _BindOnStart: 1
+  _DisposeOnDestroy: 0
+  _overrideViewModel: 0
+  _BindPanelIn: 1
+  _BindPanelOut: 1
+  PanelTransform: {fileID: 985845322}
 --- !u!1 &1931671933
 GameObject:
   m_ObjectHideFlags: 0
@@ -1876,7 +2010,6 @@ GameObject:
   - 224: {fileID: 1965921858}
   - 222: {fileID: 1965921860}
   - 114: {fileID: 1965921859}
-  - 114: {fileID: 1965921861}
   m_Layer: 0
   m_Name: Panel_Login
   m_TagString: Untagged
@@ -1937,24 +2070,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1965921857}
---- !u!114 &1965921861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1965921857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e52984eddd7b4ad182e93317aed16d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _viewModelId: 
-  _InjectView: 0
-  _BindOnStart: 1
-  _DisposeOnDestroy: 0
-  _overrideViewModel: 0
-  _BindPanelIn: 1
-  _BindPanelOut: 1
 --- !u!1 &2084325934
 GameObject:
   m_ObjectHideFlags: 0
