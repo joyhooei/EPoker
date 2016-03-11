@@ -13,9 +13,9 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using uFrame.Serialization;
     using yigame.epoker;
     using UniRx;
-    using uFrame.Serialization;
     using uFrame.IOC;
     using uFrame.Kernel;
     using uFrame.MVVM;
