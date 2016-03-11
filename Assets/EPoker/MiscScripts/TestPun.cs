@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using ExitGames.Client.Photon;
 using PlayFab;
 using PlayFab.ClientModels;
 
@@ -47,7 +46,7 @@ public class TestPun : MonoBehaviour
 	{
 		Debug.LogFormat ("GetPhotonAuthenticationTokenResult = {0} | {1}", result.CustomData, result.PhotonCustomAuthenticationToken);
 
-		PhotonNetwork.ConnectToMasterServerWithAuthParams (PlayFabId, result.PhotonCustomAuthenticationToken, PhotonApplicationId, "0.1");
+//		PhotonNetwork.ConnectToMasterServerWithAuthParams (PlayFabId, result.PhotonCustomAuthenticationToken, PhotonApplicationId, "0.1");
 	}
 
 	void OnPlayFabError (PlayFabError error)

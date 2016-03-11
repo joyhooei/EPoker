@@ -1,7 +1,2 @@
-fileFormatVersion: 2
-guid: 8d4f08d435c4b6343969d8af249460ff
-labels:
-- ExitGames
-- PUN
-- Photon
-- Networking
+fileFormatVersion: 1
+guid: f50c9a4f0072b4442a1e1435b5190a9f
