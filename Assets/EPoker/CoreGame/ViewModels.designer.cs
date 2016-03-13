@@ -325,6 +325,8 @@ namespace yigame.epoker {
         
         private P<String> _PosIdProperty;
         
+        private P<RoomIdentity> _PlayerRoomIdentityProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         private Signal<PlayerReadyCommand> _PlayerReady;
@@ -387,6 +389,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<RoomIdentity> PlayerRoomIdentityProperty {
+            get {
+                return _PlayerRoomIdentityProperty;
+            }
+            set {
+                _PlayerRoomIdentityProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
@@ -402,6 +413,15 @@ namespace yigame.epoker {
             }
             set {
                 PosIdProperty.Value = value;
+            }
+        }
+        
+        public virtual RoomIdentity PlayerRoomIdentity {
+            get {
+                return PlayerRoomIdentityProperty.Value;
+            }
+            set {
+                PlayerRoomIdentityProperty.Value = value;
             }
         }
         
@@ -518,6 +538,7 @@ namespace yigame.epoker {
             this.InitOK = new Signal<InitOKCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _PosIdProperty = new P<String>(this, "PosId");
+            _PlayerRoomIdentityProperty = new P<RoomIdentity>(this, "PlayerRoomIdentity");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -575,6 +596,7 @@ namespace yigame.epoker {
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             this._StatusProperty.SetState(stream.DeserializeString("Status"));
+            this.PlayerRoomIdentity = (RoomIdentity)stream.DeserializeInt("PlayerRoomIdentity");;
             if (stream.DeepSerialize) {
                 this.HandCards.Clear();
                 this.HandCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("HandCards"));
@@ -584,6 +606,7 @@ namespace yigame.epoker {
         public override void Write(ISerializerStream stream) {
             base.Write(stream);
             stream.SerializeString("Status", this.Status.Name);;
+            stream.SerializeInt("PlayerRoomIdentity", (int)this.PlayerRoomIdentity);;
             if (stream.DeepSerialize) stream.SerializeArray("HandCards", this.HandCards);
         }
         
@@ -609,6 +632,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_StatusProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PosIdProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PlayerRoomIdentityProperty, false, false, true, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }

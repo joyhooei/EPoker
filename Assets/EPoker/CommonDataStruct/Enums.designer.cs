@@ -76,4 +76,11 @@ namespace yigame.epoker {
         
         Hang,
     }
+    
+    public enum RoomIdentity {
+        
+        RoomMaster,
+        
+        RoomGuest,
+    }
 }

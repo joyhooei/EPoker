@@ -22,3 +22,6 @@ MonoBehaviour:
   - _graphIdentifier: 986f579f-3723-4b3a-999b-976735719022
     _graphName: CoreGame
     _path: []
+  - _graphIdentifier: a9bd8597-0ab3-4475-990f-ceb3b49d0dd8
+    _graphName: CommonDataStruct
+    _path: []

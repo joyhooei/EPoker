@@ -253,6 +253,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public String _PosId;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public RoomIdentity _PlayerRoomIdentity;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -289,6 +294,7 @@ namespace yigame.epoker {
             var playerview = ((PlayerViewModel)model);
             playerview.Id = this._Id;
             playerview.PosId = this._PosId;
+            playerview.PlayerRoomIdentity = this._PlayerRoomIdentity;
         }
         
         public override void Bind() {
