@@ -40,11 +40,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewModelId: 
-  _InjectView: 0
+  _InjectView: 1
   _BindOnStart: 1
   _DisposeOnDestroy: 0
   _overrideViewModel: 0
   _Id: 
+  _PosId: 
+  _BindStatus: 1
+  _StatusOnlyWhenChanged: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

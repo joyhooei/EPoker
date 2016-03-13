@@ -9,6 +9,7 @@ namespace yigame.epoker
 	using uFrame.MVVM.Services;
 	using uFrame.MVVM.Bindings;
 	using uFrame.Serialization;
+	using uFrame.IOC;
 	using UniRx;
 	using UnityEngine;
 	using yigame.epoker;
@@ -16,13 +17,19 @@ namespace yigame.epoker
     
 	public class PlayerView : PlayerViewBase
 	{
-        
+		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
 			// NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
 			// var vm = model as PlayerViewModel;
 			// This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+		}
+
+		protected override void PreBind ()
+		{
+			base.PreBind ();
 		}
 
 		public override void Bind ()
@@ -44,7 +51,6 @@ namespace yigame.epoker
 		public override void OnInit ()
 		{
 			base.OnInit ();
-
 		}
 
 		public override void OnReady ()
@@ -83,6 +89,20 @@ namespace yigame.epoker
 		}
 
 		#endregion
+
+		public void SetPanelPosByPosId ()
+		{
+			if (string.IsNullOrEmpty (Player.PosId)) {
+				return;
+			}
+
+			string pos_obj_name = string.Format ("PlayerPos{0}", Player.PosId);
+
+			Vector3 pos = Player.CoreGameRoot.PosIdPosition [pos_obj_name];
+			transform.position = pos;
+
+			Debug.Log (pos_obj_name + pos.ToString ());
+		}
 
 	}
 }

@@ -43,6 +43,7 @@ namespace yigame.epoker
 		public override void PlayerCollectionAdded (uFrame.MVVM.ViewBase view)
 		{
 			Debug.Log ("PlayerCollectionAdded");
+			(view as PlayerView).SetPanelPosByPosId ();
 		}
 
 		public override void PlayerCollectionRemoved (uFrame.MVVM.ViewBase view)

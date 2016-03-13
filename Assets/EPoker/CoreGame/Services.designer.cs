@@ -13,11 +13,11 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using uFrame.IOC;
     using uFrame.MVVM;
-    using UnityEngine;
-    using UniRx;
     using uFrame.Kernel;
+    using uFrame.IOC;
+    using UniRx;
+    using UnityEngine;
     
     
     public class GameServiceBase : uFrame.Kernel.SystemServiceMonoBehavior {

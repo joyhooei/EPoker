@@ -26,6 +26,9 @@ namespace yigame.epoker {
     public class CoreGameRootViewBase : uFrame.MVVM.ViewBase {
         
         [UnityEngine.SerializeField()]
+        private PlayerPositionsVC _PlayerPositionsVC;
+        
+        [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
         public uFrame.MVVM.ViewBase _BackGround;
@@ -69,6 +72,12 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual PlayerPositionsVC PlayerPositionsVC {
+            get {
+                return _PlayerPositionsVC ?? (_PlayerPositionsVC = this.gameObject.EnsureComponent<PlayerPositionsVC>());
+            }
+        }
+        
         protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
             base.InitializeViewModel(model);
             // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
@@ -99,9 +108,27 @@ namespace yigame.epoker {
         public virtual void PlayerCollectionRemoved(uFrame.MVVM.ViewBase view) {
         }
         
+        public virtual void ExecuteRootMatchBegan() {
+            CoreGameRoot.RootMatchBegan.OnNext(new RootMatchBeganCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteSimulateMatchBegan() {
+            CoreGameRoot.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.ResetPlayerCount.OnNext(command);
+        }
+        
+        public virtual void ExecuteRootMatchBegan(RootMatchBeganCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RootMatchBegan.OnNext(command);
+        }
+        
+        public virtual void ExecuteSimulateMatchBegan(SimulateMatchBeganCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.SimulateMatchBegan.OnNext(command);
         }
         
         public virtual void ExecuteResetPlayerCount(Int32 arg) {
@@ -323,6 +350,96 @@ namespace yigame.epoker {
         }
         
         public virtual void OnWait() {
+        }
+        
+        public virtual void ExecutePlayerReady() {
+            Player.PlayerReady.OnNext(new PlayerReadyCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecutePlayerCancel() {
+            Player.PlayerCancel.OnNext(new PlayerCancelCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteMatchBegan() {
+            Player.MatchBegan.OnNext(new MatchBeganCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteBeganToPlay() {
+            Player.BeganToPlay.OnNext(new BeganToPlayCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteBeganToWait() {
+            Player.BeganToWait.OnNext(new BeganToWaitCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteTurnOn() {
+            Player.TurnOn.OnNext(new TurnOnCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteTurnOff() {
+            Player.TurnOff.OnNext(new TurnOffCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteWin() {
+            Player.Win.OnNext(new WinCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteOver() {
+            Player.Over.OnNext(new OverCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteInitOK() {
+            Player.InitOK.OnNext(new InitOKCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
+            command.Sender = Player;
+            Player.PlayerReady.OnNext(command);
+        }
+        
+        public virtual void ExecutePlayerCancel(PlayerCancelCommand command) {
+            command.Sender = Player;
+            Player.PlayerCancel.OnNext(command);
+        }
+        
+        public virtual void ExecuteMatchBegan(MatchBeganCommand command) {
+            command.Sender = Player;
+            Player.MatchBegan.OnNext(command);
+        }
+        
+        public virtual void ExecuteBeganToPlay(BeganToPlayCommand command) {
+            command.Sender = Player;
+            Player.BeganToPlay.OnNext(command);
+        }
+        
+        public virtual void ExecuteBeganToWait(BeganToWaitCommand command) {
+            command.Sender = Player;
+            Player.BeganToWait.OnNext(command);
+        }
+        
+        public virtual void ExecuteTurnOn(TurnOnCommand command) {
+            command.Sender = Player;
+            Player.TurnOn.OnNext(command);
+        }
+        
+        public virtual void ExecuteTurnOff(TurnOffCommand command) {
+            command.Sender = Player;
+            Player.TurnOff.OnNext(command);
+        }
+        
+        public virtual void ExecuteWin(WinCommand command) {
+            command.Sender = Player;
+            Player.Win.OnNext(command);
+        }
+        
+        public virtual void ExecuteOver(OverCommand command) {
+            command.Sender = Player;
+            Player.Over.OnNext(command);
+        }
+        
+        public virtual void ExecuteInitOK(InitOKCommand command) {
+            command.Sender = Player;
+            Player.InitOK.OnNext(command);
         }
     }
 }

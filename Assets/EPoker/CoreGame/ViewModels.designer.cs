@@ -33,6 +33,10 @@ namespace yigame.epoker {
         
         private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
         
+        private Signal<RootMatchBeganCommand> _RootMatchBegan;
+        
+        private Signal<SimulateMatchBeganCommand> _SimulateMatchBegan;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -91,9 +95,29 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RootMatchBeganCommand> RootMatchBegan {
+            get {
+                return _RootMatchBegan;
+            }
+            set {
+                _RootMatchBegan = value;
+            }
+        }
+        
+        public virtual Signal<SimulateMatchBeganCommand> SimulateMatchBegan {
+            get {
+                return _SimulateMatchBegan;
+            }
+            set {
+                _SimulateMatchBegan = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
+            this.RootMatchBegan = new Signal<RootMatchBeganCommand>(this);
+            this.SimulateMatchBegan = new Signal<SimulateMatchBeganCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
@@ -101,6 +125,14 @@ namespace yigame.epoker {
         
         public virtual void ExecuteResetPlayerCount(Int32 argument) {
             this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand(){Argument = argument});
+        }
+        
+        public virtual void ExecuteRootMatchBegan() {
+            this.RootMatchBegan.OnNext(new RootMatchBeganCommand());
+        }
+        
+        public virtual void ExecuteSimulateMatchBegan() {
+            this.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -123,6 +155,8 @@ namespace yigame.epoker {
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(Int32) });
+            list.Add(new ViewModelCommandInfo("RootMatchBegan", RootMatchBegan) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("SimulateMatchBegan", SimulateMatchBegan) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -293,6 +327,26 @@ namespace yigame.epoker {
         
         private ModelCollection<CardViewModel> _HandCards;
         
+        private Signal<PlayerReadyCommand> _PlayerReady;
+        
+        private Signal<PlayerCancelCommand> _PlayerCancel;
+        
+        private Signal<MatchBeganCommand> _MatchBegan;
+        
+        private Signal<BeganToPlayCommand> _BeganToPlay;
+        
+        private Signal<BeganToWaitCommand> _BeganToWait;
+        
+        private Signal<TurnOnCommand> _TurnOn;
+        
+        private Signal<TurnOffCommand> _TurnOff;
+        
+        private Signal<WinCommand> _Win;
+        
+        private Signal<OverCommand> _Over;
+        
+        private Signal<InitOKCommand> _InitOK;
+        
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -360,12 +414,162 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<PlayerReadyCommand> PlayerReady {
+            get {
+                return _PlayerReady;
+            }
+            set {
+                _PlayerReady = value;
+            }
+        }
+        
+        public virtual Signal<PlayerCancelCommand> PlayerCancel {
+            get {
+                return _PlayerCancel;
+            }
+            set {
+                _PlayerCancel = value;
+            }
+        }
+        
+        public virtual Signal<MatchBeganCommand> MatchBegan {
+            get {
+                return _MatchBegan;
+            }
+            set {
+                _MatchBegan = value;
+            }
+        }
+        
+        public virtual Signal<BeganToPlayCommand> BeganToPlay {
+            get {
+                return _BeganToPlay;
+            }
+            set {
+                _BeganToPlay = value;
+            }
+        }
+        
+        public virtual Signal<BeganToWaitCommand> BeganToWait {
+            get {
+                return _BeganToWait;
+            }
+            set {
+                _BeganToWait = value;
+            }
+        }
+        
+        public virtual Signal<TurnOnCommand> TurnOn {
+            get {
+                return _TurnOn;
+            }
+            set {
+                _TurnOn = value;
+            }
+        }
+        
+        public virtual Signal<TurnOffCommand> TurnOff {
+            get {
+                return _TurnOff;
+            }
+            set {
+                _TurnOff = value;
+            }
+        }
+        
+        public virtual Signal<WinCommand> Win {
+            get {
+                return _Win;
+            }
+            set {
+                _Win = value;
+            }
+        }
+        
+        public virtual Signal<OverCommand> Over {
+            get {
+                return _Over;
+            }
+            set {
+                _Over = value;
+            }
+        }
+        
+        public virtual Signal<InitOKCommand> InitOK {
+            get {
+                return _InitOK;
+            }
+            set {
+                _InitOK = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.PlayerReady = new Signal<PlayerReadyCommand>(this);
+            this.PlayerCancel = new Signal<PlayerCancelCommand>(this);
+            this.MatchBegan = new Signal<MatchBeganCommand>(this);
+            this.BeganToPlay = new Signal<BeganToPlayCommand>(this);
+            this.BeganToWait = new Signal<BeganToWaitCommand>(this);
+            this.TurnOn = new Signal<TurnOnCommand>(this);
+            this.TurnOff = new Signal<TurnOffCommand>(this);
+            this.Win = new Signal<WinCommand>(this);
+            this.Over = new Signal<OverCommand>(this);
+            this.InitOK = new Signal<InitOKCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _PosIdProperty = new P<String>(this, "PosId");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
+            PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
+            PlayerCancel.Subscribe(_ => StatusProperty.PlayerCancel.OnNext(true));
+            MatchBegan.Subscribe(_ => StatusProperty.MatchBegan.OnNext(true));
+            BeganToPlay.Subscribe(_ => StatusProperty.BeganToPlay.OnNext(true));
+            BeganToWait.Subscribe(_ => StatusProperty.BeganToWait.OnNext(true));
+            TurnOn.Subscribe(_ => StatusProperty.TurnOn.OnNext(true));
+            TurnOff.Subscribe(_ => StatusProperty.TurnOff.OnNext(true));
+            Win.Subscribe(_ => StatusProperty.Win.OnNext(true));
+            Over.Subscribe(_ => StatusProperty.Over.OnNext(true));
+            InitOK.Subscribe(_ => StatusProperty.InitOK.OnNext(true));
+        }
+        
+        public virtual void ExecutePlayerReady() {
+            this.PlayerReady.OnNext(new PlayerReadyCommand());
+        }
+        
+        public virtual void ExecutePlayerCancel() {
+            this.PlayerCancel.OnNext(new PlayerCancelCommand());
+        }
+        
+        public virtual void ExecuteMatchBegan() {
+            this.MatchBegan.OnNext(new MatchBeganCommand());
+        }
+        
+        public virtual void ExecuteBeganToPlay() {
+            this.BeganToPlay.OnNext(new BeganToPlayCommand());
+        }
+        
+        public virtual void ExecuteBeganToWait() {
+            this.BeganToWait.OnNext(new BeganToWaitCommand());
+        }
+        
+        public virtual void ExecuteTurnOn() {
+            this.TurnOn.OnNext(new TurnOnCommand());
+        }
+        
+        public virtual void ExecuteTurnOff() {
+            this.TurnOff.OnNext(new TurnOffCommand());
+        }
+        
+        public virtual void ExecuteWin() {
+            this.Win.OnNext(new WinCommand());
+        }
+        
+        public virtual void ExecuteOver() {
+            this.Over.OnNext(new OverCommand());
+        }
+        
+        public virtual void ExecuteInitOK() {
+            this.InitOK.OnNext(new InitOKCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -385,6 +589,16 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("PlayerReady", PlayerReady) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("PlayerCancel", PlayerCancel) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("MatchBegan", MatchBegan) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("BeganToPlay", BeganToPlay) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("BeganToWait", BeganToWait) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("TurnOn", TurnOn) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("TurnOff", TurnOff) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("Win", Win) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("Over", Over) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("InitOK", InitOK) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

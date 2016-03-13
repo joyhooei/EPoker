@@ -31,4 +31,40 @@ namespace yigame.epoker {
             }
         }
     }
+    
+    public partial class RootMatchBeganCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class SimulateMatchBeganCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class PlayerReadyCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class PlayerCancelCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class MatchBeganCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class BeganToPlayCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class BeganToWaitCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class TurnOnCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class TurnOffCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class WinCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class OverCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class InitOKCommand : uFrame.MVVM.ViewModelCommand {
+    }
 }

@@ -129,8 +129,8 @@ Prefab:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11496982, guid: 8601439c45856d5468d3d43d77f9aec6, type: 2}
-      propertyPath: _overrideViewModel
-      value: 0
+      propertyPath: _InjectView
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8601439c45856d5468d3d43d77f9aec6, type: 2}
@@ -183,6 +183,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 555916070}
+  - 114: {fileID: 555916071}
   m_Layer: 0
   m_Name: PlayerPositions
   m_TagString: Untagged
@@ -208,6 +209,18 @@ Transform:
   - {fileID: 1927181497}
   m_Father: {fileID: 1057175575}
   m_RootOrder: 1
+--- !u!114 &555916071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 555916069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac21880ada25a4ecfbfbba3812839618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 2108308442}
 --- !u!1 &650668304
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,6 +744,7 @@ MonoBehaviour:
   _BindOnStart: 1
   _DisposeOnDestroy: 0
   _overrideViewModel: 1
+  _PlayerPositionsVC: {fileID: 555916071}
   _BackGround: {fileID: 1227737777}
   _PlayerCount: 0
   _BindPlayerCollection: 1

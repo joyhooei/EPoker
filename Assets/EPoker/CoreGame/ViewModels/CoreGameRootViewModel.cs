@@ -15,5 +15,6 @@ namespace yigame.epoker
     
 	public partial class CoreGameRootViewModel : CoreGameRootViewModelBase
 	{
+		public Dictionary<string, Vector3> PosIdPosition = new Dictionary<string, Vector3> ();
 	}
 }

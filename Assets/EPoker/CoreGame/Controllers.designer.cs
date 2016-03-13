@@ -13,12 +13,12 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using uFrame.IOC;
-    using uFrame.Kernel;
+    using yigame.epoker;
     using uFrame.MVVM;
     using uFrame.Serialization;
     using UniRx;
-    using yigame.epoker;
+    using uFrame.Kernel;
+    using uFrame.IOC;
     
     
     public class CoreGameRootControllerBase : uFrame.MVVM.Controller {
@@ -75,6 +75,8 @@ namespace yigame.epoker {
         public virtual void InitializeCoreGameRoot(CoreGameRootViewModel viewModel) {
             // This is called when a CoreGameRootViewModel is created
             viewModel.ResetPlayerCount.Action = this.ResetPlayerCountHandler;
+            viewModel.RootMatchBegan.Action = this.RootMatchBeganHandler;
+            viewModel.SimulateMatchBegan.Action = this.SimulateMatchBeganHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -83,8 +85,22 @@ namespace yigame.epoker {
             CoreGameRootViewModelManager.Remove(viewModel);
         }
         
+        public virtual void RootMatchBegan(CoreGameRootViewModel viewModel) {
+        }
+        
+        public virtual void SimulateMatchBegan(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
             this.ResetPlayerCount(command.Sender as CoreGameRootViewModel, command.Argument);
+        }
+        
+        public virtual void RootMatchBeganHandler(RootMatchBeganCommand command) {
+            this.RootMatchBegan(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void SimulateMatchBeganHandler(SimulateMatchBeganCommand command) {
+            this.SimulateMatchBegan(command.Sender as CoreGameRootViewModel);
         }
         
         public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel, Int32 arg) {
@@ -268,12 +284,92 @@ namespace yigame.epoker {
         
         public virtual void InitializePlayer(PlayerViewModel viewModel) {
             // This is called when a PlayerViewModel is created
+            viewModel.PlayerReady.Action = this.PlayerReadyHandler;
+            viewModel.PlayerCancel.Action = this.PlayerCancelHandler;
+            viewModel.MatchBegan.Action = this.MatchBeganHandler;
+            viewModel.BeganToPlay.Action = this.BeganToPlayHandler;
+            viewModel.BeganToWait.Action = this.BeganToWaitHandler;
+            viewModel.TurnOn.Action = this.TurnOnHandler;
+            viewModel.TurnOff.Action = this.TurnOffHandler;
+            viewModel.Win.Action = this.WinHandler;
+            viewModel.Over.Action = this.OverHandler;
+            viewModel.InitOK.Action = this.InitOKHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             PlayerViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void PlayerReady(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void PlayerCancel(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void MatchBegan(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void BeganToPlay(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void BeganToWait(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void TurnOn(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void TurnOff(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void Win(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void Over(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void InitOK(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void PlayerReadyHandler(PlayerReadyCommand command) {
+            this.PlayerReady(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void PlayerCancelHandler(PlayerCancelCommand command) {
+            this.PlayerCancel(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void MatchBeganHandler(MatchBeganCommand command) {
+            this.MatchBegan(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void BeganToPlayHandler(BeganToPlayCommand command) {
+            this.BeganToPlay(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void BeganToWaitHandler(BeganToWaitCommand command) {
+            this.BeganToWait(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void TurnOnHandler(TurnOnCommand command) {
+            this.TurnOn(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void TurnOffHandler(TurnOffCommand command) {
+            this.TurnOff(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void WinHandler(WinCommand command) {
+            this.Win(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void OverHandler(OverCommand command) {
+            this.Over(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void InitOKHandler(InitOKCommand command) {
+            this.InitOK(command.Sender as PlayerViewModel);
         }
     }
 }

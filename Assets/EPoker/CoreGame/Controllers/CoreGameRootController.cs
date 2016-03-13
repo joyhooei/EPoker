@@ -33,8 +33,6 @@ namespace yigame.epoker
 		{
 			base.ResetPlayerCount (viewModel, arg);
 
-			arg = 4;
-
 			JObject jArrange = JObject.Parse (posid_arrange_player_count);
 			JArray jArrangeItem = jArrange [arg.ToString ()] as JArray;
 
@@ -45,9 +43,40 @@ namespace yigame.epoker
 			for (int i = 0; i < arg; i++) {
 				PlayerViewModel player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
 				player.PosId = jArrangeItem [i].Value<string> ();
-
 				viewModel.PlayerCollection.Add (player);
 			}
+		}
+
+		public override void RootMatchBegan (CoreGameRootViewModel viewModel)
+		{
+			base.RootMatchBegan (viewModel);
+
+			viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
+				playerVM.ExecuteMatchBegan ();
+			});
+		}
+
+		public override void SimulateMatchBegan (CoreGameRootViewModel viewModel)
+		{
+			base.SimulateMatchBegan (viewModel);
+
+			Observable.Interval (TimeSpan.FromMilliseconds (100)).Take (4).Subscribe (step => {
+				UnityEngine.Debug.LogFormat ("Simulate Match Begain: {0}", step);
+
+				if (step == 0) {
+					viewModel.ExecuteResetPlayerCount (2);
+				} else if (step == 1) {
+					viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
+						playerVM.ExecuteInitOK ();
+					});
+				} else if (step == 2) {
+					viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
+						playerVM.ExecutePlayerReady ();
+					});
+				} else if (step == 3) {
+					viewModel.ExecuteRootMatchBegan ();
+				}
+			});
 		}
 	}
 }
