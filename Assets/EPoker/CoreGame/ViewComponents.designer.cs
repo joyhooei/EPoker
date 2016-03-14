@@ -28,16 +28,16 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual void ExecuteResetPlayerCount() {
+            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRootMatchBegan() {
             CoreGameRoot.RootMatchBegan.OnNext(new RootMatchBeganCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteSimulateMatchBegan() {
             CoreGameRoot.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand() { Sender = CoreGameRoot });
-        }
-        
-        public virtual void ExecuteResetPlayerCount(Int32 arg) {
-            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot, Argument = arg });
         }
         
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {

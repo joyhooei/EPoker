@@ -38,6 +38,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public Int32 _PlayerCount;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Newtonsoft.Json.Linq.JObject _InfoJson;
+        
         [UFToggleGroup("PlayerCollection")]
         [UnityEngine.HideInInspector()]
         public bool _BindPlayerCollection = true;
@@ -53,6 +58,16 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerCollectionviewFirst")]
         protected bool _PlayerCollectionViewFirst;
+        
+        [UFToggleGroup("CoreGameStatus")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindCoreGameStatus = true;
+        
+        [UFGroup("CoreGameStatus")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_CoreGameStatusonlyWhenChanged")]
+        protected bool _CoreGameStatusOnlyWhenChanged;
         
         public override string DefaultIdentifier {
             get {
@@ -86,6 +101,7 @@ namespace yigame.epoker {
             var coregamerootview = ((CoreGameRootViewModel)model);
             coregamerootview.BackGround = this._BackGround == null ? null :  ViewService.FetchViewModel(this._BackGround) as BackGroundViewModel;
             coregamerootview.PlayerCount = this._PlayerCount;
+            coregamerootview.InfoJson = this._InfoJson;
         }
         
         public override void Bind() {
@@ -95,6 +111,9 @@ namespace yigame.epoker {
             // Any designer bindings are created in the base implementation.
             if (_BindPlayerCollection) {
                 this.BindToViewCollection(this.CoreGameRoot.PlayerCollection, this.PlayerCollectionCreateView, this.PlayerCollectionAdded, this.PlayerCollectionRemoved, _PlayerCollectionParent, _PlayerCollectionViewFirst);
+            }
+            if (_BindCoreGameStatus) {
+                this.BindStateProperty(this.CoreGameRoot.CoreGameStatusProperty, this.CoreGameStatusChanged, _CoreGameStatusOnlyWhenChanged);
             }
         }
         
@@ -106,6 +125,25 @@ namespace yigame.epoker {
         }
         
         public virtual void PlayerCollectionRemoved(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void CoreGameStatusChanged(Invert.StateMachine.State arg1) {
+            if (arg1 is InGameInit) {
+                this.OnInGameInit();
+            }
+            if (arg1 is WithPlayers) {
+                this.OnWithPlayers();
+            }
+        }
+        
+        public virtual void OnInGameInit() {
+        }
+        
+        public virtual void OnWithPlayers() {
+        }
+        
+        public virtual void ExecuteResetPlayerCount() {
+            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteRootMatchBegan() {
@@ -129,10 +167,6 @@ namespace yigame.epoker {
         public virtual void ExecuteSimulateMatchBegan(SimulateMatchBeganCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.SimulateMatchBegan.OnNext(command);
-        }
-        
-        public virtual void ExecuteResetPlayerCount(Int32 arg) {
-            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot, Argument = arg });
         }
     }
     
@@ -258,6 +292,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public RoomIdentity _PlayerRoomIdentity;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _DisplayName;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -295,6 +334,7 @@ namespace yigame.epoker {
             playerview.Id = this._Id;
             playerview.PosId = this._PosId;
             playerview.PlayerRoomIdentity = this._PlayerRoomIdentity;
+            playerview.DisplayName = this._DisplayName;
         }
         
         public override void Bind() {

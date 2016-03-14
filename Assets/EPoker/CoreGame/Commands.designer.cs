@@ -19,17 +19,6 @@ namespace yigame.epoker {
     
     
     public partial class ResetPlayerCountCommand : uFrame.MVVM.ViewModelCommand {
-        
-        private Int32 _Argument;
-        
-        public Int32 Argument {
-            get {
-                return _Argument;
-            }
-            set {
-                _Argument = value;
-            }
-        }
     }
     
     public partial class RootMatchBeganCommand : uFrame.MVVM.ViewModelCommand {

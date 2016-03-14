@@ -592,4 +592,139 @@ namespace yigame.epoker {
             this.Transition(this.PlayerReady);
         }
     }
+    
+    public class CoreGameSM : Invert.StateMachine.StateMachine {
+        
+        private Invert.StateMachine.StateMachineTrigger _InitPlayers;
+        
+        private Invert.StateMachine.StateMachineTrigger _ReInit;
+        
+        private InGameInit _InGameInit;
+        
+        private WithPlayers _WithPlayers;
+        
+        public CoreGameSM(uFrame.MVVM.ViewModel vm, string propertyName) : 
+                base(vm, propertyName) {
+        }
+        
+        public CoreGameSM() : 
+                base(null, string.Empty) {
+        }
+        
+        public override Invert.StateMachine.State StartState {
+            get {
+                return this.InGameInit;
+            }
+        }
+        
+        public virtual Invert.StateMachine.StateMachineTrigger InitPlayers {
+            get {
+                if (this._InitPlayers == null) {
+                    this._InitPlayers = new StateMachineTrigger(this , "InitPlayers");
+                }
+                return _InitPlayers;
+            }
+            set {
+                _InitPlayers = value;
+            }
+        }
+        
+        public virtual Invert.StateMachine.StateMachineTrigger ReInit {
+            get {
+                if (this._ReInit == null) {
+                    this._ReInit = new StateMachineTrigger(this , "ReInit");
+                }
+                return _ReInit;
+            }
+            set {
+                _ReInit = value;
+            }
+        }
+        
+        public virtual InGameInit InGameInit {
+            get {
+                if (this._InGameInit == null) {
+                    this._InGameInit = new InGameInit();
+                }
+                return _InGameInit;
+            }
+            set {
+                _InGameInit = value;
+            }
+        }
+        
+        public virtual WithPlayers WithPlayers {
+            get {
+                if (this._WithPlayers == null) {
+                    this._WithPlayers = new WithPlayers();
+                }
+                return _WithPlayers;
+            }
+            set {
+                _WithPlayers = value;
+            }
+        }
+        
+        public override void Compose(System.Collections.Generic.List<Invert.StateMachine.State> states) {
+            base.Compose(states);
+            InGameInit.InitPlayers = new StateTransition("InitPlayers", InGameInit, WithPlayers);
+            Transitions.Add(InGameInit.InitPlayers);
+            InGameInit.AddTrigger(InitPlayers, InGameInit.InitPlayers);
+            InGameInit.StateMachine = this;
+            states.Add(InGameInit);
+            WithPlayers.ReInit = new StateTransition("ReInit", WithPlayers, InGameInit);
+            Transitions.Add(WithPlayers.ReInit);
+            WithPlayers.AddTrigger(ReInit, WithPlayers.ReInit);
+            WithPlayers.StateMachine = this;
+            states.Add(WithPlayers);
+        }
+    }
+    
+    public class InGameInit : Invert.StateMachine.State {
+        
+        private Invert.StateMachine.StateTransition _InitPlayers;
+        
+        public Invert.StateMachine.StateTransition InitPlayers {
+            get {
+                return _InitPlayers;
+            }
+            set {
+                _InitPlayers = value;
+            }
+        }
+        
+        public override string Name {
+            get {
+                return "InGameInit";
+            }
+        }
+        
+        public virtual void InitPlayersTransition() {
+            this.Transition(this.InitPlayers);
+        }
+    }
+    
+    public class WithPlayers : Invert.StateMachine.State {
+        
+        private Invert.StateMachine.StateTransition _ReInit;
+        
+        public Invert.StateMachine.StateTransition ReInit {
+            get {
+                return _ReInit;
+            }
+            set {
+                _ReInit = value;
+            }
+        }
+        
+        public override string Name {
+            get {
+                return "WithPlayers";
+            }
+        }
+        
+        public virtual void ReInitTransition() {
+            this.Transition(this.ReInit);
+        }
+    }
 }

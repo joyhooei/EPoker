@@ -25,9 +25,13 @@ namespace yigame.epoker {
     
     public partial class CoreGameRootViewModelBase : uFrame.MVVM.ViewModel {
         
+        private CoreGameSM _CoreGameStatusProperty;
+        
         private P<BackGroundViewModel> _BackGroundProperty;
         
         private P<Int32> _PlayerCountProperty;
+        
+        private P<Newtonsoft.Json.Linq.JObject> _InfoJsonProperty;
         
         private ModelCollection<PlayerViewModel> _PlayerCollection;
         
@@ -39,6 +43,24 @@ namespace yigame.epoker {
         
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
+        }
+        
+        public virtual CoreGameSM CoreGameStatusProperty {
+            get {
+                return _CoreGameStatusProperty;
+            }
+            set {
+                _CoreGameStatusProperty = value;
+            }
+        }
+        
+        public virtual Invert.StateMachine.State CoreGameStatus {
+            get {
+                return CoreGameStatusProperty.Value;
+            }
+            set {
+                CoreGameStatusProperty.Value = value;
+            }
         }
         
         public virtual P<BackGroundViewModel> BackGroundProperty {
@@ -59,6 +81,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Newtonsoft.Json.Linq.JObject> InfoJsonProperty {
+            get {
+                return _InfoJsonProperty;
+            }
+            set {
+                _InfoJsonProperty = value;
+            }
+        }
+        
         public virtual BackGroundViewModel BackGround {
             get {
                 return BackGroundProperty.Value;
@@ -74,6 +105,15 @@ namespace yigame.epoker {
             }
             set {
                 PlayerCountProperty.Value = value;
+            }
+        }
+        
+        public virtual Newtonsoft.Json.Linq.JObject InfoJson {
+            get {
+                return InfoJsonProperty.Value;
+            }
+            set {
+                InfoJsonProperty.Value = value;
             }
         }
         
@@ -120,11 +160,13 @@ namespace yigame.epoker {
             this.SimulateMatchBegan = new Signal<SimulateMatchBeganCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
+            _InfoJsonProperty = new P<Newtonsoft.Json.Linq.JObject>(this, "InfoJson");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
+            _CoreGameStatusProperty = new CoreGameSM(this, "CoreGameStatus");
         }
         
-        public virtual void ExecuteResetPlayerCount(Int32 argument) {
-            this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand(){Argument = argument});
+        public virtual void ExecuteResetPlayerCount() {
+            this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand());
         }
         
         public virtual void ExecuteRootMatchBegan() {
@@ -139,6 +181,7 @@ namespace yigame.epoker {
             base.Read(stream);
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
             this.PlayerCount = stream.DeserializeInt("PlayerCount");;
+            this._CoreGameStatusProperty.SetState(stream.DeserializeString("CoreGameStatus"));
             if (stream.DeepSerialize) {
                 this.PlayerCollection.Clear();
                 this.PlayerCollection.AddRange(stream.DeserializeObjectArray<PlayerViewModel>("PlayerCollection"));
@@ -149,12 +192,13 @@ namespace yigame.epoker {
             base.Write(stream);
             if (stream.DeepSerialize) stream.SerializeObject("BackGround", this.BackGround);;
             stream.SerializeInt("PlayerCount", this.PlayerCount);
+            stream.SerializeString("CoreGameStatus", this.CoreGameStatus.Name);;
             if (stream.DeepSerialize) stream.SerializeArray("PlayerCollection", this.PlayerCollection);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
-            list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(Int32) });
+            list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RootMatchBegan", RootMatchBegan) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("SimulateMatchBegan", SimulateMatchBegan) { ParameterType = typeof(void) });
         }
@@ -165,6 +209,10 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_BackGroundProperty, true, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PlayerCountProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_CoreGameStatusProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_InfoJsonProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_PlayerCollection, true, true, false, false));
         }
     }
@@ -327,6 +375,8 @@ namespace yigame.epoker {
         
         private P<RoomIdentity> _PlayerRoomIdentityProperty;
         
+        private P<String> _DisplayNameProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         private Signal<PlayerReadyCommand> _PlayerReady;
@@ -398,6 +448,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<String> DisplayNameProperty {
+            get {
+                return _DisplayNameProperty;
+            }
+            set {
+                _DisplayNameProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
@@ -422,6 +481,15 @@ namespace yigame.epoker {
             }
             set {
                 PlayerRoomIdentityProperty.Value = value;
+            }
+        }
+        
+        public virtual String DisplayName {
+            get {
+                return DisplayNameProperty.Value;
+            }
+            set {
+                DisplayNameProperty.Value = value;
             }
         }
         
@@ -539,6 +607,7 @@ namespace yigame.epoker {
             _IdProperty = new P<String>(this, "Id");
             _PosIdProperty = new P<String>(this, "PosId");
             _PlayerRoomIdentityProperty = new P<RoomIdentity>(this, "PlayerRoomIdentity");
+            _DisplayNameProperty = new P<String>(this, "DisplayName");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -634,6 +703,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PosIdProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PlayerRoomIdentityProperty, false, false, true, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_DisplayNameProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }

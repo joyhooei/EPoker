@@ -24,7 +24,7 @@ namespace yigame.epoker
 				CoreGameRoot.PosIdPosition.Add (t.gameObject.name, t.position);
 			}
 
-			Debug.Log (JsonConvert.SerializeObject (CoreGameRoot.PosIdPosition));
+//			Debug.Log (JsonConvert.SerializeObject (CoreGameRoot.PosIdPosition));
 		}
 	}
 }

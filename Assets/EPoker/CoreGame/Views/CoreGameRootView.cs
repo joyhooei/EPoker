@@ -12,6 +12,8 @@ namespace yigame.epoker
 	using uFrame.Serialization;
 	using UniRx;
 	using UnityEngine;
+	using Newtonsoft.Json;
+	using Newtonsoft.Json.Linq;
 
     
 	public class CoreGameRootView : CoreGameRootViewBase
@@ -50,6 +52,21 @@ namespace yigame.epoker
 		{
 			Debug.Log ("PlayerCollectionRemoved");
 			Destroy (view.gameObject);
+		}
+
+		public override void CoreGameStatusChanged (Invert.StateMachine.State arg1)
+		{
+			base.CoreGameStatusChanged (arg1);
+		}
+
+		public override void OnInGameInit ()
+		{
+			base.OnInGameInit ();
+		}
+
+		public override void OnWithPlayers ()
+		{
+			base.OnWithPlayers ();
 		}
 	}
 }

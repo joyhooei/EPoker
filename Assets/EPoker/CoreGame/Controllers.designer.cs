@@ -85,6 +85,9 @@ namespace yigame.epoker {
             CoreGameRootViewModelManager.Remove(viewModel);
         }
         
+        public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void RootMatchBegan(CoreGameRootViewModel viewModel) {
         }
         
@@ -92,7 +95,7 @@ namespace yigame.epoker {
         }
         
         public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
-            this.ResetPlayerCount(command.Sender as CoreGameRootViewModel, command.Argument);
+            this.ResetPlayerCount(command.Sender as CoreGameRootViewModel);
         }
         
         public virtual void RootMatchBeganHandler(RootMatchBeganCommand command) {
@@ -101,9 +104,6 @@ namespace yigame.epoker {
         
         public virtual void SimulateMatchBeganHandler(SimulateMatchBeganCommand command) {
             this.SimulateMatchBegan(command.Sender as CoreGameRootViewModel);
-        }
-        
-        public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel, Int32 arg) {
         }
     }
     
