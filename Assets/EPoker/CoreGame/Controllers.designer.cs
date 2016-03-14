@@ -372,4 +372,66 @@ namespace yigame.epoker {
             this.InitOK(command.Sender as PlayerViewModel);
         }
     }
+    
+    public class CardsPileControllerBase : uFrame.MVVM.Controller {
+        
+        private uFrame.MVVM.IViewModelManager _CardsPileViewModelManager;
+        
+        private CoreGameRootViewModel _CoreGameRoot;
+        
+        [uFrame.IOC.InjectAttribute("CardsPile")]
+        public uFrame.MVVM.IViewModelManager CardsPileViewModelManager {
+            get {
+                return _CardsPileViewModelManager;
+            }
+            set {
+                _CardsPileViewModelManager = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("CoreGameRoot")]
+        public CoreGameRootViewModel CoreGameRoot {
+            get {
+                return _CoreGameRoot;
+            }
+            set {
+                _CoreGameRoot = value;
+            }
+        }
+        
+        public IEnumerable<CardsPileViewModel> CardsPileViewModels {
+            get {
+                return CardsPileViewModelManager.OfType<CardsPileViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializeCardsPile(((CardsPileViewModel)(viewModel)));
+        }
+        
+        public virtual CardsPileViewModel CreateCardsPile() {
+            return ((CardsPileViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new CardsPileViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializeCardsPile(CardsPileViewModel viewModel) {
+            // This is called when a CardsPileViewModel is created
+            CardsPileViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            CardsPileViewModelManager.Remove(viewModel);
+        }
+    }
 }

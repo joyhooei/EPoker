@@ -1,15 +1,15 @@
 {
-	"player_count": 2,
-	"players": [
-		{
-			"playfab_id": 1001,
-			"display_name": "ethan",
-			"player_room_identity": "RoomMaster"
-		},
-		{
-			"playfab_id": 1002,
-			"display_name": "dream",
-			"player_room_identity": "RoomGuest"
-		}
-	]
+  "player_count": 2,
+  "players": [
+    {
+      "playfab_id": 1001,
+      "display_name": "ethan",
+      "player_room_identity": "RoomMaster"
+    },
+    {
+      "playfab_id": 1002,
+      "display_name": "dream",
+      "player_room_identity": "RoomGuest"
+    }
+  ]
 }

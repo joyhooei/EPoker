@@ -33,6 +33,8 @@ namespace yigame.epoker {
         
         private P<Newtonsoft.Json.Linq.JObject> _InfoJsonProperty;
         
+        private P<CardsPileViewModel> _PileProperty;
+        
         private ModelCollection<PlayerViewModel> _PlayerCollection;
         
         private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
@@ -90,6 +92,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<CardsPileViewModel> PileProperty {
+            get {
+                return _PileProperty;
+            }
+            set {
+                _PileProperty = value;
+            }
+        }
+        
         public virtual BackGroundViewModel BackGround {
             get {
                 return BackGroundProperty.Value;
@@ -114,6 +125,15 @@ namespace yigame.epoker {
             }
             set {
                 InfoJsonProperty.Value = value;
+            }
+        }
+        
+        public virtual CardsPileViewModel Pile {
+            get {
+                return PileProperty.Value;
+            }
+            set {
+                PileProperty.Value = value;
             }
         }
         
@@ -161,6 +181,7 @@ namespace yigame.epoker {
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _InfoJsonProperty = new P<Newtonsoft.Json.Linq.JObject>(this, "InfoJson");
+            _PileProperty = new P<CardsPileViewModel>(this, "Pile");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
             _CoreGameStatusProperty = new CoreGameSM(this, "CoreGameStatus");
         }
@@ -182,6 +203,7 @@ namespace yigame.epoker {
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
             this.PlayerCount = stream.DeserializeInt("PlayerCount");;
             this._CoreGameStatusProperty.SetState(stream.DeserializeString("CoreGameStatus"));
+            		if (stream.DeepSerialize) this.Pile = stream.DeserializeObject<CardsPileViewModel>("Pile");;
             if (stream.DeepSerialize) {
                 this.PlayerCollection.Clear();
                 this.PlayerCollection.AddRange(stream.DeserializeObjectArray<PlayerViewModel>("PlayerCollection"));
@@ -193,6 +215,7 @@ namespace yigame.epoker {
             if (stream.DeepSerialize) stream.SerializeObject("BackGround", this.BackGround);;
             stream.SerializeInt("PlayerCount", this.PlayerCount);
             stream.SerializeString("CoreGameStatus", this.CoreGameStatus.Name);;
+            if (stream.DeepSerialize) stream.SerializeObject("Pile", this.Pile);;
             if (stream.DeepSerialize) stream.SerializeArray("PlayerCollection", this.PlayerCollection);
         }
         
@@ -213,6 +236,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_CoreGameStatusProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_InfoJsonProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PileProperty, true, false, false, false));
             list.Add(new ViewModelPropertyInfo(_PlayerCollection, true, true, false, false));
         }
     }
@@ -712,6 +737,58 @@ namespace yigame.epoker {
     public partial class PlayerViewModel {
         
         public PlayerViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
+    
+    public partial class CardsPileViewModelBase : uFrame.MVVM.ViewModel {
+        
+        private ModelCollection<CardViewModel> _Cards;
+        
+        public CardsPileViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual ModelCollection<CardViewModel> Cards {
+            get {
+                return _Cards;
+            }
+            set {
+                _Cards = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            _Cards = new ModelCollection<CardViewModel>(this, "Cards");
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+            if (stream.DeepSerialize) {
+                this.Cards.Clear();
+                this.Cards.AddRange(stream.DeserializeObjectArray<CardViewModel>("Cards"));
+            }
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+            if (stream.DeepSerialize) stream.SerializeArray("Cards", this.Cards);
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            list.Add(new ViewModelPropertyInfo(_Cards, true, true, false, false));
+        }
+    }
+    
+    public partial class CardsPileViewModel {
+        
+        public CardsPileViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
     }

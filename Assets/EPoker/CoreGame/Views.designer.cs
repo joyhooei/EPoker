@@ -43,6 +43,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public Newtonsoft.Json.Linq.JObject _InfoJson;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public uFrame.MVVM.ViewBase _Pile;
+        
         [UFToggleGroup("PlayerCollection")]
         [UnityEngine.HideInInspector()]
         public bool _BindPlayerCollection = true;
@@ -68,6 +73,16 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_CoreGameStatusonlyWhenChanged")]
         protected bool _CoreGameStatusOnlyWhenChanged;
+        
+        [UFToggleGroup("SimulateMatchBegan")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindSimulateMatchBegan = true;
+        
+        [UFGroup("SimulateMatchBegan")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SimulateMatchBeganbutton")]
+        protected UnityEngine.UI.Button _SimulateMatchBeganButton;
         
         public override string DefaultIdentifier {
             get {
@@ -102,6 +117,7 @@ namespace yigame.epoker {
             coregamerootview.BackGround = this._BackGround == null ? null :  ViewService.FetchViewModel(this._BackGround) as BackGroundViewModel;
             coregamerootview.PlayerCount = this._PlayerCount;
             coregamerootview.InfoJson = this._InfoJson;
+            coregamerootview.Pile = this._Pile == null ? null :  ViewService.FetchViewModel(this._Pile) as CardsPileViewModel;
         }
         
         public override void Bind() {
@@ -114,6 +130,9 @@ namespace yigame.epoker {
             }
             if (_BindCoreGameStatus) {
                 this.BindStateProperty(this.CoreGameRoot.CoreGameStatusProperty, this.CoreGameStatusChanged, _CoreGameStatusOnlyWhenChanged);
+            }
+            if (_BindSimulateMatchBegan) {
+                this.BindButtonToCommand(_SimulateMatchBeganButton, this.CoreGameRoot.SimulateMatchBegan);
             }
         }
         
@@ -486,6 +505,70 @@ namespace yigame.epoker {
         public virtual void ExecuteInitOK(InitOKCommand command) {
             command.Sender = Player;
             Player.InitOK.OnNext(command);
+        }
+    }
+    
+    public class CardsPileViewBase : uFrame.MVVM.ViewBase {
+        
+        [UFToggleGroup("Cards")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindCards = true;
+        
+        [UFGroup("Cards")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_Cardsparent")]
+        protected UnityEngine.Transform _CardsParent;
+        
+        [UFGroup("Cards")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_CardsviewFirst")]
+        protected bool _CardsViewFirst;
+        
+        public override string DefaultIdentifier {
+            get {
+                return base.DefaultIdentifier;
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(CardsPileViewModel);
+            }
+        }
+        
+        public CardsPileViewModel CardsPile {
+            get {
+                return (CardsPileViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as CardsPileViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.CardsPile to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
+            if (_BindCards) {
+                this.BindToViewCollection(this.CardsPile.Cards, this.CardsCreateView, this.CardsAdded, this.CardsRemoved, _CardsParent, _CardsViewFirst);
+            }
+        }
+        
+        public virtual uFrame.MVVM.ViewBase CardsCreateView(uFrame.MVVM.ViewModel viewModel) {
+            return InstantiateView(viewModel);
+        }
+        
+        public virtual void CardsAdded(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void CardsRemoved(uFrame.MVVM.ViewBase view) {
         }
     }
 }

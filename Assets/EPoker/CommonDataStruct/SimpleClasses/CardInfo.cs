@@ -1,19 +1,36 @@
-namespace yigame.epoker {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using uFrame.Kernel;
-    using uFrame.MVVM;
-    using uFrame.MVVM.Bindings;
-    using uFrame.Serialization;
+namespace yigame.epoker
+{
+	using System;
+	using System.Collections;
+	using System.Collections.Generic;
+	using System.Linq;
+	using uFrame.Kernel;
+	using uFrame.MVVM;
+	using uFrame.MVVM.Bindings;
+	using uFrame.Serialization;
 	using UnityEngine;
 
 	[System.Serializable]
-	public class CardInfo : CardInfoBase {
+	public class CardInfo : CardInfoBase
+	{
 
+		public CardInfo ()
+		{
+		}
 
-		public string GetCardFrontSpriteName() {
+		public CardInfo (Suit suit, NumericalValue numericalValue)
+		{
+			this.Suit = suit;
+			this.NumericalValue = numericalValue;
+		}
+
+		public override string ToString ()
+		{
+			return string.Format ("({0},{1})", Suit.ToString (), NumericalValue.ToString ());
+		}
+
+		public string GetCardFrontSpriteName ()
+		{
 			string suit_str;
 			string nv_str;
 
@@ -90,7 +107,7 @@ namespace yigame.epoker {
 				throw new ArgumentOutOfRangeException ();
 			}
 
-			return string.Format("PlayingCards_{0}_{1}", suit_str, nv_str);
+			return string.Format ("PlayingCards_{0}_{1}", suit_str, nv_str);
 		}
-    }
+	}
 }

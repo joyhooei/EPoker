@@ -18,6 +18,7 @@ namespace yigame.epoker
 	public class PlayerView : PlayerViewBase
 	{
 		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+		[Inject] public GameService GameService;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
@@ -47,7 +48,6 @@ namespace yigame.epoker
 			base.StatusChanged (arg1);
 		}
 
-		// 初始化
 		public override void OnInit ()
 		{
 			base.OnInit ();
@@ -61,6 +61,12 @@ namespace yigame.epoker
 		public override void OnMatchPrepare ()
 		{
 			base.OnMatchPrepare ();
+
+			// room-master 进行随机牌生成,更新房间属性/触发房间事件
+
+			if (Player.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
+				List<CardInfo> card_info_list = GameService.GetDeck ();
+			}
 		}
 
 		public override void OnMatchIdle ()
