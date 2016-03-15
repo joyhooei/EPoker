@@ -65,7 +65,7 @@ namespace yigame.epoker
 			// room-master 进行随机牌生成,更新房间属性/触发房间事件
 
 			if (Player.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
-				List<CardInfo> card_info_list = GameService.GetDeck ();
+				List<CardInfo> card_info_list = GameService.GetDeck (true);
 			}
 		}
 

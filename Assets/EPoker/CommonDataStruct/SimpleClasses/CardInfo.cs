@@ -4,6 +4,7 @@ namespace yigame.epoker
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text.RegularExpressions;
 	using uFrame.Kernel;
 	using uFrame.MVVM;
 	using uFrame.MVVM.Bindings;
@@ -27,6 +28,17 @@ namespace yigame.epoker
 		public override string ToString ()
 		{
 			return string.Format ("({0},{1})", Suit.ToString (), NumericalValue.ToString ());
+		}
+
+		private static readonly string _parse_pattern = "\\(([_A-Z0-9]+),([_A-Z0-9]+)\\)";
+
+		public static CardInfo Parse (string str)
+		{
+			Match m = Regex.Match (str, _parse_pattern);
+			return new CardInfo (
+				(Suit)Enum.Parse (typeof(Suit), m.Groups [1].Value), 
+				(NumericalValue)Enum.Parse (typeof(NumericalValue), m.Groups [2].Value)
+			);
 		}
 
 		public string GetCardFrontSpriteName ()

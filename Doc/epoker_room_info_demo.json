@@ -11,5 +11,7 @@
       "display_name": "dream",
       "player_room_identity": "RoomGuest"
     }
-  ]
+  ],
+  "pile_for_get": {},
+  "pile_for_show": {}
 }

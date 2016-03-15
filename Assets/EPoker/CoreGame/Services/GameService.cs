@@ -9,11 +9,12 @@ namespace yigame.epoker
 	using uFrame.Kernel;
 	using UniRx;
 	using UnityEngine;
+	using Newtonsoft.Json;
 
     
 	public class GameService : GameServiceBase
 	{
-		public List<CardInfo> GetDeck ()
+		public List<CardInfo> GetDeck (bool disorder)
 		{
 			List<CardInfo> card_info_list = new List<CardInfo> ();
 			for (int s = 0; s < 4; s++) {
@@ -24,9 +25,15 @@ namespace yigame.epoker
 			card_info_list.Add (new CardInfo (Suit.SMALL_JOKER, NumericalValue.NV_SMALL_JOKER));
 			card_info_list.Add (new CardInfo (Suit.BIG_JOKER, NumericalValue.NV_BIG_JOKER));
 
-			card_info_list.ForEach (ci => {
-				Debug.Log (ci.ToString ());
-			});
+//			card_info_list.ForEach (ci => {
+//				string s = ci.ToString ();
+//				CardInfo ci_p = CardInfo.Parse (s);
+//				Debug.Log (JsonConvert.SerializeObject (ci_p));
+//			});
+
+			if (disorder) {
+				card_info_list = card_info_list.OrderBy (x => Guid.NewGuid ()).ToList ();
+			}
 
 			return card_info_list;
 		}
