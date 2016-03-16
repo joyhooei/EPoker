@@ -35,6 +35,8 @@ namespace yigame.epoker {
         
         private Signal<DoQuitRoomCommand> _DoQuitRoom;
         
+        private Signal<InitGameCommand> _InitGame;
+        
         public OutOfGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -102,11 +104,21 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<InitGameCommand> InitGame {
+            get {
+                return _InitGame;
+            }
+            set {
+                _InitGame = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.DoLogin = new Signal<DoLoginCommand>(this);
             this.DoEnterRoom = new Signal<DoEnterRoomCommand>(this);
             this.DoQuitRoom = new Signal<DoQuitRoomCommand>(this);
+            this.InitGame = new Signal<InitGameCommand>(this);
             _CanvasRootProperty = new P<CanvasRootViewModel>(this, "CanvasRoot");
             _UIFlowStatusProperty = new UIFlowSM(this, "UIFlowStatus");
             DoLogin.Subscribe(_ => UIFlowStatusProperty.Login.OnNext(true));
@@ -126,6 +138,10 @@ namespace yigame.epoker {
             this.DoQuitRoom.OnNext(new DoQuitRoomCommand());
         }
         
+        public virtual void ExecuteInitGame() {
+            this.InitGame.OnNext(new InitGameCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.CanvasRoot = stream.DeserializeObject<CanvasRootViewModel>("CanvasRoot");;
@@ -143,6 +159,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("DoLogin", DoLogin) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoEnterRoom", DoEnterRoom) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoQuitRoom", DoQuitRoom) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("InitGame", InitGame) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -493,6 +510,63 @@ namespace yigame.epoker {
     public partial class RoomPanelViewModel {
         
         public RoomPanelViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
+    
+    public partial class DebugInfoPanelViewModelBase : PanelViewModel {
+        
+        private P<String> _TextProperty;
+        
+        public DebugInfoPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual P<String> TextProperty {
+            get {
+                return _TextProperty;
+            }
+            set {
+                _TextProperty = value;
+            }
+        }
+        
+        public virtual String Text {
+            get {
+                return TextProperty.Value;
+            }
+            set {
+                TextProperty.Value = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            _TextProperty = new P<String>(this, "Text");
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_TextProperty, false, false, false, false));
+        }
+    }
+    
+    public partial class DebugInfoPanelViewModel {
+        
+        public DebugInfoPanelViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
     }

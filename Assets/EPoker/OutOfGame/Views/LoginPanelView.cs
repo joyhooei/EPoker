@@ -21,22 +21,23 @@ namespace yigame.epoker
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
-			// NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
-			// var vm = model as LoginPanelViewModel;
-			// This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+
+			(model as LoginPanelViewModel).CustomId = PlayerPrefs.GetString ("login_panel_custom_id", "");
 		}
 
 		public override void Bind ()
 		{
 			base.Bind ();
-			// Use this.LoginPanel to access the viewmodel.
-			// Use this method to subscribe to the view-model.
-			// Any designer bindings are created in the base implementation.
 		}
 
 		public override Transform GetPanelRoot ()
 		{
 			return PanelTransform;
+		}
+
+		public override void LoginExecuted (LoginCommand command)
+		{
+			PlayerPrefs.SetString ("login_panel_custom_id", LoginPanel.CustomId);
 		}
 	}
 }

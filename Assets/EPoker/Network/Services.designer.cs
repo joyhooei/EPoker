@@ -29,7 +29,16 @@ namespace yigame.epoker {
         /// </summary>
         public override void Setup() {
             base.Setup();
+            this.OnEvent<NetInit>().Subscribe(this.NetInitHandler);
             this.OnEvent<NetLogin>().Subscribe(this.NetLoginHandler);
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new NetInit())
+        /// </summary>
+        public virtual void NetInitHandler(NetInit data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
         }
         
         /// <summary>

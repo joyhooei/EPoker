@@ -27,6 +27,8 @@ namespace yigame.epoker {
         
         private OutOfGameRootViewModel _OutOfGameRoot;
         
+        private DebugInfoPanelViewModel _DebugInfoPanel;
+        
         [uFrame.IOC.InjectAttribute("OutOfGameRoot")]
         public uFrame.MVVM.IViewModelManager OutOfGameRootViewModelManager {
             get {
@@ -44,6 +46,16 @@ namespace yigame.epoker {
             }
             set {
                 _OutOfGameRoot = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("DebugInfoPanel")]
+        public DebugInfoPanelViewModel DebugInfoPanel {
+            get {
+                return _DebugInfoPanel;
+            }
+            set {
+                _DebugInfoPanel = value;
             }
         }
         
@@ -77,6 +89,7 @@ namespace yigame.epoker {
             viewModel.DoLogin.Action = this.DoLoginHandler;
             viewModel.DoEnterRoom.Action = this.DoEnterRoomHandler;
             viewModel.DoQuitRoom.Action = this.DoQuitRoomHandler;
+            viewModel.InitGame.Action = this.InitGameHandler;
             OutOfGameRootViewModelManager.Add(viewModel);
         }
         
@@ -94,6 +107,9 @@ namespace yigame.epoker {
         public virtual void DoQuitRoom(OutOfGameRootViewModel viewModel) {
         }
         
+        public virtual void InitGame(OutOfGameRootViewModel viewModel) {
+        }
+        
         public virtual void DoLoginHandler(DoLoginCommand command) {
             this.DoLogin(command.Sender as OutOfGameRootViewModel);
         }
@@ -105,6 +121,10 @@ namespace yigame.epoker {
         public virtual void DoQuitRoomHandler(DoQuitRoomCommand command) {
             this.DoQuitRoom(command.Sender as OutOfGameRootViewModel);
         }
+        
+        public virtual void InitGameHandler(InitGameCommand command) {
+            this.InitGame(command.Sender as OutOfGameRootViewModel);
+        }
     }
     
     public class CanvasRootControllerBase : uFrame.MVVM.Controller {
@@ -112,6 +132,8 @@ namespace yigame.epoker {
         private uFrame.MVVM.IViewModelManager _CanvasRootViewModelManager;
         
         private OutOfGameRootViewModel _OutOfGameRoot;
+        
+        private DebugInfoPanelViewModel _DebugInfoPanel;
         
         [uFrame.IOC.InjectAttribute("CanvasRoot")]
         public uFrame.MVVM.IViewModelManager CanvasRootViewModelManager {
@@ -130,6 +152,16 @@ namespace yigame.epoker {
             }
             set {
                 _OutOfGameRoot = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("DebugInfoPanel")]
+        public DebugInfoPanelViewModel DebugInfoPanel {
+            get {
+                return _DebugInfoPanel;
+            }
+            set {
+                _DebugInfoPanel = value;
             }
         }
         
@@ -183,6 +215,8 @@ namespace yigame.epoker {
         
         private OutOfGameRootViewModel _OutOfGameRoot;
         
+        private DebugInfoPanelViewModel _DebugInfoPanel;
+        
         [uFrame.IOC.InjectAttribute("Panel")]
         public uFrame.MVVM.IViewModelManager PanelViewModelManager {
             get {
@@ -200,6 +234,16 @@ namespace yigame.epoker {
             }
             set {
                 _OutOfGameRoot = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("DebugInfoPanel")]
+        public DebugInfoPanelViewModel DebugInfoPanel {
+            get {
+                return _DebugInfoPanel;
+            }
+            set {
+                _DebugInfoPanel = value;
             }
         }
         
@@ -426,6 +470,56 @@ namespace yigame.epoker {
         
         public virtual void QuitRoomHandler(QuitRoomCommand command) {
             this.QuitRoom(command.Sender as RoomPanelViewModel);
+        }
+    }
+    
+    public class DebugInfoPanelControllerBase : PanelController {
+        
+        private uFrame.MVVM.IViewModelManager _DebugInfoPanelViewModelManager;
+        
+        [uFrame.IOC.InjectAttribute("DebugInfoPanel")]
+        public uFrame.MVVM.IViewModelManager DebugInfoPanelViewModelManager {
+            get {
+                return _DebugInfoPanelViewModelManager;
+            }
+            set {
+                _DebugInfoPanelViewModelManager = value;
+            }
+        }
+        
+        public IEnumerable<DebugInfoPanelViewModel> DebugInfoPanelViewModels {
+            get {
+                return DebugInfoPanelViewModelManager.OfType<DebugInfoPanelViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializeDebugInfoPanel(((DebugInfoPanelViewModel)(viewModel)));
+        }
+        
+        public virtual DebugInfoPanelViewModel CreateDebugInfoPanel() {
+            return ((DebugInfoPanelViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new DebugInfoPanelViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializeDebugInfoPanel(DebugInfoPanelViewModel viewModel) {
+            // This is called when a DebugInfoPanelViewModel is created
+            DebugInfoPanelViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            DebugInfoPanelViewModelManager.Remove(viewModel);
         }
     }
 }

@@ -19,17 +19,11 @@ namespace yigame.epoker
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
-			// NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
-			// var vm = model as OutOfGameRootViewModel;
-			// This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
 		}
 
 		public override void Bind ()
 		{
 			base.Bind ();
-			// Use this.OutOfGameRoot to access the viewmodel.
-			// Use this method to subscribe to the view-model.
-			// Any designer bindings are created in the base implementation.
 		}
 
 		public override void UIFlowStatusChanged (Invert.StateMachine.State arg1)
@@ -40,6 +34,9 @@ namespace yigame.epoker
 		public override void OnUILogin ()
 		{
 			base.OnUILogin ();
+
+			OutOfGameRoot.ExecuteInitGame ();
+
 			OutOfGameRoot.CanvasRoot.Execute (new OpenClosePanelCommand () {
 				OpenPanels = new List<Type> () { typeof(LoginPanelViewModel) },
 				ClosePanels = new List<Type> () { typeof(LobbyPanelViewModel), typeof(RoomPanelViewModel) }

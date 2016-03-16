@@ -13,7 +13,8 @@ namespace yigame.epoker
     
 	public class LoginPanelController : LoginPanelControllerBase
 	{
-        
+		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
+
 		public override void InitializeLoginPanel (LoginPanelViewModel viewModel)
 		{
 			base.InitializeLoginPanel (viewModel);
@@ -29,6 +30,7 @@ namespace yigame.epoker
 				CustomID = viewModel.CustomId,
 				SuccessCallback = _ => {
 					UnityEngine.Debug.Log ("SuccessCallback: " + _);
+					OutOfGameRoot.ExecuteDoLogin ();
 				},
 				ErrorCallback = _ => {
 					UnityEngine.Debug.Log ("ErrorCallback: " + _);

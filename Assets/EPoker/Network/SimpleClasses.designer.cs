@@ -54,4 +54,7 @@ namespace yigame.epoker {
             }
         }
     }
+    
+    public class NetInitBase : object {
+    }
 }

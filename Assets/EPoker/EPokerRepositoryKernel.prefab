@@ -28,6 +28,7 @@ GameObject:
   - 114: {fileID: 11477756}
   - 114: {fileID: 11428930}
   - 114: {fileID: 11491556}
+  - 114: {fileID: 11451652}
   m_Layer: 0
   m_Name: Services
   m_TagString: Untagged
@@ -164,7 +165,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400c6efa856ee144da1ae077f9100374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TestStr: Hello World!
+--- !u!114 &11451652
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 135992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fed7d7f6233d451a8957bb690812ee3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TitleId: 4214
 --- !u!114 &11464268
 MonoBehaviour:
   m_ObjectHideFlags: 1

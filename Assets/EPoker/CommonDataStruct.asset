@@ -181,12 +181,11 @@ MonoBehaviour:
     "IsNewNode":true}, {"_CLRType":"Invert.Core.GraphDesigner.TypeReferenceNode, Invert.Core.GraphDesigner,
     Version=1.1.0.0, Culture=neutral, PublicKeyToken=null", "Name":"Newtonsoft.Json.Linq.JObject",
     "IsCollapsed":true, "Identifier":"297d59a5-ded9-4482-af4a-d0b8c23ecc5c", "Items":[  ],
-    "CollapsedValues":{}, "Flags":{"_CLRType":"Invert.Core.GraphDesigner.FlagsDictionary,
+    "CollapsedValues":{}, "Flags":{"_CLRType":true}, "DataBag":{"_CLRType":"Invert.Core.GraphDesigner.DataBag,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null"},
-    "DataBag":{"_CLRType":"Invert.Core.GraphDesigner.DataBag, Invert.Core.GraphDesigner,
-    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null"}, "IsNewNode":true} ],
-    "ConnectedItems":[  ], "PositionData":{"_CLRType":"FilterPositionData, Invert.Core.GraphDesigner,
-    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null", "c598248a-9986-47a3-b582-d61a4ebf520f":{"c598248a-9986-47a3-b582-d61a4ebf520f":{"x":50,
+    "IsNewNode":true} ], "ConnectedItems":[  ], "PositionData":{"_CLRType":"FilterPositionData,
+    Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null",
+    "c598248a-9986-47a3-b582-d61a4ebf520f":{"c598248a-9986-47a3-b582-d61a4ebf520f":{"x":50,
     "y":30}, "e7ce18f1-8273-47e6-a3a3-b61c2d1fa79b":{"x":70, "y":160}, "802bc7f7-3558-4527-a837-c95e5e34c6c4":{"x":340,
     "y":160}, "32731838-3375-4d97-b75e-39a1354e1a3d":{"x":510, "y":160}, "a35ae210-a8bf-4c7a-a529-f734b1b63bf3":{"x":100,
     "y":350}, "10937a3b-8a10-4781-ac46-76960bf0f6bd":{"x":100, "y":510}, "f7a2f2d8-965d-436b-8ad7-0dafe52fd491":{"x":750,
@@ -201,7 +200,4 @@ MonoBehaviour:
     "g":1, "b":1, "a":1}, "InheritanceLinkColor":{"r":0, "g":1, "b":0, "a":1}, "SceneManagerLinkColor":{"r":"0.5",
     "g":"0.5", "b":"0.5", "a":1}, "SubSystemLinkColor":{"r":"0.5", "g":"0.5", "b":"0.5",
     "a":1}, "TransitionLinkColor":{"r":1, "g":"0.9215686", "b":"0.01568628", "a":1},
-    "ViewLinkColor":{"r":0, "g":0, "b":1, "a":1}, "RootNamespace":""}, "Changes":[
-    {"_CLRType":"Invert.Core.GraphDesigner.GraphItemAdded, Invert.Core.GraphDesigner,
-    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null", "ItemIdentifier":"297d59a5-ded9-4482-af4a-d0b8c23ecc5c"}
-    ]}'
+    "ViewLinkColor":{"r":0, "g":0, "b":1, "a":1}, "RootNamespace":""}, "Changes":[  ]}'

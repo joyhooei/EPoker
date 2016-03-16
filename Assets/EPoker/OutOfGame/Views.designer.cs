@@ -110,6 +110,10 @@ namespace yigame.epoker {
             OutOfGameRoot.DoQuitRoom.OnNext(new DoQuitRoomCommand() { Sender = OutOfGameRoot });
         }
         
+        public virtual void ExecuteInitGame() {
+            OutOfGameRoot.InitGame.OnNext(new InitGameCommand() { Sender = OutOfGameRoot });
+        }
+        
         public virtual void ExecuteDoLogin(DoLoginCommand command) {
             command.Sender = OutOfGameRoot;
             OutOfGameRoot.DoLogin.OnNext(command);
@@ -123,6 +127,11 @@ namespace yigame.epoker {
         public virtual void ExecuteDoQuitRoom(DoQuitRoomCommand command) {
             command.Sender = OutOfGameRoot;
             OutOfGameRoot.DoQuitRoom.OnNext(command);
+        }
+        
+        public virtual void ExecuteInitGame(InitGameCommand command) {
+            command.Sender = OutOfGameRoot;
+            OutOfGameRoot.InitGame.OnNext(command);
         }
     }
     
@@ -333,6 +342,12 @@ namespace yigame.epoker {
             if (_BindLogin) {
                 this.BindButtonToCommand(_LoginButton, this.LoginPanel.Login);
             }
+            if (_BindLogin) {
+                this.BindCommandExecuted(this.LoginPanel.Login, this.LoginExecuted);
+            }
+        }
+        
+        public virtual void LoginExecuted(LoginCommand command) {
         }
         
         public virtual void ExecuteLogin() {
@@ -476,6 +491,79 @@ namespace yigame.epoker {
         public virtual void ExecuteQuitRoom(QuitRoomCommand command) {
             command.Sender = RoomPanel;
             RoomPanel.QuitRoom.OnNext(command);
+        }
+    }
+    
+    public class DebugInfoPanelViewBase : uFrame.MVVM.ViewBase {
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _Text;
+        
+        [UFToggleGroup("Text")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindText = true;
+        
+        [UFGroup("Text")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_Textinput")]
+        protected UnityEngine.UI.Text _TextInput;
+        
+        public override string DefaultIdentifier {
+            get {
+                return "DebugInfoPanel";
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(DebugInfoPanelViewModel);
+            }
+        }
+        
+        public DebugInfoPanelViewModel DebugInfoPanel {
+            get {
+                return (DebugInfoPanelViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as DebugInfoPanelViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var debuginfopanelview = ((DebugInfoPanelViewModel)model);
+            debuginfopanelview.Text = this._Text;
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.DebugInfoPanel to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
+            if (_BindText) {
+                this.BindTextToProperty(_TextInput, this.DebugInfoPanel.TextProperty);
+            }
+        }
+        
+        public virtual void ExecutePanelIn() {
+            DebugInfoPanel.PanelIn.OnNext(new PanelInCommand() { Sender = DebugInfoPanel });
+        }
+        
+        public virtual void ExecutePanelOut() {
+            DebugInfoPanel.PanelOut.OnNext(new PanelOutCommand() { Sender = DebugInfoPanel });
+        }
+        
+        public virtual void ExecutePanelIn(PanelInCommand command) {
+            command.Sender = DebugInfoPanel;
+            DebugInfoPanel.PanelIn.OnNext(command);
+        }
+        
+        public virtual void ExecutePanelOut(PanelOutCommand command) {
+            command.Sender = DebugInfoPanel;
+            DebugInfoPanel.PanelOut.OnNext(command);
         }
     }
 }
