@@ -27,6 +27,9 @@ namespace yigame.epoker {
     public partial class SimulateMatchBeganCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class SeparatePileCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class PlayerReadyCommand : uFrame.MVVM.ViewModelCommand {
     }
     

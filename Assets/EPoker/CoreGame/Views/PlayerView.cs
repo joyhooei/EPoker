@@ -13,6 +13,8 @@ namespace yigame.epoker
 	using UniRx;
 	using UnityEngine;
 	using yigame.epoker;
+	using Newtonsoft.Json;
+	using Newtonsoft.Json.Linq;
 
     
 	public class PlayerView : PlayerViewBase
@@ -66,6 +68,12 @@ namespace yigame.epoker
 
 			if (Player.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
 				List<CardInfo> card_info_list = GameService.GetDeck (true);
+				JObject jInfo = CoreGameRoot.InfoJson;
+
+				int get_card_first_idx = jInfo ["players"]
+					.Where (jp => jp ["get_card_first"].Value<bool> ())
+					.Select (jp => jp ["idx"].Value<int> ())
+					.Single ();
 			}
 		}
 

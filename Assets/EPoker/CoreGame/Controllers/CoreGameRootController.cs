@@ -33,7 +33,12 @@ namespace yigame.epoker
 			base.ResetPlayerCount (viewModel);
 
 			int count = viewModel.InfoJson ["player_count"].Value<int> ();
-
+			int idx = viewModel.InfoJson ["players"]
+				.Select ((jt, _idx) => new {jt, _idx})
+				.Where (kv => kv.jt ["playfab_id"].Value<string> () == viewModel.MyId)
+				.Select (kv => kv._idx)
+				.Single ();
+			
 			JObject jArrange = JObject.Parse (posid_arrange_player_count);
 			JArray jArrangeItem = jArrange [count.ToString ()] as JArray;
 
@@ -41,12 +46,17 @@ namespace yigame.epoker
 
 			viewModel.PlayerCollection.Clear ();
 
+
 			for (int i = 0; i < count; i++) {
+
+				int idx_in_players = (i + idx) % count;
+				var jPlayer = viewModel.InfoJson ["players"] [idx_in_players];
+
 				PlayerViewModel player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
 				player.PosId = jArrangeItem [i].Value<string> ();
-				player.Id = viewModel.InfoJson ["players"] [i] ["playfab_id"].Value<string> ();
-				player.DisplayName = viewModel.InfoJson ["players"] [i] ["display_name"].Value<string> ();
-				player.PlayerRoomIdentity = (RoomIdentity)Enum.Parse (typeof(RoomIdentity), viewModel.InfoJson ["players"] [i] ["player_room_identity"].Value<string> ());
+				player.Id = jPlayer ["playfab_id"].Value<string> ();
+				player.DisplayName = jPlayer ["display_name"].Value<string> ();
+				player.PlayerRoomIdentity = (RoomIdentity)Enum.Parse (typeof(RoomIdentity), jPlayer ["player_room_identity"].Value<string> ());
 
 				viewModel.PlayerCollection.Add (player);
 			}
@@ -65,26 +75,38 @@ namespace yigame.epoker
 		{
 			base.SimulateMatchBegan (viewModel);
 
+			// 初始化本人 id
+			viewModel.MyId = "1002";
+
 			// 此处应从服务器读取房间初始数据
-			var json_str = @"{
-			  ""player_count"": 2,
-			  ""players"": [
-			    {
-			      ""playfab_id"": 1001,
-			      ""display_name"": ""ethan"",
-			      ""player_room_identity"": ""RoomMaster""
-			    },
-			    {
-			      ""playfab_id"": 1002,
-			      ""display_name"": ""dream"",
-			      ""player_room_identity"": ""RoomGuest""
-			    }
-			  ]
-			}";
+			var json_str = @"
+							{
+							  ""player_count"": 2,
+							  ""players"": [
+							    {
+							      ""idx"": 0,
+							      ""playfab_id"": ""1001"",
+							      ""display_name"": ""ethan"",
+							      ""player_room_identity"": ""RoomMaster"",
+							      ""get_card_first"": true,
+							      ""hand_cards"": []
+							    },
+							    {
+							      ""idx"": 1,
+							      ""playfab_id"": ""1002"",
+							      ""display_name"": ""dream"",
+							      ""player_room_identity"": ""RoomGuest"",
+							      ""get_card_first"": false,
+							      ""hand_cards"": []
+							    }
+							  ],
+							  ""pile_for_show"": []
+							}
+						";
 			viewModel.InfoJson = JObject.Parse (json_str);
 
 			Observable.Interval (TimeSpan.FromMilliseconds (100)).Take (4).Subscribe (step => {
-				UnityEngine.Debug.LogFormat ("Simulate Match Begain: {0}", step);
+				UnityEngine.Debug.LogFormat ("Simulate Match Began: {0}", step);
 
 				if (step == 0) {
 					viewModel.ExecuteResetPlayerCount ();
@@ -100,6 +122,11 @@ namespace yigame.epoker
 					viewModel.ExecuteRootMatchBegan ();
 				}
 			});
+		}
+
+		public override void SeparatePile (CoreGameRootViewModel viewModel)
+		{
+			base.SeparatePile (viewModel);
 		}
 	}
 }

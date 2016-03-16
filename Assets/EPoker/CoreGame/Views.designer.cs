@@ -48,6 +48,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public uFrame.MVVM.ViewBase _Pile;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _MyId;
+        
         [UFToggleGroup("PlayerCollection")]
         [UnityEngine.HideInInspector()]
         public bool _BindPlayerCollection = true;
@@ -118,6 +123,7 @@ namespace yigame.epoker {
             coregamerootview.PlayerCount = this._PlayerCount;
             coregamerootview.InfoJson = this._InfoJson;
             coregamerootview.Pile = this._Pile == null ? null :  ViewService.FetchViewModel(this._Pile) as CardsPileViewModel;
+            coregamerootview.MyId = this._MyId;
         }
         
         public override void Bind() {
@@ -173,6 +179,10 @@ namespace yigame.epoker {
             CoreGameRoot.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteSeparatePile() {
+            CoreGameRoot.SeparatePile.OnNext(new SeparatePileCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.ResetPlayerCount.OnNext(command);
@@ -186,6 +196,11 @@ namespace yigame.epoker {
         public virtual void ExecuteSimulateMatchBegan(SimulateMatchBeganCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.SimulateMatchBegan.OnNext(command);
+        }
+        
+        public virtual void ExecuteSeparatePile(SeparatePileCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.SeparatePile.OnNext(command);
         }
     }
     
@@ -316,6 +331,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public String _DisplayName;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _IsSelf;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -354,6 +374,7 @@ namespace yigame.epoker {
             playerview.PosId = this._PosId;
             playerview.PlayerRoomIdentity = this._PlayerRoomIdentity;
             playerview.DisplayName = this._DisplayName;
+            playerview.IsSelf = this._IsSelf;
         }
         
         public override void Bind() {
