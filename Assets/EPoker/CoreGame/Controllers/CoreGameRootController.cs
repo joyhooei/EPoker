@@ -147,6 +147,8 @@ namespace yigame.epoker
 			});
 
 			UnityEngine.Debug.Log ("jInfo: " + JsonConvert.SerializeObject (jInfo, Formatting.Indented));
+
+			Publish (new UploadInfoJson ());
 		}
 
 		public override void DealPile (CoreGameRootViewModel viewModel)
