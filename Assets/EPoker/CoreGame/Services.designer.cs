@@ -17,6 +17,7 @@ namespace yigame.epoker {
     using uFrame.Kernel;
     using uFrame.IOC;
     using UniRx;
+    using yigame.epoker;
     using UnityEngine;
     
     
@@ -28,6 +29,24 @@ namespace yigame.epoker {
         /// </summary>
         public override void Setup() {
             base.Setup();
+            this.OnEvent<UploadInfoJson>().Subscribe(this.UploadInfoJsonHandler);
+            this.OnEvent<OnInfoJsonUpdate>().Subscribe(this.OnInfoJsonUpdateHandler);
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new UploadInfoJson())
+        /// </summary>
+        public virtual void UploadInfoJsonHandler(UploadInfoJson data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new OnInfoJsonUpdate())
+        /// </summary>
+        public virtual void OnInfoJsonUpdateHandler(OnInfoJsonUpdate data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
         }
     }
 }

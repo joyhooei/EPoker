@@ -37,5 +37,16 @@ namespace yigame.epoker
 
 			return card_info_list;
 		}
+
+		public override void UploadInfoJsonHandler (UploadInfoJson data)
+		{
+			base.UploadInfoJsonHandler (data);
+			// 将 CoreGameRoot InfoJson 数据上传房间属性
+		}
+
+		public override void OnInfoJsonUpdateHandler (OnInfoJsonUpdate data)
+		{
+			base.OnInfoJsonUpdateHandler (data);
+		}
 	}
 }
