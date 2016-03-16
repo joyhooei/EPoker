@@ -19,15 +19,11 @@ namespace yigame.epoker
     
 	public class PlayerView : PlayerViewBase
 	{
-		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
 		[Inject] public GameService GameService;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
-			// NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
-			// var vm = model as PlayerViewModel;
-			// This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
 		}
 
 		protected override void PreBind ()
@@ -38,9 +34,6 @@ namespace yigame.epoker
 		public override void Bind ()
 		{
 			base.Bind ();
-			// Use this.Player to access the viewmodel.
-			// Use this method to subscribe to the view-model.
-			// Any designer bindings are created in the base implementation.
 		}
 
 		#region Status Changed
@@ -67,13 +60,7 @@ namespace yigame.epoker
 			// room-master 进行随机牌生成,更新房间属性/触发房间事件
 
 			if (Player.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
-				List<CardInfo> card_info_list = GameService.GetDeck (true);
-				JObject jInfo = CoreGameRoot.InfoJson;
-
-				int get_card_first_idx = jInfo ["players"]
-					.Where (jp => jp ["get_card_first"].Value<bool> ())
-					.Select (jp => jp ["idx"].Value<int> ())
-					.Single ();
+				Player.CoreGameRoot.ExecuteCreateDeckToPile ();
 			}
 		}
 

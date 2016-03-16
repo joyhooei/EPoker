@@ -179,8 +179,12 @@ namespace yigame.epoker {
             CoreGameRoot.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand() { Sender = CoreGameRoot });
         }
         
-        public virtual void ExecuteSeparatePile() {
-            CoreGameRoot.SeparatePile.OnNext(new SeparatePileCommand() { Sender = CoreGameRoot });
+        public virtual void ExecuteCreateDeckToPile() {
+            CoreGameRoot.CreateDeckToPile.OnNext(new CreateDeckToPileCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteDealPile() {
+            CoreGameRoot.DealPile.OnNext(new DealPileCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
@@ -198,9 +202,14 @@ namespace yigame.epoker {
             CoreGameRoot.SimulateMatchBegan.OnNext(command);
         }
         
-        public virtual void ExecuteSeparatePile(SeparatePileCommand command) {
+        public virtual void ExecuteCreateDeckToPile(CreateDeckToPileCommand command) {
             command.Sender = CoreGameRoot;
-            CoreGameRoot.SeparatePile.OnNext(command);
+            CoreGameRoot.CreateDeckToPile.OnNext(command);
+        }
+        
+        public virtual void ExecuteDealPile(DealPileCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.DealPile.OnNext(command);
         }
     }
     

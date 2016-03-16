@@ -14,6 +14,7 @@ namespace yigame.epoker
 
 	public class CoreGameRootController : CoreGameRootControllerBase
 	{
+		[Inject] public GameService GameService;
 
 		public override void InitializeCoreGameRoot (CoreGameRootViewModel viewModel)
 		{
@@ -124,9 +125,33 @@ namespace yigame.epoker
 			});
 		}
 
-		public override void SeparatePile (CoreGameRootViewModel viewModel)
+		public override void CreateDeckToPile (CoreGameRootViewModel viewModel)
 		{
-			base.SeparatePile (viewModel);
+			base.CreateDeckToPile (viewModel);
+
+			List<CardInfo> card_info_list = this.GameService.GetDeck (true);
+			JObject jInfo = CoreGameRoot.InfoJson;
+//			jInfo ["pile_for_show"] = JArray.Parse (JsonConvert.SerializeObject (card_info_list.Select (ci => ci.ToString ())));
+
+
+			int get_card_first_idx = jInfo ["players"]
+				.Where (jp => jp ["get_card_first"].Value<bool> ())
+				.Select (jp => jp ["idx"].Value<int> ())
+				.Single ();
+
+			int i = get_card_first_idx;
+			card_info_list.ForEach (ci => {
+				JArray j_hand_cards = jInfo ["players"] [i] ["hand_cards"] as JArray;
+				j_hand_cards.Add (ci.ToString ());
+				i = (i + 1) % viewModel.PlayerCount;
+			});
+
+			UnityEngine.Debug.Log ("jInfo: " + JsonConvert.SerializeObject (jInfo, Formatting.Indented));
+		}
+
+		public override void DealPile (CoreGameRootViewModel viewModel)
+		{
+			base.DealPile (viewModel);
 		}
 	}
 }

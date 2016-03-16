@@ -45,7 +45,9 @@ namespace yigame.epoker {
         
         private Signal<SimulateMatchBeganCommand> _SimulateMatchBegan;
         
-        private Signal<SeparatePileCommand> _SeparatePile;
+        private Signal<CreateDeckToPileCommand> _CreateDeckToPile;
+        
+        private Signal<DealPileCommand> _DealPile;
         
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -195,12 +197,21 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual Signal<SeparatePileCommand> SeparatePile {
+        public virtual Signal<CreateDeckToPileCommand> CreateDeckToPile {
             get {
-                return _SeparatePile;
+                return _CreateDeckToPile;
             }
             set {
-                _SeparatePile = value;
+                _CreateDeckToPile = value;
+            }
+        }
+        
+        public virtual Signal<DealPileCommand> DealPile {
+            get {
+                return _DealPile;
+            }
+            set {
+                _DealPile = value;
             }
         }
         
@@ -209,7 +220,8 @@ namespace yigame.epoker {
             this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
             this.RootMatchBegan = new Signal<RootMatchBeganCommand>(this);
             this.SimulateMatchBegan = new Signal<SimulateMatchBeganCommand>(this);
-            this.SeparatePile = new Signal<SeparatePileCommand>(this);
+            this.CreateDeckToPile = new Signal<CreateDeckToPileCommand>(this);
+            this.DealPile = new Signal<DealPileCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _InfoJsonProperty = new P<Newtonsoft.Json.Linq.JObject>(this, "InfoJson");
@@ -231,8 +243,12 @@ namespace yigame.epoker {
             this.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand());
         }
         
-        public virtual void ExecuteSeparatePile() {
-            this.SeparatePile.OnNext(new SeparatePileCommand());
+        public virtual void ExecuteCreateDeckToPile() {
+            this.CreateDeckToPile.OnNext(new CreateDeckToPileCommand());
+        }
+        
+        public virtual void ExecuteDealPile() {
+            this.DealPile.OnNext(new DealPileCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -261,7 +277,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RootMatchBegan", RootMatchBegan) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("SimulateMatchBegan", SimulateMatchBegan) { ParameterType = typeof(void) });
-            list.Add(new ViewModelCommandInfo("SeparatePile", SeparatePile) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("CreateDeckToPile", CreateDeckToPile) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("DealPile", DealPile) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

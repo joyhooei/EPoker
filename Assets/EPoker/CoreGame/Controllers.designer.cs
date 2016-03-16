@@ -77,7 +77,8 @@ namespace yigame.epoker {
             viewModel.ResetPlayerCount.Action = this.ResetPlayerCountHandler;
             viewModel.RootMatchBegan.Action = this.RootMatchBeganHandler;
             viewModel.SimulateMatchBegan.Action = this.SimulateMatchBeganHandler;
-            viewModel.SeparatePile.Action = this.SeparatePileHandler;
+            viewModel.CreateDeckToPile.Action = this.CreateDeckToPileHandler;
+            viewModel.DealPile.Action = this.DealPileHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -95,7 +96,10 @@ namespace yigame.epoker {
         public virtual void SimulateMatchBegan(CoreGameRootViewModel viewModel) {
         }
         
-        public virtual void SeparatePile(CoreGameRootViewModel viewModel) {
+        public virtual void CreateDeckToPile(CoreGameRootViewModel viewModel) {
+        }
+        
+        public virtual void DealPile(CoreGameRootViewModel viewModel) {
         }
         
         public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
@@ -110,8 +114,12 @@ namespace yigame.epoker {
             this.SimulateMatchBegan(command.Sender as CoreGameRootViewModel);
         }
         
-        public virtual void SeparatePileHandler(SeparatePileCommand command) {
-            this.SeparatePile(command.Sender as CoreGameRootViewModel);
+        public virtual void CreateDeckToPileHandler(CreateDeckToPileCommand command) {
+            this.CreateDeckToPile(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void DealPileHandler(DealPileCommand command) {
+            this.DealPile(command.Sender as CoreGameRootViewModel);
         }
     }
     
