@@ -82,4 +82,40 @@ namespace yigame.epoker {
             }
         }
     }
+    
+    public class NetJoinOrCreateRoomBase : object {
+        
+        private String _RoomId;
+        
+        private Action<string> _SuccessCallback;
+        
+        private Action<string> _ErrorCallback;
+        
+        public String RoomId {
+            get {
+                return _RoomId;
+            }
+            set {
+                _RoomId = value;
+            }
+        }
+        
+        public Action<string> SuccessCallback {
+            get {
+                return _SuccessCallback;
+            }
+            set {
+                _SuccessCallback = value;
+            }
+        }
+        
+        public Action<string> ErrorCallback {
+            get {
+                return _ErrorCallback;
+            }
+            set {
+                _ErrorCallback = value;
+            }
+        }
+    }
 }

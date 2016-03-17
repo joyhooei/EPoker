@@ -32,6 +32,7 @@ namespace yigame.epoker {
             this.OnEvent<NetInit>().Subscribe(this.NetInitHandler);
             this.OnEvent<NetLogin>().Subscribe(this.NetLoginHandler);
             this.OnEvent<NetLogout>().Subscribe(this.NetLogoutHandler);
+            this.OnEvent<NetJoinOrCreateRoom>().Subscribe(this.NetJoinOrCreateRoomHandler);
         }
         
         /// <summary>
@@ -54,6 +55,14 @@ namespace yigame.epoker {
         // This method is executed when using this.Publish(new NetLogout())
         /// </summary>
         public virtual void NetLogoutHandler(NetLogout data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new NetJoinOrCreateRoom())
+        /// </summary>
+        public virtual void NetJoinOrCreateRoomHandler(NetJoinOrCreateRoom data) {
             // Process the commands information.  Also, you can publish new events by using the line below.
             // this.Publish(new AnotherEvent())
         }

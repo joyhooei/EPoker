@@ -23,6 +23,10 @@ namespace yigame.epoker
 		public override void EnterRoom (LobbyPanelViewModel viewModel)
 		{
 			base.EnterRoom (viewModel);
+
+			Publish (new NetJoinOrCreateRoom () {
+				RoomId = viewModel.RoomId
+			});
 		}
 
 		public override void QuitLobby (LobbyPanelViewModel viewModel)

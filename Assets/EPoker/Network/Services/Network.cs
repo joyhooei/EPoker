@@ -161,6 +161,12 @@ namespace yigame.epoker
 
 		}
 
+		public override void NetJoinOrCreateRoomHandler (NetJoinOrCreateRoom data)
+		{
+			base.NetJoinOrCreateRoomHandler (data);
+			Client.OpJoinOrCreateRoom (data.RoomId, 0, null);
+		}
+
 		public void RefreshNetInfo (string netStatusDesc)
 		{
 			DebugInfoPanel.Text = string.Format ("Network[{0}]: {1}", DateTime.Now, netStatusDesc);
