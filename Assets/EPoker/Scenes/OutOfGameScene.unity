@@ -577,6 +577,7 @@ MonoBehaviour:
   _BindPanelOut: 1
   _BindQuitRoom: 1
   _QuitRoomButton: {fileID: 1931671935}
+  _BindRefreshRoom: 1
   PanelTransform: {fileID: 887471723}
 --- !u!1 &613279827
 GameObject:
@@ -1105,7 +1106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &887471723
 RectTransform:
   m_ObjectHideFlags: 0

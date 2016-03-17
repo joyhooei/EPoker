@@ -55,6 +55,9 @@ namespace yigame.epoker {
     public partial class QuitRoomCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class RefreshRoomCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class OpenClosePanelCommand : ViewModelCommand {
         
         private List<Type> _OpenPanels;

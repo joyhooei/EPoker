@@ -12,6 +12,7 @@ namespace yigame.epoker
 	using PlayFab;
 	using PlayFab.ClientModels;
 	using Newtonsoft.Json;
+	using ExitGames.Client.Photon;
 	using ExitGames.Client.Photon.LoadBalancing;
 
 	public class Network : NetworkBase
@@ -54,7 +55,7 @@ namespace yigame.epoker
 			Application.runInBackground = true;
 			CustomTypes.Register ();
 
-			Client = new EPokerClient ();
+			Client = new EPokerClient (this);
 			Client.AppId = AppId;
 			Client.AppVersion = AppVersion;
 

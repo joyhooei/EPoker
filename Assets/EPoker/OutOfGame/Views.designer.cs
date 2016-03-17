@@ -489,6 +489,10 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_QuitRoombutton")]
         protected UnityEngine.UI.Button _QuitRoomButton;
         
+        [UFToggleGroup("RefreshRoom")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRefreshRoom = true;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -522,15 +526,30 @@ namespace yigame.epoker {
             if (_BindQuitRoom) {
                 this.BindButtonToCommand(_QuitRoomButton, this.RoomPanel.QuitRoom);
             }
+            if (_BindRefreshRoom) {
+                this.BindCommandExecuted(this.RoomPanel.RefreshRoom, this.RefreshRoomExecuted);
+            }
+        }
+        
+        public virtual void RefreshRoomExecuted(RefreshRoomCommand command) {
         }
         
         public virtual void ExecuteQuitRoom() {
             RoomPanel.QuitRoom.OnNext(new QuitRoomCommand() { Sender = RoomPanel });
         }
         
+        public virtual void ExecuteRefreshRoom() {
+            RoomPanel.RefreshRoom.OnNext(new RefreshRoomCommand() { Sender = RoomPanel });
+        }
+        
         public virtual void ExecuteQuitRoom(QuitRoomCommand command) {
             command.Sender = RoomPanel;
             RoomPanel.QuitRoom.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshRoom(RefreshRoomCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.RefreshRoom.OnNext(command);
         }
     }
     

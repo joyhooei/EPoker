@@ -11,8 +11,8 @@ namespace yigame.epoker
 	using uFrame.Serialization;
 	using UniRx;
 	using UnityEngine;
+	using Newtonsoft.Json;
 
-    
 	public class RoomPanelView : RoomPanelViewBase
 	{
 
@@ -37,6 +37,11 @@ namespace yigame.epoker
 		public override Transform GetPanelRoot ()
 		{
 			return PanelTransform;
+		}
+
+		public override void RefreshRoomExecuted (RefreshRoomCommand command)
+		{
+			Debug.LogFormat ("RefreshRoomExecuted: {0}", JsonConvert.SerializeObject (RoomPanel.Players));
 		}
 	}
 }

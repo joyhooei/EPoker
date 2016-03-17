@@ -481,6 +481,7 @@ namespace yigame.epoker {
         public virtual void InitializeRoomPanel(RoomPanelViewModel viewModel) {
             // This is called when a RoomPanelViewModel is created
             viewModel.QuitRoom.Action = this.QuitRoomHandler;
+            viewModel.RefreshRoom.Action = this.RefreshRoomHandler;
             RoomPanelViewModelManager.Add(viewModel);
         }
         
@@ -492,8 +493,15 @@ namespace yigame.epoker {
         public virtual void QuitRoom(RoomPanelViewModel viewModel) {
         }
         
+        public virtual void RefreshRoom(RoomPanelViewModel viewModel) {
+        }
+        
         public virtual void QuitRoomHandler(QuitRoomCommand command) {
             this.QuitRoom(command.Sender as RoomPanelViewModel);
+        }
+        
+        public virtual void RefreshRoomHandler(RefreshRoomCommand command) {
+            this.RefreshRoom(command.Sender as RoomPanelViewModel);
         }
     }
     

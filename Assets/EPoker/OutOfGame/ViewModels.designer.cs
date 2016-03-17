@@ -518,10 +518,23 @@ namespace yigame.epoker {
     
     public partial class RoomPanelViewModelBase : PanelViewModel {
         
+        private ModelCollection<String> _Players;
+        
         private Signal<QuitRoomCommand> _QuitRoom;
+        
+        private Signal<RefreshRoomCommand> _RefreshRoom;
         
         public RoomPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
+        }
+        
+        public virtual ModelCollection<String> Players {
+            get {
+                return _Players;
+            }
+            set {
+                _Players = value;
+            }
         }
         
         public virtual Signal<QuitRoomCommand> QuitRoom {
@@ -533,13 +546,28 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RefreshRoomCommand> RefreshRoom {
+            get {
+                return _RefreshRoom;
+            }
+            set {
+                _RefreshRoom = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.QuitRoom = new Signal<QuitRoomCommand>(this);
+            this.RefreshRoom = new Signal<RefreshRoomCommand>(this);
+            _Players = new ModelCollection<String>(this, "Players");
         }
         
         public virtual void ExecuteQuitRoom() {
             this.QuitRoom.OnNext(new QuitRoomCommand());
+        }
+        
+        public virtual void ExecuteRefreshRoom() {
+            this.RefreshRoom.OnNext(new RefreshRoomCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -553,10 +581,12 @@ namespace yigame.epoker {
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("QuitRoom", QuitRoom) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshRoom", RefreshRoom) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
             base.FillProperties(list);
+            list.Add(new ViewModelPropertyInfo(_Players, false, true, false, false));
         }
     }
     
