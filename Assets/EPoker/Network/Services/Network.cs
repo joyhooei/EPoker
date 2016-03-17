@@ -28,7 +28,7 @@ namespace yigame.epoker
 
 		// photon
 		public string AppId = "60090e03-9030-4321-b497-270418f42a37";
-		public string AppVersion = "0.1";
+		public string AppVersion = "1.0";
 		public ClientState ClientState;
 
 		public EPokerClient Client;
@@ -48,11 +48,18 @@ namespace yigame.epoker
 			PlayFab.PlayFabSettings.TitleId = TitleId;
 			RefreshNetInfo ("请输入 CustomId 进行登录");
 
+			Application.runInBackground = true;
+			CustomTypes.Register ();
+
 			Client = new EPokerClient ();
 			Client.AppId = AppId;
 			Client.AppVersion = AppVersion;
 
 			Client.OnStateChangeAction += this.OnStateChanged;
+
+			Observable.EveryUpdate ().Subscribe (_ => {
+				Client.Service ();
+			}).AddTo (this.gameObject);
 		}
 
 		public override void NetLoginHandler (NetLogin data)
@@ -123,7 +130,7 @@ namespace yigame.epoker
 					WaitPhotonStateDisposable.Dispose ();
 				}
 				WaitPhotonStateDisposable = Observable.Interval (TimeSpan.FromMilliseconds (500f)).Subscribe (_ => {
-					if (Client.State == ClientState.ConnectedToMaster) {
+					if (Client.State == ClientState.JoinedLobby) {
 						WaitPhotonStateDisposable.Dispose ();
 						WaitPhotonStateDisposable = null;
 
@@ -157,6 +164,64 @@ namespace yigame.epoker
 		{
 			Debug.Log ("photon state changed: " + state.ToString ());
 			ClientState = state;
+			switch (state) {
+			case ClientState.Uninitialized:
+				break;
+			case ClientState.ConnectingToMasterserver:
+				RefreshNetInfo ("正在连接主服务器...");
+				break;
+			case ClientState.ConnectedToMaster:
+				RefreshNetInfo ("已连接主服务器");
+				break;
+			case ClientState.Queued:
+				break;
+			case ClientState.Authenticated:
+				RefreshNetInfo ("已授权");
+				break;
+			case ClientState.JoinedLobby:
+				RefreshNetInfo ("已连接大厅");
+				break;
+			case ClientState.DisconnectingFromMasterserver:
+				RefreshNetInfo ("正在从主服务器断开...");
+				break;
+			case ClientState.ConnectingToGameserver:
+				RefreshNetInfo ("正在连接游戏服务器...");
+				break;
+			case ClientState.ConnectedToGameserver:
+				RefreshNetInfo ("已连接游戏服务器");
+				break;
+			case ClientState.Joining:
+				break;
+			case ClientState.Joined:
+				break;
+			case ClientState.Leaving:
+				break;
+			case ClientState.Left:
+				break;
+			case ClientState.DisconnectingFromGameserver:
+				RefreshNetInfo ("正在从游戏服务器断开...");
+				break;
+			case ClientState.QueuedComingFromGameserver:
+				break;
+			case ClientState.Disconnecting:
+				break;
+			case ClientState.Disconnected:
+				break;
+			case ClientState.ConnectingToNameServer:
+				RefreshNetInfo ("正在连接名字服务器...");
+				break;
+			case ClientState.ConnectedToNameServer:
+				RefreshNetInfo ("已连接名字服务器");
+				break;
+			case ClientState.Authenticating:
+				RefreshNetInfo ("正在授权...");
+				break;
+			case ClientState.DisconnectingFromNameServer:
+				RefreshNetInfo ("正在从名字服务器断开...");
+				break;
+			default:
+				throw new ArgumentOutOfRangeException ();
+			}
 		}
 
 		public void ConnectToMasterServer (string id, string ticket)

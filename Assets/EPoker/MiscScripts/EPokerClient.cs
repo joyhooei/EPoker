@@ -1,7 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
-using ExitGames.Client.Photon.LoadBalancing;
-
-public class EPokerClient : LoadBalancingClient
+﻿namespace yigame.epoker
 {
+	using UnityEngine;
+	using System.Collections;
+	using System.Collections.Generic;
+	using ExitGames.Client.Photon.LoadBalancing;
+	using Newtonsoft.Json;
+
+	public class EPokerClient : LoadBalancingClient
+	{
+	}
 }
