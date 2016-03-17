@@ -29,13 +29,15 @@ namespace yigame.epoker {
         
         private P<CanvasRootViewModel> _CanvasRootProperty;
         
+        private Signal<InitGameCommand> _InitGame;
+        
         private Signal<DoLoginCommand> _DoLogin;
+        
+        private Signal<DoLogoutCommand> _DoLogout;
         
         private Signal<DoEnterRoomCommand> _DoEnterRoom;
         
         private Signal<DoQuitRoomCommand> _DoQuitRoom;
-        
-        private Signal<InitGameCommand> _InitGame;
         
         public OutOfGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -77,12 +79,30 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<InitGameCommand> InitGame {
+            get {
+                return _InitGame;
+            }
+            set {
+                _InitGame = value;
+            }
+        }
+        
         public virtual Signal<DoLoginCommand> DoLogin {
             get {
                 return _DoLogin;
             }
             set {
                 _DoLogin = value;
+            }
+        }
+        
+        public virtual Signal<DoLogoutCommand> DoLogout {
+            get {
+                return _DoLogout;
+            }
+            set {
+                _DoLogout = value;
             }
         }
         
@@ -104,30 +124,31 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual Signal<InitGameCommand> InitGame {
-            get {
-                return _InitGame;
-            }
-            set {
-                _InitGame = value;
-            }
-        }
-        
         public override void Bind() {
             base.Bind();
+            this.InitGame = new Signal<InitGameCommand>(this);
             this.DoLogin = new Signal<DoLoginCommand>(this);
+            this.DoLogout = new Signal<DoLogoutCommand>(this);
             this.DoEnterRoom = new Signal<DoEnterRoomCommand>(this);
             this.DoQuitRoom = new Signal<DoQuitRoomCommand>(this);
-            this.InitGame = new Signal<InitGameCommand>(this);
             _CanvasRootProperty = new P<CanvasRootViewModel>(this, "CanvasRoot");
             _UIFlowStatusProperty = new UIFlowSM(this, "UIFlowStatus");
             DoLogin.Subscribe(_ => UIFlowStatusProperty.Login.OnNext(true));
+            DoLogout.Subscribe(_ => UIFlowStatusProperty.Logout.OnNext(true));
             DoEnterRoom.Subscribe(_ => UIFlowStatusProperty.EnterRoom.OnNext(true));
             DoQuitRoom.Subscribe(_ => UIFlowStatusProperty.QuitRoom.OnNext(true));
         }
         
+        public virtual void ExecuteInitGame() {
+            this.InitGame.OnNext(new InitGameCommand());
+        }
+        
         public virtual void ExecuteDoLogin() {
             this.DoLogin.OnNext(new DoLoginCommand());
+        }
+        
+        public virtual void ExecuteDoLogout() {
+            this.DoLogout.OnNext(new DoLogoutCommand());
         }
         
         public virtual void ExecuteDoEnterRoom() {
@@ -136,10 +157,6 @@ namespace yigame.epoker {
         
         public virtual void ExecuteDoQuitRoom() {
             this.DoQuitRoom.OnNext(new DoQuitRoomCommand());
-        }
-        
-        public virtual void ExecuteInitGame() {
-            this.InitGame.OnNext(new InitGameCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -156,10 +173,11 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("InitGame", InitGame) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoLogin", DoLogin) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("DoLogout", DoLogout) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoEnterRoom", DoEnterRoom) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoQuitRoom", DoQuitRoom) { ParameterType = typeof(void) });
-            list.Add(new ViewModelCommandInfo("InitGame", InitGame) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -395,6 +413,8 @@ namespace yigame.epoker {
         
         private Signal<EnterRoomCommand> _EnterRoom;
         
+        private Signal<QuitLobbyCommand> _QuitLobby;
+        
         public LobbyPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -426,14 +446,28 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<QuitLobbyCommand> QuitLobby {
+            get {
+                return _QuitLobby;
+            }
+            set {
+                _QuitLobby = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.EnterRoom = new Signal<EnterRoomCommand>(this);
+            this.QuitLobby = new Signal<QuitLobbyCommand>(this);
             _RoomIdProperty = new P<String>(this, "RoomId");
         }
         
         public virtual void ExecuteEnterRoom() {
             this.EnterRoom.OnNext(new EnterRoomCommand());
+        }
+        
+        public virtual void ExecuteQuitLobby() {
+            this.QuitLobby.OnNext(new QuitLobbyCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -447,6 +481,7 @@ namespace yigame.epoker {
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("EnterRoom", EnterRoom) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("QuitLobby", QuitLobby) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

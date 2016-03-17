@@ -86,10 +86,11 @@ namespace yigame.epoker {
         
         public virtual void InitializeOutOfGameRoot(OutOfGameRootViewModel viewModel) {
             // This is called when a OutOfGameRootViewModel is created
+            viewModel.InitGame.Action = this.InitGameHandler;
             viewModel.DoLogin.Action = this.DoLoginHandler;
+            viewModel.DoLogout.Action = this.DoLogoutHandler;
             viewModel.DoEnterRoom.Action = this.DoEnterRoomHandler;
             viewModel.DoQuitRoom.Action = this.DoQuitRoomHandler;
-            viewModel.InitGame.Action = this.InitGameHandler;
             OutOfGameRootViewModelManager.Add(viewModel);
         }
         
@@ -98,7 +99,13 @@ namespace yigame.epoker {
             OutOfGameRootViewModelManager.Remove(viewModel);
         }
         
+        public virtual void InitGame(OutOfGameRootViewModel viewModel) {
+        }
+        
         public virtual void DoLogin(OutOfGameRootViewModel viewModel) {
+        }
+        
+        public virtual void DoLogout(OutOfGameRootViewModel viewModel) {
         }
         
         public virtual void DoEnterRoom(OutOfGameRootViewModel viewModel) {
@@ -107,11 +114,16 @@ namespace yigame.epoker {
         public virtual void DoQuitRoom(OutOfGameRootViewModel viewModel) {
         }
         
-        public virtual void InitGame(OutOfGameRootViewModel viewModel) {
+        public virtual void InitGameHandler(InitGameCommand command) {
+            this.InitGame(command.Sender as OutOfGameRootViewModel);
         }
         
         public virtual void DoLoginHandler(DoLoginCommand command) {
             this.DoLogin(command.Sender as OutOfGameRootViewModel);
+        }
+        
+        public virtual void DoLogoutHandler(DoLogoutCommand command) {
+            this.DoLogout(command.Sender as OutOfGameRootViewModel);
         }
         
         public virtual void DoEnterRoomHandler(DoEnterRoomCommand command) {
@@ -120,10 +132,6 @@ namespace yigame.epoker {
         
         public virtual void DoQuitRoomHandler(DoQuitRoomCommand command) {
             this.DoQuitRoom(command.Sender as OutOfGameRootViewModel);
-        }
-        
-        public virtual void InitGameHandler(InitGameCommand command) {
-            this.InitGame(command.Sender as OutOfGameRootViewModel);
         }
     }
     
@@ -399,6 +407,7 @@ namespace yigame.epoker {
         public virtual void InitializeLobbyPanel(LobbyPanelViewModel viewModel) {
             // This is called when a LobbyPanelViewModel is created
             viewModel.EnterRoom.Action = this.EnterRoomHandler;
+            viewModel.QuitLobby.Action = this.QuitLobbyHandler;
             LobbyPanelViewModelManager.Add(viewModel);
         }
         
@@ -410,8 +419,15 @@ namespace yigame.epoker {
         public virtual void EnterRoom(LobbyPanelViewModel viewModel) {
         }
         
+        public virtual void QuitLobby(LobbyPanelViewModel viewModel) {
+        }
+        
         public virtual void EnterRoomHandler(EnterRoomCommand command) {
             this.EnterRoom(command.Sender as LobbyPanelViewModel);
+        }
+        
+        public virtual void QuitLobbyHandler(QuitLobbyCommand command) {
+            this.QuitLobby(command.Sender as LobbyPanelViewModel);
         }
     }
     

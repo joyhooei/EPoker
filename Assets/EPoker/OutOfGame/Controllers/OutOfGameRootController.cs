@@ -40,5 +40,10 @@ namespace yigame.epoker
 
 			Publish (new NetInit ());
 		}
+
+		public override void DoLogout (OutOfGameRootViewModel viewModel)
+		{
+			base.DoLogout (viewModel);
+		}
 	}
 }

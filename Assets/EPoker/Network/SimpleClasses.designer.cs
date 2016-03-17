@@ -57,4 +57,29 @@ namespace yigame.epoker {
     
     public class NetInitBase : object {
     }
+    
+    public class NetLogoutBase : object {
+        
+        private Action<string> _SuccessCallback;
+        
+        private Action<string> _ErrorCallback;
+        
+        public Action<string> SuccessCallback {
+            get {
+                return _SuccessCallback;
+            }
+            set {
+                _SuccessCallback = value;
+            }
+        }
+        
+        public Action<string> ErrorCallback {
+            get {
+                return _ErrorCallback;
+            }
+            set {
+                _ErrorCallback = value;
+            }
+        }
+    }
 }

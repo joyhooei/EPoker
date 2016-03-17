@@ -98,8 +98,16 @@ namespace yigame.epoker {
         public virtual void OnUIRoom() {
         }
         
+        public virtual void ExecuteInitGame() {
+            OutOfGameRoot.InitGame.OnNext(new InitGameCommand() { Sender = OutOfGameRoot });
+        }
+        
         public virtual void ExecuteDoLogin() {
             OutOfGameRoot.DoLogin.OnNext(new DoLoginCommand() { Sender = OutOfGameRoot });
+        }
+        
+        public virtual void ExecuteDoLogout() {
+            OutOfGameRoot.DoLogout.OnNext(new DoLogoutCommand() { Sender = OutOfGameRoot });
         }
         
         public virtual void ExecuteDoEnterRoom() {
@@ -110,13 +118,19 @@ namespace yigame.epoker {
             OutOfGameRoot.DoQuitRoom.OnNext(new DoQuitRoomCommand() { Sender = OutOfGameRoot });
         }
         
-        public virtual void ExecuteInitGame() {
-            OutOfGameRoot.InitGame.OnNext(new InitGameCommand() { Sender = OutOfGameRoot });
+        public virtual void ExecuteInitGame(InitGameCommand command) {
+            command.Sender = OutOfGameRoot;
+            OutOfGameRoot.InitGame.OnNext(command);
         }
         
         public virtual void ExecuteDoLogin(DoLoginCommand command) {
             command.Sender = OutOfGameRoot;
             OutOfGameRoot.DoLogin.OnNext(command);
+        }
+        
+        public virtual void ExecuteDoLogout(DoLogoutCommand command) {
+            command.Sender = OutOfGameRoot;
+            OutOfGameRoot.DoLogout.OnNext(command);
         }
         
         public virtual void ExecuteDoEnterRoom(DoEnterRoomCommand command) {
@@ -127,11 +141,6 @@ namespace yigame.epoker {
         public virtual void ExecuteDoQuitRoom(DoQuitRoomCommand command) {
             command.Sender = OutOfGameRoot;
             OutOfGameRoot.DoQuitRoom.OnNext(command);
-        }
-        
-        public virtual void ExecuteInitGame(InitGameCommand command) {
-            command.Sender = OutOfGameRoot;
-            OutOfGameRoot.InitGame.OnNext(command);
         }
     }
     
@@ -387,6 +396,16 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_EnterRoombutton")]
         protected UnityEngine.UI.Button _EnterRoomButton;
         
+        [UFToggleGroup("QuitLobby")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindQuitLobby = true;
+        
+        [UFGroup("QuitLobby")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_QuitLobbybutton")]
+        protected UnityEngine.UI.Button _QuitLobbyButton;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -425,15 +444,27 @@ namespace yigame.epoker {
             if (_BindEnterRoom) {
                 this.BindButtonToCommand(_EnterRoomButton, this.LobbyPanel.EnterRoom);
             }
+            if (_BindQuitLobby) {
+                this.BindButtonToCommand(_QuitLobbyButton, this.LobbyPanel.QuitLobby);
+            }
         }
         
         public virtual void ExecuteEnterRoom() {
             LobbyPanel.EnterRoom.OnNext(new EnterRoomCommand() { Sender = LobbyPanel });
         }
         
+        public virtual void ExecuteQuitLobby() {
+            LobbyPanel.QuitLobby.OnNext(new QuitLobbyCommand() { Sender = LobbyPanel });
+        }
+        
         public virtual void ExecuteEnterRoom(EnterRoomCommand command) {
             command.Sender = LobbyPanel;
             LobbyPanel.EnterRoom.OnNext(command);
+        }
+        
+        public virtual void ExecuteQuitLobby(QuitLobbyCommand command) {
+            command.Sender = LobbyPanel;
+            LobbyPanel.QuitLobby.OnNext(command);
         }
     }
     

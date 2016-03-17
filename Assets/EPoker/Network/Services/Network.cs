@@ -147,6 +147,20 @@ namespace yigame.epoker
 
 		}
 
+		public override void NetLogoutHandler (NetLogout data)
+		{
+			base.NetLogoutHandler (data);
+
+			Client.Disconnect ();
+
+			Observable.Interval (TimeSpan.FromMilliseconds (500f)).Subscribe (_ => {
+				if (Client.State == ClientState.Disconnected) {
+					data.SuccessCallback.Invoke (null);
+				}
+			}).AddTo (this.gameObject);
+
+		}
+
 		public void RefreshNetInfo (string netStatusDesc)
 		{
 			DebugInfoPanel.Text = string.Format ("Network[{0}]: {1}", DateTime.Now, netStatusDesc);

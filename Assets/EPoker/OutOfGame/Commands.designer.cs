@@ -19,16 +19,19 @@ namespace yigame.epoker {
     using UnityEngine;
     
     
+    public partial class InitGameCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class DoLoginCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class DoLogoutCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class DoEnterRoomCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class DoQuitRoomCommand : uFrame.MVVM.ViewModelCommand {
-    }
-    
-    public partial class InitGameCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class PanelInCommand : uFrame.MVVM.ViewModelCommand {
@@ -41,6 +44,9 @@ namespace yigame.epoker {
     }
     
     public partial class EnterRoomCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class QuitLobbyCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class QuitRoomCommand : uFrame.MVVM.ViewModelCommand {

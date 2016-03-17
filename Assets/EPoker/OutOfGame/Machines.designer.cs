@@ -20,6 +20,8 @@ namespace yigame.epoker {
         
         private Invert.StateMachine.StateMachineTrigger _Login;
         
+        private Invert.StateMachine.StateMachineTrigger _Logout;
+        
         private Invert.StateMachine.StateMachineTrigger _EnterRoom;
         
         private Invert.StateMachine.StateMachineTrigger _QuitRoom;
@@ -53,6 +55,18 @@ namespace yigame.epoker {
             }
             set {
                 _Login = value;
+            }
+        }
+        
+        public virtual Invert.StateMachine.StateMachineTrigger Logout {
+            get {
+                if (this._Logout == null) {
+                    this._Logout = new StateMachineTrigger(this , "Logout");
+                }
+                return _Logout;
+            }
+            set {
+                _Logout = value;
             }
         }
         
@@ -123,8 +137,11 @@ namespace yigame.epoker {
             UILogin.AddTrigger(Login, UILogin.Login);
             UILogin.StateMachine = this;
             states.Add(UILogin);
+            UILobby.Logout = new StateTransition("Logout", UILobby, UILogin);
+            Transitions.Add(UILobby.Logout);
             UILobby.EnterRoom = new StateTransition("EnterRoom", UILobby, UIRoom);
             Transitions.Add(UILobby.EnterRoom);
+            UILobby.AddTrigger(Logout, UILobby.Logout);
             UILobby.AddTrigger(EnterRoom, UILobby.EnterRoom);
             UILobby.StateMachine = this;
             states.Add(UILobby);
@@ -162,7 +179,18 @@ namespace yigame.epoker {
     
     public class UILobby : Invert.StateMachine.State {
         
+        private Invert.StateMachine.StateTransition _Logout;
+        
         private Invert.StateMachine.StateTransition _EnterRoom;
+        
+        public Invert.StateMachine.StateTransition Logout {
+            get {
+                return _Logout;
+            }
+            set {
+                _Logout = value;
+            }
+        }
         
         public Invert.StateMachine.StateTransition EnterRoom {
             get {
@@ -177,6 +205,10 @@ namespace yigame.epoker {
             get {
                 return "UILobby";
             }
+        }
+        
+        public virtual void LogoutTransition() {
+            this.Transition(this.Logout);
         }
         
         public virtual void EnterRoomTransition() {
