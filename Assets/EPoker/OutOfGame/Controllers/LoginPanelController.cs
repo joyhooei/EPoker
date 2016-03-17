@@ -13,7 +13,7 @@ namespace yigame.epoker
     
 	public class LoginPanelController : LoginPanelControllerBase
 	{
-		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
+//		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
 
 		public override void InitializeLoginPanel (LoginPanelViewModel viewModel)
 		{

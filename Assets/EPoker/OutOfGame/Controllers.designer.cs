@@ -91,6 +91,7 @@ namespace yigame.epoker {
             viewModel.DoLogout.Action = this.DoLogoutHandler;
             viewModel.DoEnterRoom.Action = this.DoEnterRoomHandler;
             viewModel.DoQuitRoom.Action = this.DoQuitRoomHandler;
+            viewModel.DoDisconnect.Action = this.DoDisconnectHandler;
             OutOfGameRootViewModelManager.Add(viewModel);
         }
         
@@ -114,6 +115,9 @@ namespace yigame.epoker {
         public virtual void DoQuitRoom(OutOfGameRootViewModel viewModel) {
         }
         
+        public virtual void DoDisconnect(OutOfGameRootViewModel viewModel) {
+        }
+        
         public virtual void InitGameHandler(InitGameCommand command) {
             this.InitGame(command.Sender as OutOfGameRootViewModel);
         }
@@ -132,6 +136,10 @@ namespace yigame.epoker {
         
         public virtual void DoQuitRoomHandler(DoQuitRoomCommand command) {
             this.DoQuitRoom(command.Sender as OutOfGameRootViewModel);
+        }
+        
+        public virtual void DoDisconnectHandler(DoDisconnectCommand command) {
+            this.DoDisconnect(command.Sender as OutOfGameRootViewModel);
         }
     }
     

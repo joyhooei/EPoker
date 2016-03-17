@@ -39,6 +39,8 @@ namespace yigame.epoker {
         
         private Signal<DoQuitRoomCommand> _DoQuitRoom;
         
+        private Signal<DoDisconnectCommand> _DoDisconnect;
+        
         public OutOfGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -124,6 +126,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<DoDisconnectCommand> DoDisconnect {
+            get {
+                return _DoDisconnect;
+            }
+            set {
+                _DoDisconnect = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.InitGame = new Signal<InitGameCommand>(this);
@@ -131,12 +142,14 @@ namespace yigame.epoker {
             this.DoLogout = new Signal<DoLogoutCommand>(this);
             this.DoEnterRoom = new Signal<DoEnterRoomCommand>(this);
             this.DoQuitRoom = new Signal<DoQuitRoomCommand>(this);
+            this.DoDisconnect = new Signal<DoDisconnectCommand>(this);
             _CanvasRootProperty = new P<CanvasRootViewModel>(this, "CanvasRoot");
             _UIFlowStatusProperty = new UIFlowSM(this, "UIFlowStatus");
             DoLogin.Subscribe(_ => UIFlowStatusProperty.Login.OnNext(true));
             DoLogout.Subscribe(_ => UIFlowStatusProperty.Logout.OnNext(true));
             DoEnterRoom.Subscribe(_ => UIFlowStatusProperty.EnterRoom.OnNext(true));
             DoQuitRoom.Subscribe(_ => UIFlowStatusProperty.QuitRoom.OnNext(true));
+            DoDisconnect.Subscribe(_ => UIFlowStatusProperty.Disconnect.OnNext(true));
         }
         
         public virtual void ExecuteInitGame() {
@@ -159,6 +172,10 @@ namespace yigame.epoker {
             this.DoQuitRoom.OnNext(new DoQuitRoomCommand());
         }
         
+        public virtual void ExecuteDoDisconnect() {
+            this.DoDisconnect.OnNext(new DoDisconnectCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.CanvasRoot = stream.DeserializeObject<CanvasRootViewModel>("CanvasRoot");;
@@ -178,6 +195,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("DoLogout", DoLogout) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoEnterRoom", DoEnterRoom) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DoQuitRoom", DoQuitRoom) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("DoDisconnect", DoDisconnect) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

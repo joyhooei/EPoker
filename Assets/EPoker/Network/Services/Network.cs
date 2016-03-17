@@ -17,6 +17,7 @@ namespace yigame.epoker
 	public class Network : NetworkBase
 	{
 		[Inject ("DebugInfoPanel")] public DebugInfoPanelViewModel DebugInfoPanel;
+		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
 
 		#region 成员变量
 
@@ -29,7 +30,7 @@ namespace yigame.epoker
 		// photon
 		public string AppId = "60090e03-9030-4321-b497-270418f42a37";
 		public string AppVersion = "1.0";
-		public ClientState ClientState;
+		public ReactiveProperty<ClientState> ClientStateRP;
 
 		public EPokerClient Client;
 
@@ -46,6 +47,8 @@ namespace yigame.epoker
 		{
 			base.NetInitHandler (data);
 			PlayFab.PlayFabSettings.TitleId = TitleId;
+			ClientStateRP = new ReactiveProperty<ClientState> (ClientState.Uninitialized);
+
 			RefreshNetInfo ("请输入 CustomId 进行登录");
 
 			Application.runInBackground = true;
@@ -66,52 +69,60 @@ namespace yigame.epoker
 		{
 			base.NetLoginHandler (data);
 
-			RefreshNetInfo ("正在登录PlayFab...");
-			LoginWithCustomIDRequest request = new LoginWithCustomIDRequest () {
-				TitleId = TitleId,
-				CreateAccount = true,
-				CustomId = data.CustomID
-			};
-			PlayFabClientAPI.LoginWithCustomID (request, loginResult => {
+			if (Client.State == ClientState.Uninitialized) {
 
-				PlayFabId = loginResult.PlayFabId;
-				CustomId = data.CustomID;
+				RefreshNetInfo ("正在登录PlayFab...");
+				Client.State = ClientState.Queued;
 
-				if (loginResult.NewlyCreated) {
-					RefreshNetInfo ("登录成功,正在为新用户设置名称...");
+				LoginWithCustomIDRequest request = new LoginWithCustomIDRequest () {
+					TitleId = TitleId,
+					CreateAccount = true,
+					CustomId = data.CustomID
+				};
+				PlayFabClientAPI.LoginWithCustomID (request, loginResult => {
 
-					UpdateUserTitleDisplayNameRequest request2 = new UpdateUserTitleDisplayNameRequest () {
-						DisplayName = data.CustomID
-					};
-					PlayFabClientAPI.UpdateUserTitleDisplayName (request2, result2 => {
-						DisplayName = data.CustomID;
-						RefreshUserInfo ();
-						// PlayFab 部分登录及初始化完毕
-						OnPlayFabSuccessLogin (data.SuccessCallback, data.ErrorCallback, loginResult);
-					}, error2 => {
-						ResetUserInfo ();
-						data.ErrorCallback.Invoke (JsonConvert.SerializeObject (error2));
-					});
-				} else {
-					RefreshNetInfo ("登录成功,正在同步用户信息...");
+					PlayFabId = loginResult.PlayFabId;
+					CustomId = data.CustomID;
 
-					GetUserCombinedInfoRequest r1 = new GetUserCombinedInfoRequest () {
-						PlayFabId = PlayFabId
-					};
-					PlayFabClientAPI.GetUserCombinedInfo (r1, rs1 => {
-						DisplayName = rs1.AccountInfo.TitleInfo.DisplayName;
-						RefreshUserInfo ();
-						// PlayFab 部分登录及初始化完毕
-						OnPlayFabSuccessLogin (data.SuccessCallback, data.ErrorCallback, loginResult);
-					}, re1 => {
-						ResetUserInfo ();
-						data.ErrorCallback.Invoke (JsonConvert.SerializeObject (re1));
-					});
-				}
-			}, error => {
-				ResetUserInfo ();
-				data.ErrorCallback.Invoke (JsonConvert.SerializeObject (error));
-			});
+					if (loginResult.NewlyCreated) {
+						RefreshNetInfo ("登录成功,正在为新用户设置名称...");
+
+						UpdateUserTitleDisplayNameRequest request2 = new UpdateUserTitleDisplayNameRequest () {
+							DisplayName = data.CustomID
+						};
+						PlayFabClientAPI.UpdateUserTitleDisplayName (request2, result2 => {
+							DisplayName = data.CustomID;
+							RefreshUserInfo ();
+							// PlayFab 部分登录及初始化完毕
+							OnPlayFabSuccessLogin (data.SuccessCallback, data.ErrorCallback, loginResult);
+						}, error2 => {
+							ResetUserInfo ();
+							Client.State = ClientState.Uninitialized;
+							data.ErrorCallback.Invoke (JsonConvert.SerializeObject (error2));
+						});
+					} else {
+						RefreshNetInfo ("登录成功,正在同步用户信息...");
+
+						GetUserCombinedInfoRequest r1 = new GetUserCombinedInfoRequest () {
+							PlayFabId = PlayFabId
+						};
+						PlayFabClientAPI.GetUserCombinedInfo (r1, rs1 => {
+							DisplayName = rs1.AccountInfo.TitleInfo.DisplayName;
+							RefreshUserInfo ();
+							// PlayFab 部分登录及初始化完毕
+							OnPlayFabSuccessLogin (data.SuccessCallback, data.ErrorCallback, loginResult);
+						}, re1 => {
+							ResetUserInfo ();
+							Client.State = ClientState.Uninitialized;
+							data.ErrorCallback.Invoke (JsonConvert.SerializeObject (re1));
+						});
+					}
+				}, error => {
+					ResetUserInfo ();
+					Client.State = ClientState.Uninitialized;
+					data.ErrorCallback.Invoke (JsonConvert.SerializeObject (error));
+				});
+			}
 		}
 
 		IDisposable WaitPhotonStateDisposable = null;
@@ -129,15 +140,11 @@ namespace yigame.epoker
 				if (WaitPhotonStateDisposable != null) {
 					WaitPhotonStateDisposable.Dispose ();
 				}
-				WaitPhotonStateDisposable = Observable.Interval (TimeSpan.FromMilliseconds (500f)).Subscribe (_ => {
-					if (Client.State == ClientState.JoinedLobby) {
-						WaitPhotonStateDisposable.Dispose ();
-						WaitPhotonStateDisposable = null;
 
-						RefreshUserInfo ();
-						successCallback.Invoke (JsonConvert.SerializeObject (loginResult));
-					}
-				}).AddTo (this.gameObject);
+				ClientStateRP.Where (cs => cs == ClientState.JoinedLobby).Subscribe (_ => {
+					RefreshUserInfo ();
+					successCallback.Invoke (JsonConvert.SerializeObject (loginResult));
+				});
 
 				ConnectToMasterServer (PlayFabId, res.PhotonCustomAuthenticationToken);
 
@@ -151,20 +158,40 @@ namespace yigame.epoker
 		{
 			base.NetLogoutHandler (data);
 
-			Client.Disconnect ();
+			if (Client.IsConnectedAndReady) {
+				Client.Disconnect ();
 
-			Observable.Interval (TimeSpan.FromMilliseconds (500f)).Subscribe (_ => {
-				if (Client.State == ClientState.Disconnected) {
-					data.SuccessCallback.Invoke (null);
-				}
-			}).AddTo (this.gameObject);
-
+				ClientStateRP.Where (cs => cs == ClientState.Disconnected).Subscribe (_ => {
+					if (Client.State == ClientState.Disconnected) {
+						data.SuccessCallback.Invoke (null);
+					}
+				}).AddTo (this.gameObject);
+			}
 		}
 
 		public override void NetJoinOrCreateRoomHandler (NetJoinOrCreateRoom data)
 		{
 			base.NetJoinOrCreateRoomHandler (data);
-			Client.OpJoinOrCreateRoom (data.RoomId, 0, null);
+
+			if (Client.IsConnectedAndReady) {
+				ClientStateRP.Where (cs => cs == ClientState.Joined).Subscribe (_ => {
+					data.SuccessCallback.Invoke (null);
+				});
+
+				Client.OpJoinOrCreateRoom (data.RoomId, 0, null);
+			}
+		}
+
+		public override void NetLeaveRoomHandler (NetLeaveRoom data)
+		{
+			base.NetLeaveRoomHandler (data);
+			if (Client.IsConnectedAndReady) {
+				ClientStateRP.Where (cs => cs == ClientState.JoinedLobby).Subscribe (_ => {
+					data.SuccessCallback.Invoke (null);
+				});
+
+				Client.OpLeaveRoom ();
+			}
 		}
 
 		public void RefreshNetInfo (string netStatusDesc)
@@ -183,7 +210,8 @@ namespace yigame.epoker
 		private void OnStateChanged (ClientState state)
 		{
 			Debug.Log ("photon state changed: " + state.ToString ());
-			ClientState = state;
+			ClientStateRP.Value = state;
+
 			switch (state) {
 			case ClientState.Uninitialized:
 				break;
@@ -211,12 +239,16 @@ namespace yigame.epoker
 				RefreshNetInfo ("已连接游戏服务器");
 				break;
 			case ClientState.Joining:
+				RefreshNetInfo ("正在加入游戏..");
 				break;
 			case ClientState.Joined:
+				RefreshNetInfo ("已经加入游戏");
 				break;
 			case ClientState.Leaving:
+				RefreshNetInfo ("正在离开游戏..");
 				break;
 			case ClientState.Left:
+				RefreshNetInfo ("已经离开游戏");
 				break;
 			case ClientState.DisconnectingFromGameserver:
 				RefreshNetInfo ("正在从游戏服务器断开...");
@@ -224,8 +256,11 @@ namespace yigame.epoker
 			case ClientState.QueuedComingFromGameserver:
 				break;
 			case ClientState.Disconnecting:
+				RefreshNetInfo ("正在断开..");
 				break;
 			case ClientState.Disconnected:
+				RefreshNetInfo ("已经断开与服务器的连接");
+				OutOfGameRoot.ExecuteDoDisconnect ();
 				break;
 			case ClientState.ConnectingToNameServer:
 				RefreshNetInfo ("正在连接名字服务器...");

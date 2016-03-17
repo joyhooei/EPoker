@@ -118,6 +118,10 @@ namespace yigame.epoker {
             OutOfGameRoot.DoQuitRoom.OnNext(new DoQuitRoomCommand() { Sender = OutOfGameRoot });
         }
         
+        public virtual void ExecuteDoDisconnect() {
+            OutOfGameRoot.DoDisconnect.OnNext(new DoDisconnectCommand() { Sender = OutOfGameRoot });
+        }
+        
         public virtual void ExecuteInitGame(InitGameCommand command) {
             command.Sender = OutOfGameRoot;
             OutOfGameRoot.InitGame.OnNext(command);
@@ -141,6 +145,11 @@ namespace yigame.epoker {
         public virtual void ExecuteDoQuitRoom(DoQuitRoomCommand command) {
             command.Sender = OutOfGameRoot;
             OutOfGameRoot.DoQuitRoom.OnNext(command);
+        }
+        
+        public virtual void ExecuteDoDisconnect(DoDisconnectCommand command) {
+            command.Sender = OutOfGameRoot;
+            OutOfGameRoot.DoDisconnect.OnNext(command);
         }
     }
     

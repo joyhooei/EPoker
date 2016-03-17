@@ -25,7 +25,11 @@ namespace yigame.epoker
 			base.EnterRoom (viewModel);
 
 			Publish (new NetJoinOrCreateRoom () {
-				RoomId = viewModel.RoomId
+				RoomId = viewModel.RoomId,
+				SuccessCallback = _ => {
+					UnityEngine.Debug.Log ("SuccessCallback: " + _);
+					OutOfGameRoot.ExecuteDoEnterRoom ();
+				}
 			});
 		}
 
@@ -37,7 +41,6 @@ namespace yigame.epoker
 			Publish (new NetLogout () {
 				SuccessCallback = _ => {
 					UnityEngine.Debug.Log ("SuccessCallback: " + _);
-					OutOfGameRoot.ExecuteDoLogout ();
 				},
 				ErrorCallback = _ => {
 					UnityEngine.Debug.Log ("ErrorCallback: " + _);

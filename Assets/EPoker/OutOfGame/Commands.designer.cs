@@ -34,6 +34,9 @@ namespace yigame.epoker {
     public partial class DoQuitRoomCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class DoDisconnectCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class PanelInCommand : uFrame.MVVM.ViewModelCommand {
     }
     

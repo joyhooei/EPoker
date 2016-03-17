@@ -26,6 +26,8 @@ namespace yigame.epoker {
         
         private Invert.StateMachine.StateMachineTrigger _QuitRoom;
         
+        private Invert.StateMachine.StateMachineTrigger _Disconnect;
+        
         private UILogin _UILogin;
         
         private UILobby _UILobby;
@@ -94,6 +96,18 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Invert.StateMachine.StateMachineTrigger Disconnect {
+            get {
+                if (this._Disconnect == null) {
+                    this._Disconnect = new StateMachineTrigger(this , "Disconnect");
+                }
+                return _Disconnect;
+            }
+            set {
+                _Disconnect = value;
+            }
+        }
+        
         public virtual UILogin UILogin {
             get {
                 if (this._UILogin == null) {
@@ -141,13 +155,19 @@ namespace yigame.epoker {
             Transitions.Add(UILobby.Logout);
             UILobby.EnterRoom = new StateTransition("EnterRoom", UILobby, UIRoom);
             Transitions.Add(UILobby.EnterRoom);
+            UILobby.Disconnect = new StateTransition("Disconnect", UILobby, UILogin);
+            Transitions.Add(UILobby.Disconnect);
             UILobby.AddTrigger(Logout, UILobby.Logout);
             UILobby.AddTrigger(EnterRoom, UILobby.EnterRoom);
+            UILobby.AddTrigger(Disconnect, UILobby.Disconnect);
             UILobby.StateMachine = this;
             states.Add(UILobby);
             UIRoom.QuitRoom = new StateTransition("QuitRoom", UIRoom, UILobby);
             Transitions.Add(UIRoom.QuitRoom);
+            UIRoom.Disconnect = new StateTransition("Disconnect", UIRoom, UILogin);
+            Transitions.Add(UIRoom.Disconnect);
             UIRoom.AddTrigger(QuitRoom, UIRoom.QuitRoom);
+            UIRoom.AddTrigger(Disconnect, UIRoom.Disconnect);
             UIRoom.StateMachine = this;
             states.Add(UIRoom);
         }
@@ -183,6 +203,8 @@ namespace yigame.epoker {
         
         private Invert.StateMachine.StateTransition _EnterRoom;
         
+        private Invert.StateMachine.StateTransition _Disconnect;
+        
         public Invert.StateMachine.StateTransition Logout {
             get {
                 return _Logout;
@@ -201,6 +223,15 @@ namespace yigame.epoker {
             }
         }
         
+        public Invert.StateMachine.StateTransition Disconnect {
+            get {
+                return _Disconnect;
+            }
+            set {
+                _Disconnect = value;
+            }
+        }
+        
         public override string Name {
             get {
                 return "UILobby";
@@ -214,11 +245,17 @@ namespace yigame.epoker {
         public virtual void EnterRoomTransition() {
             this.Transition(this.EnterRoom);
         }
+        
+        public virtual void DisconnectTransition() {
+            this.Transition(this.Disconnect);
+        }
     }
     
     public class UIRoom : Invert.StateMachine.State {
         
         private Invert.StateMachine.StateTransition _QuitRoom;
+        
+        private Invert.StateMachine.StateTransition _Disconnect;
         
         public Invert.StateMachine.StateTransition QuitRoom {
             get {
@@ -226,6 +263,15 @@ namespace yigame.epoker {
             }
             set {
                 _QuitRoom = value;
+            }
+        }
+        
+        public Invert.StateMachine.StateTransition Disconnect {
+            get {
+                return _Disconnect;
+            }
+            set {
+                _Disconnect = value;
             }
         }
         
@@ -237,6 +283,10 @@ namespace yigame.epoker {
         
         public virtual void QuitRoomTransition() {
             this.Transition(this.QuitRoom);
+        }
+        
+        public virtual void DisconnectTransition() {
+            this.Transition(this.Disconnect);
         }
     }
 }

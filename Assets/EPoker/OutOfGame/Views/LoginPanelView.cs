@@ -11,7 +11,6 @@ namespace yigame.epoker
 	using uFrame.Serialization;
 	using UniRx;
 	using UnityEngine;
-
     
 	public class LoginPanelView : LoginPanelViewBase
 	{

@@ -118,4 +118,18 @@ namespace yigame.epoker {
             }
         }
     }
+    
+    public class NetLeaveRoomBase : object {
+        
+        private Action<string> _SuccessCallback;
+        
+        public Action<string> SuccessCallback {
+            get {
+                return _SuccessCallback;
+            }
+            set {
+                _SuccessCallback = value;
+            }
+        }
+    }
 }
