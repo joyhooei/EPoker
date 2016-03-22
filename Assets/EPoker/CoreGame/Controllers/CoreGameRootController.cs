@@ -30,6 +30,14 @@ namespace yigame.epoker
 			6: [0,1,2,3,4,5]
 		}";
 
+		public override void RefreshCoreGame (CoreGameRootViewModel viewModel)
+		{
+			base.RefreshCoreGame (viewModel);
+			if (viewModel.CoreGameStatus is Waiting) {
+				viewModel.ExecuteResetPlayerCount ();
+			}
+		}
+
 		public override void ResetPlayerCount (CoreGameRootViewModel viewModel)
 		{
 			base.ResetPlayerCount (viewModel);
@@ -48,7 +56,6 @@ namespace yigame.epoker
 
 			viewModel.PlayerCollection.Clear ();
 
-
 			for (int i = 0; i < count; i++) {
 
 				int idx_in_players = (i + idx) % count;
@@ -57,6 +64,7 @@ namespace yigame.epoker
 				PlayerViewModel player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
 				player.PosId = jArrangeItem [i].Value<string> ();
 				player.Id = jPlayer ["playfab_id"].Value<string> ();
+				player.ActorId = jPlayer ["actor_id"].Value<int> ();
 				player.DisplayName = jPlayer ["display_name"].Value<string> ();
 				player.PlayerRoomIdentity = (RoomIdentity)Enum.Parse (typeof(RoomIdentity), jPlayer ["player_room_identity"].Value<string> ());
 
@@ -87,6 +95,7 @@ namespace yigame.epoker
 							  ""players"": [
 							    {
 							      ""idx"": 0,
+							      ""actor_id"": ""1"",
 							      ""playfab_id"": ""1001"",
 							      ""display_name"": ""ethan"",
 							      ""player_room_identity"": ""RoomMaster"",
@@ -95,6 +104,7 @@ namespace yigame.epoker
 							    },
 							    {
 							      ""idx"": 1,
+							      ""actor_id"": ""2"",
 							      ""playfab_id"": ""1002"",
 							      ""display_name"": ""dream"",
 							      ""player_room_identity"": ""RoomGuest"",

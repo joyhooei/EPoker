@@ -595,13 +595,13 @@ namespace yigame.epoker {
     
     public class CoreGameSM : Invert.StateMachine.StateMachine {
         
-        private Invert.StateMachine.StateMachineTrigger _InitPlayers;
+        private Invert.StateMachine.StateMachineTrigger _CoreGameStart;
         
-        private Invert.StateMachine.StateMachineTrigger _ReInit;
+        private Invert.StateMachine.StateMachineTrigger _CoreGameOver;
         
-        private InGameInit _InGameInit;
+        private Waiting _Waiting;
         
-        private WithPlayers _WithPlayers;
+        private Playing _Playing;
         
         public CoreGameSM(uFrame.MVVM.ViewModel vm, string propertyName) : 
                 base(vm, propertyName) {
@@ -613,118 +613,118 @@ namespace yigame.epoker {
         
         public override Invert.StateMachine.State StartState {
             get {
-                return this.InGameInit;
+                return this.Waiting;
             }
         }
         
-        public virtual Invert.StateMachine.StateMachineTrigger InitPlayers {
+        public virtual Invert.StateMachine.StateMachineTrigger CoreGameStart {
             get {
-                if (this._InitPlayers == null) {
-                    this._InitPlayers = new StateMachineTrigger(this , "InitPlayers");
+                if (this._CoreGameStart == null) {
+                    this._CoreGameStart = new StateMachineTrigger(this , "CoreGameStart");
                 }
-                return _InitPlayers;
+                return _CoreGameStart;
             }
             set {
-                _InitPlayers = value;
+                _CoreGameStart = value;
             }
         }
         
-        public virtual Invert.StateMachine.StateMachineTrigger ReInit {
+        public virtual Invert.StateMachine.StateMachineTrigger CoreGameOver {
             get {
-                if (this._ReInit == null) {
-                    this._ReInit = new StateMachineTrigger(this , "ReInit");
+                if (this._CoreGameOver == null) {
+                    this._CoreGameOver = new StateMachineTrigger(this , "CoreGameOver");
                 }
-                return _ReInit;
+                return _CoreGameOver;
             }
             set {
-                _ReInit = value;
+                _CoreGameOver = value;
             }
         }
         
-        public virtual InGameInit InGameInit {
+        public virtual Waiting Waiting {
             get {
-                if (this._InGameInit == null) {
-                    this._InGameInit = new InGameInit();
+                if (this._Waiting == null) {
+                    this._Waiting = new Waiting();
                 }
-                return _InGameInit;
+                return _Waiting;
             }
             set {
-                _InGameInit = value;
+                _Waiting = value;
             }
         }
         
-        public virtual WithPlayers WithPlayers {
+        public virtual Playing Playing {
             get {
-                if (this._WithPlayers == null) {
-                    this._WithPlayers = new WithPlayers();
+                if (this._Playing == null) {
+                    this._Playing = new Playing();
                 }
-                return _WithPlayers;
+                return _Playing;
             }
             set {
-                _WithPlayers = value;
+                _Playing = value;
             }
         }
         
         public override void Compose(System.Collections.Generic.List<Invert.StateMachine.State> states) {
             base.Compose(states);
-            InGameInit.InitPlayers = new StateTransition("InitPlayers", InGameInit, WithPlayers);
-            Transitions.Add(InGameInit.InitPlayers);
-            InGameInit.AddTrigger(InitPlayers, InGameInit.InitPlayers);
-            InGameInit.StateMachine = this;
-            states.Add(InGameInit);
-            WithPlayers.ReInit = new StateTransition("ReInit", WithPlayers, InGameInit);
-            Transitions.Add(WithPlayers.ReInit);
-            WithPlayers.AddTrigger(ReInit, WithPlayers.ReInit);
-            WithPlayers.StateMachine = this;
-            states.Add(WithPlayers);
+            Waiting.CoreGameStart = new StateTransition("CoreGameStart", Waiting, Playing);
+            Transitions.Add(Waiting.CoreGameStart);
+            Waiting.AddTrigger(CoreGameStart, Waiting.CoreGameStart);
+            Waiting.StateMachine = this;
+            states.Add(Waiting);
+            Playing.CoreGameOver = new StateTransition("CoreGameOver", Playing, Waiting);
+            Transitions.Add(Playing.CoreGameOver);
+            Playing.AddTrigger(CoreGameOver, Playing.CoreGameOver);
+            Playing.StateMachine = this;
+            states.Add(Playing);
         }
     }
     
-    public class InGameInit : Invert.StateMachine.State {
+    public class Waiting : Invert.StateMachine.State {
         
-        private Invert.StateMachine.StateTransition _InitPlayers;
+        private Invert.StateMachine.StateTransition _CoreGameStart;
         
-        public Invert.StateMachine.StateTransition InitPlayers {
+        public Invert.StateMachine.StateTransition CoreGameStart {
             get {
-                return _InitPlayers;
+                return _CoreGameStart;
             }
             set {
-                _InitPlayers = value;
+                _CoreGameStart = value;
             }
         }
         
         public override string Name {
             get {
-                return "InGameInit";
+                return "Waiting";
             }
         }
         
-        public virtual void InitPlayersTransition() {
-            this.Transition(this.InitPlayers);
+        public virtual void CoreGameStartTransition() {
+            this.Transition(this.CoreGameStart);
         }
     }
     
-    public class WithPlayers : Invert.StateMachine.State {
+    public class Playing : Invert.StateMachine.State {
         
-        private Invert.StateMachine.StateTransition _ReInit;
+        private Invert.StateMachine.StateTransition _CoreGameOver;
         
-        public Invert.StateMachine.StateTransition ReInit {
+        public Invert.StateMachine.StateTransition CoreGameOver {
             get {
-                return _ReInit;
+                return _CoreGameOver;
             }
             set {
-                _ReInit = value;
+                _CoreGameOver = value;
             }
         }
         
         public override string Name {
             get {
-                return "WithPlayers";
+                return "Playing";
             }
         }
         
-        public virtual void ReInitTransition() {
-            this.Transition(this.ReInit);
+        public virtual void CoreGameOverTransition() {
+            this.Transition(this.CoreGameOver);
         }
     }
 }

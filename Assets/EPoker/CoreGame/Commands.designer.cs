@@ -18,6 +18,9 @@ namespace yigame.epoker {
     using uFrame.Serialization;
     
     
+    public partial class RefreshCoreGameCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class ResetPlayerCountCommand : uFrame.MVVM.ViewModelCommand {
     }
     

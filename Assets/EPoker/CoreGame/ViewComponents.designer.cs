@@ -28,6 +28,10 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual void ExecuteRefreshCoreGame() {
+            CoreGameRoot.RefreshCoreGame.OnNext(new RefreshCoreGameCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteResetPlayerCount() {
             CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot });
         }
@@ -50,6 +54,11 @@ namespace yigame.epoker {
         
         public virtual void ExecuteQuitCoreGame() {
             CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RefreshCoreGame.OnNext(command);
         }
         
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {

@@ -39,6 +39,8 @@ namespace yigame.epoker {
         
         private ModelCollection<PlayerViewModel> _PlayerCollection;
         
+        private Signal<RefreshCoreGameCommand> _RefreshCoreGame;
+        
         private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
         
         private Signal<RootMatchBeganCommand> _RootMatchBegan;
@@ -172,6 +174,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RefreshCoreGameCommand> RefreshCoreGame {
+            get {
+                return _RefreshCoreGame;
+            }
+            set {
+                _RefreshCoreGame = value;
+            }
+        }
+        
         public virtual Signal<ResetPlayerCountCommand> ResetPlayerCount {
             get {
                 return _ResetPlayerCount;
@@ -228,6 +239,7 @@ namespace yigame.epoker {
         
         public override void Bind() {
             base.Bind();
+            this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
             this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
             this.RootMatchBegan = new Signal<RootMatchBeganCommand>(this);
             this.SimulateMatchBegan = new Signal<SimulateMatchBeganCommand>(this);
@@ -241,6 +253,10 @@ namespace yigame.epoker {
             _MyIdProperty = new P<String>(this, "MyId");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
             _CoreGameStatusProperty = new CoreGameSM(this, "CoreGameStatus");
+        }
+        
+        public virtual void ExecuteRefreshCoreGame() {
+            this.RefreshCoreGame.OnNext(new RefreshCoreGameCommand());
         }
         
         public virtual void ExecuteResetPlayerCount() {
@@ -290,6 +306,7 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("RefreshCoreGame", RefreshCoreGame) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RootMatchBegan", RootMatchBegan) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("SimulateMatchBegan", SimulateMatchBegan) { ParameterType = typeof(void) });
@@ -470,6 +487,8 @@ namespace yigame.epoker {
         
         private P<String> _IdProperty;
         
+        private P<Int32> _ActorIdProperty;
+        
         private P<String> _PosIdProperty;
         
         private P<RoomIdentity> _PlayerRoomIdentityProperty;
@@ -531,6 +550,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Int32> ActorIdProperty {
+            get {
+                return _ActorIdProperty;
+            }
+            set {
+                _ActorIdProperty = value;
+            }
+        }
+        
         public virtual P<String> PosIdProperty {
             get {
                 return _PosIdProperty;
@@ -573,6 +601,15 @@ namespace yigame.epoker {
             }
             set {
                 IdProperty.Value = value;
+            }
+        }
+        
+        public virtual Int32 ActorId {
+            get {
+                return ActorIdProperty.Value;
+            }
+            set {
+                ActorIdProperty.Value = value;
             }
         }
         
@@ -724,6 +761,7 @@ namespace yigame.epoker {
             this.Over = new Signal<OverCommand>(this);
             this.InitOK = new Signal<InitOKCommand>(this);
             _IdProperty = new P<String>(this, "Id");
+            _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
             _PlayerRoomIdentityProperty = new P<RoomIdentity>(this, "PlayerRoomIdentity");
             _DisplayNameProperty = new P<String>(this, "DisplayName");
@@ -784,6 +822,7 @@ namespace yigame.epoker {
         
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
+            this.ActorId = stream.DeserializeInt("ActorId");;
             this._StatusProperty.SetState(stream.DeserializeString("Status"));
             this.PlayerRoomIdentity = (RoomIdentity)stream.DeserializeInt("PlayerRoomIdentity");;
             this.IsSelf = stream.DeserializeBool("IsSelf");;
@@ -795,6 +834,7 @@ namespace yigame.epoker {
         
         public override void Write(ISerializerStream stream) {
             base.Write(stream);
+            stream.SerializeInt("ActorId", this.ActorId);
             stream.SerializeString("Status", this.Status.Name);;
             stream.SerializeInt("PlayerRoomIdentity", (int)this.PlayerRoomIdentity);;
             stream.SerializeBool("IsSelf", this.IsSelf);
@@ -819,6 +859,8 @@ namespace yigame.epoker {
             base.FillProperties(list);
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_IdProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_ActorIdProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_StatusProperty, false, false, false, false));
             // PropertiesChildItem

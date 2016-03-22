@@ -47,20 +47,5 @@ namespace yigame.epoker
 			Debug.Log ("PlayerCollectionRemoved");
 			Destroy (view.gameObject);
 		}
-
-		public override void CoreGameStatusChanged (Invert.StateMachine.State arg1)
-		{
-			base.CoreGameStatusChanged (arg1);
-		}
-
-		public override void OnInGameInit ()
-		{
-			base.OnInGameInit ();
-		}
-
-		public override void OnWithPlayers ()
-		{
-			base.OnWithPlayers ();
-		}
 	}
 }

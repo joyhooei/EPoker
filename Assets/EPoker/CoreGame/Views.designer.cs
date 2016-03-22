@@ -166,18 +166,22 @@ namespace yigame.epoker {
         }
         
         public virtual void CoreGameStatusChanged(Invert.StateMachine.State arg1) {
-            if (arg1 is InGameInit) {
-                this.OnInGameInit();
+            if (arg1 is Waiting) {
+                this.OnWaiting();
             }
-            if (arg1 is WithPlayers) {
-                this.OnWithPlayers();
+            if (arg1 is Playing) {
+                this.OnPlaying();
             }
         }
         
-        public virtual void OnInGameInit() {
+        public virtual void OnWaiting() {
         }
         
-        public virtual void OnWithPlayers() {
+        public virtual void OnPlaying() {
+        }
+        
+        public virtual void ExecuteRefreshCoreGame() {
+            CoreGameRoot.RefreshCoreGame.OnNext(new RefreshCoreGameCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteResetPlayerCount() {
@@ -202,6 +206,11 @@ namespace yigame.epoker {
         
         public virtual void ExecuteQuitCoreGame() {
             CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RefreshCoreGame.OnNext(command);
         }
         
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
@@ -350,6 +359,11 @@ namespace yigame.epoker {
         [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
+        public Int32 _ActorId;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
         public String _PosId;
         
         [UnityEngine.SerializeField()]
@@ -402,6 +416,7 @@ namespace yigame.epoker {
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
             var playerview = ((PlayerViewModel)model);
             playerview.Id = this._Id;
+            playerview.ActorId = this._ActorId;
             playerview.PosId = this._PosId;
             playerview.PlayerRoomIdentity = this._PlayerRoomIdentity;
             playerview.DisplayName = this._DisplayName;

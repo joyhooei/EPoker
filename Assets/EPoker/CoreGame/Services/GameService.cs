@@ -10,10 +10,14 @@ namespace yigame.epoker
 	using UniRx;
 	using UnityEngine;
 	using Newtonsoft.Json;
+	using Newtonsoft.Json.Linq;
+	using ExitGames.Client.Photon.LoadBalancing;
 
-    
 	public class GameService : GameServiceBase
 	{
+		[Inject] public Network Network;
+		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+
 		public List<CardInfo> GetDeck (bool disorder)
 		{
 			List<CardInfo> card_info_list = new List<CardInfo> ();
@@ -47,6 +51,36 @@ namespace yigame.epoker
 		public override void OnInfoJsonUpdateHandler (OnInfoJsonUpdate data)
 		{
 			base.OnInfoJsonUpdateHandler (data);
+
+			// 构造 InfoJson
+
+			JObject infoJson = new JObject ();
+			infoJson.Add (new JProperty ("player_count", Network.Client.CurrentRoom.PlayerCount));
+			infoJson.Add (new JProperty ("players", new JArray ()));
+
+			int idx = 0;
+			Network.Client.CurrentRoom.Players.OrderBy (_ => _.Key).ToList ().ForEach (kv => {
+				int actorId = kv.Key;
+				Player player = kv.Value;
+
+				JObject jo_players = (JObject)infoJson ["players"];
+				jo_players.Add (new JProperty ("idx", idx));
+				jo_players.Add (new JProperty ("actor_id", player.ID));
+				jo_players.Add (new JProperty ("playfab_id", ""));
+				jo_players.Add (new JProperty ("display_name", player.Name));
+				jo_players.Add (new JProperty ("player_room_identity", player.IsMasterClient));
+				jo_players.Add (new JProperty ("get_card_first", false));
+				jo_players.Add (new JProperty ("hand_cards", new JArray ()));
+
+				idx++;
+			});
+
+			infoJson.Add (new JProperty ("pile_for_show", new JArray ()));
+
+			CoreGameRoot.InfoJson = infoJson;
+
+			// 刷新
+
 		}
 
 		public override void OpenCoreGameHandler (OpenCoreGame data)
