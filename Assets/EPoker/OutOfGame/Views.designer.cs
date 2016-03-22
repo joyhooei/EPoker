@@ -479,6 +479,16 @@ namespace yigame.epoker {
     
     public class RoomPanelViewBase : PanelView {
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _RoomPropertiesJson;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _EventParamsJson;
+        
         [UFToggleGroup("QuitRoom")]
         [UnityEngine.HideInInspector()]
         public bool _BindQuitRoom = true;
@@ -492,6 +502,70 @@ namespace yigame.epoker {
         [UFToggleGroup("RefreshRoom")]
         [UnityEngine.HideInInspector()]
         public bool _BindRefreshRoom = true;
+        
+        [UFToggleGroup("PlayerItems")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindPlayerItems = true;
+        
+        [UFGroup("PlayerItems")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerItemsparent")]
+        protected UnityEngine.Transform _PlayerItemsParent;
+        
+        [UFGroup("PlayerItems")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerItemsviewFirst")]
+        protected bool _PlayerItemsViewFirst;
+        
+        [UFToggleGroup("RefreshRoomProperties")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRefreshRoomProperties = true;
+        
+        [UFToggleGroup("RoomPropertiesJson")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRoomPropertiesJson = true;
+        
+        [UFGroup("RoomPropertiesJson")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_RoomPropertiesJsoninput")]
+        protected UnityEngine.UI.InputField _RoomPropertiesJsonInput;
+        
+        [UFToggleGroup("SetProperties")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindSetProperties = true;
+        
+        [UFGroup("SetProperties")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SetPropertiesbutton")]
+        protected UnityEngine.UI.Button _SetPropertiesButton;
+        
+        [UFToggleGroup("EventParamsJson")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindEventParamsJson = true;
+        
+        [UFGroup("EventParamsJson")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_EventParamsJsoninput")]
+        protected UnityEngine.UI.InputField _EventParamsJsonInput;
+        
+        [UFToggleGroup("SendEvent")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindSendEvent = true;
+        
+        [UFGroup("SendEvent")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SendEventbutton")]
+        protected UnityEngine.UI.Button _SendEventButton;
+        
+        [UFToggleGroup("RefreshEvent")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRefreshEvent = true;
         
         public override string DefaultIdentifier {
             get {
@@ -516,6 +590,9 @@ namespace yigame.epoker {
             // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
             // var vm = model as RoomPanelViewModel;
             // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var roompanelview = ((RoomPanelViewModel)model);
+            roompanelview.RoomPropertiesJson = this._RoomPropertiesJson;
+            roompanelview.EventParamsJson = this._EventParamsJson;
         }
         
         public override void Bind() {
@@ -529,9 +606,46 @@ namespace yigame.epoker {
             if (_BindRefreshRoom) {
                 this.BindCommandExecuted(this.RoomPanel.RefreshRoom, this.RefreshRoomExecuted);
             }
+            if (_BindPlayerItems) {
+                this.BindToViewCollection(this.RoomPanel.PlayerItems, this.PlayerItemsCreateView, this.PlayerItemsAdded, this.PlayerItemsRemoved, _PlayerItemsParent, _PlayerItemsViewFirst);
+            }
+            if (_BindRefreshRoomProperties) {
+                this.BindCommandExecuted(this.RoomPanel.RefreshRoomProperties, this.RefreshRoomPropertiesExecuted);
+            }
+            if (_BindRoomPropertiesJson) {
+                this.BindInputFieldToProperty(_RoomPropertiesJsonInput, this.RoomPanel.RoomPropertiesJsonProperty);
+            }
+            if (_BindSetProperties) {
+                this.BindButtonToCommand(_SetPropertiesButton, this.RoomPanel.SetProperties);
+            }
+            if (_BindEventParamsJson) {
+                this.BindInputFieldToProperty(_EventParamsJsonInput, this.RoomPanel.EventParamsJsonProperty);
+            }
+            if (_BindSendEvent) {
+                this.BindButtonToCommand(_SendEventButton, this.RoomPanel.SendEvent);
+            }
+            if (_BindRefreshEvent) {
+                this.BindCommandExecuted(this.RoomPanel.RefreshEvent, this.RefreshEventExecuted);
+            }
         }
         
         public virtual void RefreshRoomExecuted(RefreshRoomCommand command) {
+        }
+        
+        public virtual uFrame.MVVM.ViewBase PlayerItemsCreateView(uFrame.MVVM.ViewModel viewModel) {
+            return InstantiateView(viewModel);
+        }
+        
+        public virtual void PlayerItemsAdded(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void PlayerItemsRemoved(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void RefreshRoomPropertiesExecuted(RefreshRoomPropertiesCommand command) {
+        }
+        
+        public virtual void RefreshEventExecuted(RefreshEventCommand command) {
         }
         
         public virtual void ExecuteQuitRoom() {
@@ -542,6 +656,22 @@ namespace yigame.epoker {
             RoomPanel.RefreshRoom.OnNext(new RefreshRoomCommand() { Sender = RoomPanel });
         }
         
+        public virtual void ExecuteRefreshRoomProperties() {
+            RoomPanel.RefreshRoomProperties.OnNext(new RefreshRoomPropertiesCommand() { Sender = RoomPanel });
+        }
+        
+        public virtual void ExecuteRefreshPlayerProperties() {
+            RoomPanel.RefreshPlayerProperties.OnNext(new RefreshPlayerPropertiesCommand() { Sender = RoomPanel });
+        }
+        
+        public virtual void ExecuteSetProperties() {
+            RoomPanel.SetProperties.OnNext(new SetPropertiesCommand() { Sender = RoomPanel });
+        }
+        
+        public virtual void ExecuteSendEvent() {
+            RoomPanel.SendEvent.OnNext(new SendEventCommand() { Sender = RoomPanel });
+        }
+        
         public virtual void ExecuteQuitRoom(QuitRoomCommand command) {
             command.Sender = RoomPanel;
             RoomPanel.QuitRoom.OnNext(command);
@@ -550,6 +680,31 @@ namespace yigame.epoker {
         public virtual void ExecuteRefreshRoom(RefreshRoomCommand command) {
             command.Sender = RoomPanel;
             RoomPanel.RefreshRoom.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshRoomProperties(RefreshRoomPropertiesCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.RefreshRoomProperties.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshPlayerProperties(RefreshPlayerPropertiesCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.RefreshPlayerProperties.OnNext(command);
+        }
+        
+        public virtual void ExecuteSetProperties(SetPropertiesCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.SetProperties.OnNext(command);
+        }
+        
+        public virtual void ExecuteSendEvent(SendEventCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.SendEvent.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshEvent(RefreshEventCommand command) {
+            command.Sender = RoomPanel;
+            RoomPanel.RefreshEvent.OnNext(command);
         }
     }
     
@@ -623,6 +778,161 @@ namespace yigame.epoker {
         public virtual void ExecutePanelOut(PanelOutCommand command) {
             command.Sender = DebugInfoPanel;
             DebugInfoPanel.PanelOut.OnNext(command);
+        }
+    }
+    
+    public class PlayerItemViewBase : uFrame.MVVM.ViewBase {
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _ActerId;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _Name;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _Ready;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public ExitGames.Client.Photon.LoadBalancing.Player _Player;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _IsLocal;
+        
+        [UFToggleGroup("Name")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindName = true;
+        
+        [UFGroup("Name")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_Nameinput")]
+        protected UnityEngine.UI.Text _NameInput;
+        
+        [UFToggleGroup("Ready")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindReady = true;
+        
+        [UFGroup("Ready")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_Readytoggle")]
+        protected UnityEngine.UI.Toggle _ReadyToggle;
+        
+        [UFGroup("Ready")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ReadyonlyWhenChanged")]
+        protected bool _ReadyOnlyWhenChanged;
+        
+        [UFToggleGroup("IsLocal")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindIsLocal = true;
+        
+        [UFGroup("IsLocal")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_IsLocalonlyWhenChanged")]
+        protected bool _IsLocalOnlyWhenChanged;
+        
+        [UFToggleGroup("ActerId")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindActerId = true;
+        
+        [UFGroup("ActerId")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ActerIdonlyWhenChanged")]
+        protected bool _ActerIdOnlyWhenChanged;
+        
+        [UFToggleGroup("RefreshByPlayer")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRefreshByPlayer = true;
+        
+        public override string DefaultIdentifier {
+            get {
+                return base.DefaultIdentifier;
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(PlayerItemViewModel);
+            }
+        }
+        
+        public PlayerItemViewModel PlayerItem {
+            get {
+                return (PlayerItemViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as PlayerItemViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var playeritemview = ((PlayerItemViewModel)model);
+            playeritemview.ActerId = this._ActerId;
+            playeritemview.Name = this._Name;
+            playeritemview.Ready = this._Ready;
+            playeritemview.Player = this._Player;
+            playeritemview.IsLocal = this._IsLocal;
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.PlayerItem to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
+            if (_BindName) {
+                this.BindTextToProperty(_NameInput, this.PlayerItem.NameProperty);
+            }
+            if (_BindReady) {
+                this.BindToggleToProperty(_ReadyToggle, this.PlayerItem.ReadyProperty);
+            }
+            if (_BindReady) {
+                this.BindProperty(this.PlayerItem.ReadyProperty, this.ReadyChanged, _ReadyOnlyWhenChanged);
+            }
+            if (_BindIsLocal) {
+                this.BindProperty(this.PlayerItem.IsLocalProperty, this.IsLocalChanged, _IsLocalOnlyWhenChanged);
+            }
+            if (_BindActerId) {
+                this.BindProperty(this.PlayerItem.ActerIdProperty, this.ActerIdChanged, _ActerIdOnlyWhenChanged);
+            }
+            if (_BindRefreshByPlayer) {
+                this.BindCommandExecuted(this.PlayerItem.RefreshByPlayer, this.RefreshByPlayerExecuted);
+            }
+        }
+        
+        public virtual void ReadyChanged(Boolean arg1) {
+        }
+        
+        public virtual void IsLocalChanged(Boolean arg1) {
+        }
+        
+        public virtual void ActerIdChanged(Int32 arg1) {
+        }
+        
+        public virtual void RefreshByPlayerExecuted(RefreshByPlayerCommand command) {
+        }
+        
+        public virtual void ExecuteRefreshByPlayer() {
+            PlayerItem.RefreshByPlayer.OnNext(new RefreshByPlayerCommand() { Sender = PlayerItem });
+        }
+        
+        public virtual void ExecuteRefreshByPlayer(RefreshByPlayerCommand command) {
+            command.Sender = PlayerItem;
+            PlayerItem.RefreshByPlayer.OnNext(command);
         }
     }
 }

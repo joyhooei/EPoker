@@ -24,4 +24,10 @@ namespace yigame.epoker {
     
     public class OnInfoJsonUpdateBase : object {
     }
+    
+    public class OpenCoreGameBase : object {
+    }
+    
+    public class CloseCoreGameBase : object {
+    }
 }

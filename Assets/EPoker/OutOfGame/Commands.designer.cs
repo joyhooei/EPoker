@@ -58,6 +58,18 @@ namespace yigame.epoker {
     public partial class RefreshRoomCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class RefreshRoomPropertiesCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class RefreshPlayerPropertiesCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class SetPropertiesCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class SendEventCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class OpenClosePanelCommand : ViewModelCommand {
         
         private List<Type> _OpenPanels;
@@ -79,6 +91,34 @@ namespace yigame.epoker {
             }
             set {
                 _ClosePanels = value;
+            }
+        }
+    }
+    
+    public partial class RefreshByPlayerCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class RefreshEventCommand : ViewModelCommand {
+        
+        private Byte _EventCode;
+        
+        private Dictionary<byte, object> _EventContent;
+        
+        public Byte EventCode {
+            get {
+                return _EventCode;
+            }
+            set {
+                _EventCode = value;
+            }
+        }
+        
+        public Dictionary<byte, object> EventContent {
+            get {
+                return _EventContent;
+            }
+            set {
+                _EventContent = value;
             }
         }
     }

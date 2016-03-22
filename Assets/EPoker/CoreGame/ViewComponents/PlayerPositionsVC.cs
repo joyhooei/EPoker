@@ -19,6 +19,7 @@ namespace yigame.epoker
 		{
 			base.Bind (view);
 
+			CoreGameRoot.PosIdPosition.Clear ();
 			for (int i = 0; i < transform.childCount; i++) {
 				Transform t = transform.GetChild (i);
 				CoreGameRoot.PosIdPosition.Add (t.gameObject.name, t.position);

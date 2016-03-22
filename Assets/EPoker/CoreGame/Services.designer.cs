@@ -31,6 +31,8 @@ namespace yigame.epoker {
             base.Setup();
             this.OnEvent<UploadInfoJson>().Subscribe(this.UploadInfoJsonHandler);
             this.OnEvent<OnInfoJsonUpdate>().Subscribe(this.OnInfoJsonUpdateHandler);
+            this.OnEvent<OpenCoreGame>().Subscribe(this.OpenCoreGameHandler);
+            this.OnEvent<CloseCoreGame>().Subscribe(this.CloseCoreGameHandler);
         }
         
         /// <summary>
@@ -45,6 +47,22 @@ namespace yigame.epoker {
         // This method is executed when using this.Publish(new OnInfoJsonUpdate())
         /// </summary>
         public virtual void OnInfoJsonUpdateHandler(OnInfoJsonUpdate data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new OpenCoreGame())
+        /// </summary>
+        public virtual void OpenCoreGameHandler(OpenCoreGame data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new CloseCoreGame())
+        /// </summary>
+        public virtual void CloseCoreGameHandler(CloseCoreGame data) {
             // Process the commands information.  Also, you can publish new events by using the line below.
             // this.Publish(new AnotherEvent())
         }

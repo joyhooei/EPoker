@@ -39,6 +39,8 @@ namespace yigame.epoker {
         
         private DebugInfoPanelController _DebugInfoPanelController;
         
+        private PlayerItemController _PlayerItemController;
+        
         [uFrame.IOC.InjectAttribute("OutOfGameRoot")]
         public virtual OutOfGameRootViewModel OutOfGameRoot {
             get {
@@ -154,6 +156,19 @@ namespace yigame.epoker {
             }
         }
         
+        [uFrame.IOC.InjectAttribute()]
+        public virtual PlayerItemController PlayerItemController {
+            get {
+                if (_PlayerItemController==null) {
+                    _PlayerItemController = Container.CreateInstance(typeof(PlayerItemController)) as PlayerItemController;;
+                }
+                return _PlayerItemController;
+            }
+            set {
+                _PlayerItemController = value;
+            }
+        }
+        
         public override void Load() {
             Container.RegisterViewModelManager<OutOfGameRootViewModel>(new ViewModelManager<OutOfGameRootViewModel>());
             Container.RegisterController<OutOfGameRootController>(OutOfGameRootController);
@@ -169,6 +184,8 @@ namespace yigame.epoker {
             Container.RegisterController<RoomPanelController>(RoomPanelController);
             Container.RegisterViewModelManager<DebugInfoPanelViewModel>(new ViewModelManager<DebugInfoPanelViewModel>());
             Container.RegisterController<DebugInfoPanelController>(DebugInfoPanelController);
+            Container.RegisterViewModelManager<PlayerItemViewModel>(new ViewModelManager<PlayerItemViewModel>());
+            Container.RegisterController<PlayerItemController>(PlayerItemController);
             Container.RegisterViewModel<OutOfGameRootViewModel>(OutOfGameRoot, "OutOfGameRoot");
             Container.RegisterViewModel<DebugInfoPanelViewModel>(DebugInfoPanel, "DebugInfoPanel");
         }

@@ -48,5 +48,21 @@ namespace yigame.epoker
 		{
 			base.OnInfoJsonUpdateHandler (data);
 		}
+
+		public override void OpenCoreGameHandler (OpenCoreGame data)
+		{
+			base.OpenCoreGameHandler (data);
+			Publish (new LoadSceneCommand () {
+				SceneName = "CoreGameScene"
+			});
+		}
+
+		public override void CloseCoreGameHandler (CloseCoreGame data)
+		{
+			base.CloseCoreGameHandler (data);
+			Publish (new UnloadSceneCommand () {
+				SceneName = "CoreGameScene"
+			});
+		}
 	}
 }

@@ -195,6 +195,25 @@ namespace yigame.epoker
 			}
 		}
 
+		public override void NetSetRoomPropertiesHandler (NetSetRoomProperties data)
+		{
+			base.NetSetRoomPropertiesHandler (data);
+			Client.CurrentRoom.SetCustomProperties (data.PropertiesToSet);
+		}
+
+		public override void NetRaiseEventHandler (NetRaiseEvent data)
+		{
+			base.NetRaiseEventHandler (data);
+
+			Client.OpRaiseEvent (data.EventCode, data.EventContent, true, null);
+		}
+
+		public override void NetSetPlayerPropertiesHandler (NetSetPlayerProperties data)
+		{
+			base.NetSetPlayerPropertiesHandler (data);
+			Client.OpSetPropertiesOfActor (data.ActerId, data.PropertiesToSet);
+		}
+
 		public void RefreshNetInfo (string netStatusDesc)
 		{
 			DebugInfoPanel.Text = string.Format ("Network[{0}]: {1}", DateTime.Now, netStatusDesc);
@@ -262,6 +281,7 @@ namespace yigame.epoker
 			case ClientState.Disconnected:
 				RefreshNetInfo ("已经断开与服务器的连接");
 				OutOfGameRoot.ExecuteDoDisconnect ();
+				Publish (new CloseCoreGame ());
 				break;
 			case ClientState.ConnectingToNameServer:
 				RefreshNetInfo ("正在连接名字服务器...");
@@ -278,6 +298,7 @@ namespace yigame.epoker
 			default:
 				throw new ArgumentOutOfRangeException ();
 			}
+
 		}
 
 		public void ConnectToMasterServer (string id, string ticket)

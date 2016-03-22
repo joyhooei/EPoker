@@ -29,6 +29,8 @@ namespace yigame.epoker
 				SuccessCallback = _ => {
 					UnityEngine.Debug.Log ("SuccessCallback: " + _);
 					OutOfGameRoot.ExecuteDoEnterRoom ();
+
+					Publish (new OpenCoreGame ());
 				}
 			});
 		}

@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/EPoker/Scenes/EPokerRepositoryKernelScene.unity
+    path: Assets/EPoker/Scenes/OutOfGameScene.unity
   - enabled: 1
     path: Assets/EPoker/Scenes/CoreGameScene.unity
   - enabled: 1
-    path: Assets/EPoker/Scenes/OutOfGameScene.unity
+    path: Assets/EPoker/Scenes/EPokerRepositoryKernelScene.unity

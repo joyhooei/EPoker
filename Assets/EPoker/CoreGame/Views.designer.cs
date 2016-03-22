@@ -89,6 +89,16 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SimulateMatchBeganbutton")]
         protected UnityEngine.UI.Button _SimulateMatchBeganButton;
         
+        [UFToggleGroup("QuitCoreGame")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindQuitCoreGame = true;
+        
+        [UFGroup("QuitCoreGame")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_QuitCoreGamebutton")]
+        protected UnityEngine.UI.Button _QuitCoreGameButton;
+        
         public override string DefaultIdentifier {
             get {
                 return "CoreGameRoot";
@@ -140,6 +150,9 @@ namespace yigame.epoker {
             if (_BindSimulateMatchBegan) {
                 this.BindButtonToCommand(_SimulateMatchBeganButton, this.CoreGameRoot.SimulateMatchBegan);
             }
+            if (_BindQuitCoreGame) {
+                this.BindButtonToCommand(_QuitCoreGameButton, this.CoreGameRoot.QuitCoreGame);
+            }
         }
         
         public virtual uFrame.MVVM.ViewBase PlayerCollectionCreateView(uFrame.MVVM.ViewModel viewModel) {
@@ -187,6 +200,10 @@ namespace yigame.epoker {
             CoreGameRoot.DealPile.OnNext(new DealPileCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteQuitCoreGame() {
+            CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.ResetPlayerCount.OnNext(command);
@@ -210,6 +227,11 @@ namespace yigame.epoker {
         public virtual void ExecuteDealPile(DealPileCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.DealPile.OnNext(command);
+        }
+        
+        public virtual void ExecuteQuitCoreGame(QuitCoreGameCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.QuitCoreGame.OnNext(command);
         }
     }
     

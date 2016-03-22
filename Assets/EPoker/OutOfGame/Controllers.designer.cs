@@ -482,6 +482,11 @@ namespace yigame.epoker {
             // This is called when a RoomPanelViewModel is created
             viewModel.QuitRoom.Action = this.QuitRoomHandler;
             viewModel.RefreshRoom.Action = this.RefreshRoomHandler;
+            viewModel.RefreshRoomProperties.Action = this.RefreshRoomPropertiesHandler;
+            viewModel.RefreshPlayerProperties.Action = this.RefreshPlayerPropertiesHandler;
+            viewModel.SetProperties.Action = this.SetPropertiesHandler;
+            viewModel.SendEvent.Action = this.SendEventHandler;
+            viewModel.RefreshEvent.Action = this.RefreshEventHandler;
             RoomPanelViewModelManager.Add(viewModel);
         }
         
@@ -496,12 +501,47 @@ namespace yigame.epoker {
         public virtual void RefreshRoom(RoomPanelViewModel viewModel) {
         }
         
+        public virtual void RefreshRoomProperties(RoomPanelViewModel viewModel) {
+        }
+        
+        public virtual void RefreshPlayerProperties(RoomPanelViewModel viewModel) {
+        }
+        
+        public virtual void SetProperties(RoomPanelViewModel viewModel) {
+        }
+        
+        public virtual void SendEvent(RoomPanelViewModel viewModel) {
+        }
+        
         public virtual void QuitRoomHandler(QuitRoomCommand command) {
             this.QuitRoom(command.Sender as RoomPanelViewModel);
         }
         
         public virtual void RefreshRoomHandler(RefreshRoomCommand command) {
             this.RefreshRoom(command.Sender as RoomPanelViewModel);
+        }
+        
+        public virtual void RefreshRoomPropertiesHandler(RefreshRoomPropertiesCommand command) {
+            this.RefreshRoomProperties(command.Sender as RoomPanelViewModel);
+        }
+        
+        public virtual void RefreshPlayerPropertiesHandler(RefreshPlayerPropertiesCommand command) {
+            this.RefreshPlayerProperties(command.Sender as RoomPanelViewModel);
+        }
+        
+        public virtual void SetPropertiesHandler(SetPropertiesCommand command) {
+            this.SetProperties(command.Sender as RoomPanelViewModel);
+        }
+        
+        public virtual void SendEventHandler(SendEventCommand command) {
+            this.SendEvent(command.Sender as RoomPanelViewModel);
+        }
+        
+        public virtual void RefreshEventHandler(RefreshEventCommand command) {
+            this.RefreshEvent(command.Sender as RoomPanelViewModel, command);
+        }
+        
+        public virtual void RefreshEvent(RoomPanelViewModel viewModel, RefreshEventCommand arg) {
         }
     }
     
@@ -552,6 +592,88 @@ namespace yigame.epoker {
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             DebugInfoPanelViewModelManager.Remove(viewModel);
+        }
+    }
+    
+    public class PlayerItemControllerBase : uFrame.MVVM.Controller {
+        
+        private uFrame.MVVM.IViewModelManager _PlayerItemViewModelManager;
+        
+        private OutOfGameRootViewModel _OutOfGameRoot;
+        
+        private DebugInfoPanelViewModel _DebugInfoPanel;
+        
+        [uFrame.IOC.InjectAttribute("PlayerItem")]
+        public uFrame.MVVM.IViewModelManager PlayerItemViewModelManager {
+            get {
+                return _PlayerItemViewModelManager;
+            }
+            set {
+                _PlayerItemViewModelManager = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("OutOfGameRoot")]
+        public OutOfGameRootViewModel OutOfGameRoot {
+            get {
+                return _OutOfGameRoot;
+            }
+            set {
+                _OutOfGameRoot = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("DebugInfoPanel")]
+        public DebugInfoPanelViewModel DebugInfoPanel {
+            get {
+                return _DebugInfoPanel;
+            }
+            set {
+                _DebugInfoPanel = value;
+            }
+        }
+        
+        public IEnumerable<PlayerItemViewModel> PlayerItemViewModels {
+            get {
+                return PlayerItemViewModelManager.OfType<PlayerItemViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializePlayerItem(((PlayerItemViewModel)(viewModel)));
+        }
+        
+        public virtual PlayerItemViewModel CreatePlayerItem() {
+            return ((PlayerItemViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new PlayerItemViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializePlayerItem(PlayerItemViewModel viewModel) {
+            // This is called when a PlayerItemViewModel is created
+            viewModel.RefreshByPlayer.Action = this.RefreshByPlayerHandler;
+            PlayerItemViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            PlayerItemViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void RefreshByPlayer(PlayerItemViewModel viewModel) {
+        }
+        
+        public virtual void RefreshByPlayerHandler(RefreshByPlayerCommand command) {
+            this.RefreshByPlayer(command.Sender as PlayerItemViewModel);
         }
     }
 }

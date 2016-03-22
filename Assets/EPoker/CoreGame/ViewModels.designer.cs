@@ -49,6 +49,8 @@ namespace yigame.epoker {
         
         private Signal<DealPileCommand> _DealPile;
         
+        private Signal<QuitCoreGameCommand> _QuitCoreGame;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -215,6 +217,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<QuitCoreGameCommand> QuitCoreGame {
+            get {
+                return _QuitCoreGame;
+            }
+            set {
+                _QuitCoreGame = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
@@ -222,6 +233,7 @@ namespace yigame.epoker {
             this.SimulateMatchBegan = new Signal<SimulateMatchBeganCommand>(this);
             this.CreateDeckToPile = new Signal<CreateDeckToPileCommand>(this);
             this.DealPile = new Signal<DealPileCommand>(this);
+            this.QuitCoreGame = new Signal<QuitCoreGameCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _InfoJsonProperty = new P<Newtonsoft.Json.Linq.JObject>(this, "InfoJson");
@@ -249,6 +261,10 @@ namespace yigame.epoker {
         
         public virtual void ExecuteDealPile() {
             this.DealPile.OnNext(new DealPileCommand());
+        }
+        
+        public virtual void ExecuteQuitCoreGame() {
+            this.QuitCoreGame.OnNext(new QuitCoreGameCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -279,6 +295,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("SimulateMatchBegan", SimulateMatchBegan) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("CreateDeckToPile", CreateDeckToPile) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DealPile", DealPile) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("QuitCoreGame", QuitCoreGame) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

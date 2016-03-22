@@ -132,4 +132,68 @@ namespace yigame.epoker {
             }
         }
     }
+    
+    public class NetSetRoomPropertiesBase : object {
+        
+        private ExitGames.Client.Photon.Hashtable _PropertiesToSet;
+        
+        public ExitGames.Client.Photon.Hashtable PropertiesToSet {
+            get {
+                return _PropertiesToSet;
+            }
+            set {
+                _PropertiesToSet = value;
+            }
+        }
+    }
+    
+    public class NetRaiseEventBase : object {
+        
+        private Byte _EventCode;
+        
+        private ExitGames.Client.Photon.Hashtable _EventContent;
+        
+        public Byte EventCode {
+            get {
+                return _EventCode;
+            }
+            set {
+                _EventCode = value;
+            }
+        }
+        
+        public ExitGames.Client.Photon.Hashtable EventContent {
+            get {
+                return _EventContent;
+            }
+            set {
+                _EventContent = value;
+            }
+        }
+    }
+    
+    public class NetSetPlayerPropertiesBase : object {
+        
+        private Int32 _ActerId;
+        
+        private ExitGames.Client.Photon.Hashtable _PropertiesToSet;
+        
+        public Int32 ActerId {
+            get {
+                return _ActerId;
+            }
+            set {
+                _ActerId = value;
+            }
+        }
+        
+        public ExitGames.Client.Photon.Hashtable PropertiesToSet {
+            get {
+                return _PropertiesToSet;
+            }
+            set {
+                _PropertiesToSet = value;
+            }
+        }
+    }
 }

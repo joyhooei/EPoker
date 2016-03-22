@@ -34,6 +34,9 @@ namespace yigame.epoker {
             this.OnEvent<NetLogout>().Subscribe(this.NetLogoutHandler);
             this.OnEvent<NetJoinOrCreateRoom>().Subscribe(this.NetJoinOrCreateRoomHandler);
             this.OnEvent<NetLeaveRoom>().Subscribe(this.NetLeaveRoomHandler);
+            this.OnEvent<NetSetRoomProperties>().Subscribe(this.NetSetRoomPropertiesHandler);
+            this.OnEvent<NetSetPlayerProperties>().Subscribe(this.NetSetPlayerPropertiesHandler);
+            this.OnEvent<NetRaiseEvent>().Subscribe(this.NetRaiseEventHandler);
         }
         
         /// <summary>
@@ -72,6 +75,30 @@ namespace yigame.epoker {
         // This method is executed when using this.Publish(new NetLeaveRoom())
         /// </summary>
         public virtual void NetLeaveRoomHandler(NetLeaveRoom data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new NetSetRoomProperties())
+        /// </summary>
+        public virtual void NetSetRoomPropertiesHandler(NetSetRoomProperties data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new NetSetPlayerProperties())
+        /// </summary>
+        public virtual void NetSetPlayerPropertiesHandler(NetSetPlayerProperties data) {
+            // Process the commands information.  Also, you can publish new events by using the line below.
+            // this.Publish(new AnotherEvent())
+        }
+        
+        /// <summary>
+        // This method is executed when using this.Publish(new NetRaiseEvent())
+        /// </summary>
+        public virtual void NetRaiseEventHandler(NetRaiseEvent data) {
             // Process the commands information.  Also, you can publish new events by using the line below.
             // this.Publish(new AnotherEvent())
         }

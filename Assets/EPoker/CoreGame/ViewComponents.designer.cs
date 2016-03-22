@@ -48,6 +48,10 @@ namespace yigame.epoker {
             CoreGameRoot.DealPile.OnNext(new DealPileCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteQuitCoreGame() {
+            CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.ResetPlayerCount.OnNext(command);
@@ -71,6 +75,11 @@ namespace yigame.epoker {
         public virtual void ExecuteDealPile(DealPileCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.DealPile.OnNext(command);
+        }
+        
+        public virtual void ExecuteQuitCoreGame(QuitCoreGameCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.QuitCoreGame.OnNext(command);
         }
     }
 }

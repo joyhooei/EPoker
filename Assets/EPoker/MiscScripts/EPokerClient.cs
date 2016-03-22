@@ -43,9 +43,39 @@
 		{
 			base.OnEvent (photonEvent);
 
-			if (photonEvent.Code == EventCode.Join) {
-				RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-				roomPanelVM.ExecuteRefreshRoom ();
+			switch (photonEvent.Code) {
+			case EventCode.Join:
+				{
+					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.ExecuteRefreshRoom ();
+					break;
+				}
+			case EventCode.Leave:
+				{
+					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.ExecuteRefreshRoom ();
+					break;
+				}
+
+			case EventCode.PropertiesChanged:
+				{
+					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.ExecuteRefreshRoomProperties ();
+					roomPanelVM.ExecuteRefreshPlayerProperties ();
+					break;
+				}
+			default:
+				{
+					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.Execute (new RefreshEventCommand () {
+						EventCode = photonEvent.Code,
+						EventContent = photonEvent.Parameters
+					});
+
+					break;
+				}
+
+				break;
 			}
 		}
 

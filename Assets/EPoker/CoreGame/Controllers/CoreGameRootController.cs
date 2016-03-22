@@ -15,6 +15,7 @@ namespace yigame.epoker
 	public class CoreGameRootController : CoreGameRootControllerBase
 	{
 		[Inject] public GameService GameService;
+		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
 
 		public override void InitializeCoreGameRoot (CoreGameRootViewModel viewModel)
 		{
@@ -154,6 +155,18 @@ namespace yigame.epoker
 		public override void DealPile (CoreGameRootViewModel viewModel)
 		{
 			base.DealPile (viewModel);
+		}
+
+		public override void QuitCoreGame (CoreGameRootViewModel viewModel)
+		{
+			base.QuitCoreGame (viewModel);
+
+			Publish (new NetLeaveRoom () {
+				SuccessCallback = s => {
+					OutOfGameRoot.ExecuteDoQuitRoom ();
+					Publish (new CloseCoreGame ());
+				}
+			});
 		}
 	}
 }

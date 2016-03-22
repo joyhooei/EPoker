@@ -518,22 +518,72 @@ namespace yigame.epoker {
     
     public partial class RoomPanelViewModelBase : PanelViewModel {
         
-        private ModelCollection<String> _Players;
+        private P<String> _RoomPropertiesJsonProperty;
+        
+        private P<String> _EventParamsJsonProperty;
+        
+        private ModelCollection<PlayerItemViewModel> _PlayerItems;
         
         private Signal<QuitRoomCommand> _QuitRoom;
         
         private Signal<RefreshRoomCommand> _RefreshRoom;
         
+        private Signal<RefreshRoomPropertiesCommand> _RefreshRoomProperties;
+        
+        private Signal<RefreshPlayerPropertiesCommand> _RefreshPlayerProperties;
+        
+        private Signal<SetPropertiesCommand> _SetProperties;
+        
+        private Signal<SendEventCommand> _SendEvent;
+        
+        private Signal<RefreshEventCommand> _RefreshEvent;
+        
         public RoomPanelViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
         
-        public virtual ModelCollection<String> Players {
+        public virtual P<String> RoomPropertiesJsonProperty {
             get {
-                return _Players;
+                return _RoomPropertiesJsonProperty;
             }
             set {
-                _Players = value;
+                _RoomPropertiesJsonProperty = value;
+            }
+        }
+        
+        public virtual P<String> EventParamsJsonProperty {
+            get {
+                return _EventParamsJsonProperty;
+            }
+            set {
+                _EventParamsJsonProperty = value;
+            }
+        }
+        
+        public virtual String RoomPropertiesJson {
+            get {
+                return RoomPropertiesJsonProperty.Value;
+            }
+            set {
+                RoomPropertiesJsonProperty.Value = value;
+            }
+        }
+        
+        public virtual String EventParamsJson {
+            get {
+                return EventParamsJsonProperty.Value;
+            }
+            set {
+                EventParamsJsonProperty.Value = value;
+            }
+        }
+        
+        public virtual ModelCollection<PlayerItemViewModel> PlayerItems {
+            get {
+                return _PlayerItems;
+            }
+            set {
+                _PlayerItems = value;
             }
         }
         
@@ -555,11 +605,63 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RefreshRoomPropertiesCommand> RefreshRoomProperties {
+            get {
+                return _RefreshRoomProperties;
+            }
+            set {
+                _RefreshRoomProperties = value;
+            }
+        }
+        
+        public virtual Signal<RefreshPlayerPropertiesCommand> RefreshPlayerProperties {
+            get {
+                return _RefreshPlayerProperties;
+            }
+            set {
+                _RefreshPlayerProperties = value;
+            }
+        }
+        
+        public virtual Signal<SetPropertiesCommand> SetProperties {
+            get {
+                return _SetProperties;
+            }
+            set {
+                _SetProperties = value;
+            }
+        }
+        
+        public virtual Signal<SendEventCommand> SendEvent {
+            get {
+                return _SendEvent;
+            }
+            set {
+                _SendEvent = value;
+            }
+        }
+        
+        public virtual Signal<RefreshEventCommand> RefreshEvent {
+            get {
+                return _RefreshEvent;
+            }
+            set {
+                _RefreshEvent = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.QuitRoom = new Signal<QuitRoomCommand>(this);
             this.RefreshRoom = new Signal<RefreshRoomCommand>(this);
-            _Players = new ModelCollection<String>(this, "Players");
+            this.RefreshRoomProperties = new Signal<RefreshRoomPropertiesCommand>(this);
+            this.RefreshPlayerProperties = new Signal<RefreshPlayerPropertiesCommand>(this);
+            this.SetProperties = new Signal<SetPropertiesCommand>(this);
+            this.SendEvent = new Signal<SendEventCommand>(this);
+            this.RefreshEvent = new Signal<RefreshEventCommand>(this);
+            _RoomPropertiesJsonProperty = new P<String>(this, "RoomPropertiesJson");
+            _EventParamsJsonProperty = new P<String>(this, "EventParamsJson");
+            _PlayerItems = new ModelCollection<PlayerItemViewModel>(this, "PlayerItems");
         }
         
         public virtual void ExecuteQuitRoom() {
@@ -570,23 +672,57 @@ namespace yigame.epoker {
             this.RefreshRoom.OnNext(new RefreshRoomCommand());
         }
         
+        public virtual void ExecuteRefreshRoomProperties() {
+            this.RefreshRoomProperties.OnNext(new RefreshRoomPropertiesCommand());
+        }
+        
+        public virtual void ExecuteRefreshPlayerProperties() {
+            this.RefreshPlayerProperties.OnNext(new RefreshPlayerPropertiesCommand());
+        }
+        
+        public virtual void ExecuteSetProperties() {
+            this.SetProperties.OnNext(new SetPropertiesCommand());
+        }
+        
+        public virtual void ExecuteSendEvent() {
+            this.SendEvent.OnNext(new SendEventCommand());
+        }
+        
+        public virtual void Execute(RefreshEventCommand argument) {
+            this.RefreshEvent.OnNext(argument);
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
+            if (stream.DeepSerialize) {
+                this.PlayerItems.Clear();
+                this.PlayerItems.AddRange(stream.DeserializeObjectArray<PlayerItemViewModel>("PlayerItems"));
+            }
         }
         
         public override void Write(ISerializerStream stream) {
             base.Write(stream);
+            if (stream.DeepSerialize) stream.SerializeArray("PlayerItems", this.PlayerItems);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("QuitRoom", QuitRoom) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RefreshRoom", RefreshRoom) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshRoomProperties", RefreshRoomProperties) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshPlayerProperties", RefreshPlayerProperties) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("SetProperties", SetProperties) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("SendEvent", SendEvent) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshEvent", RefreshEvent) { ParameterType = typeof(RefreshEventCommand) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
             base.FillProperties(list);
-            list.Add(new ViewModelPropertyInfo(_Players, false, true, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_RoomPropertiesJsonProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_EventParamsJsonProperty, false, false, false, false));
+            list.Add(new ViewModelPropertyInfo(_PlayerItems, true, true, false, false));
         }
     }
     
@@ -650,6 +786,178 @@ namespace yigame.epoker {
     public partial class DebugInfoPanelViewModel {
         
         public DebugInfoPanelViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
+    
+    public partial class PlayerItemViewModelBase : uFrame.MVVM.ViewModel {
+        
+        private P<Int32> _ActerIdProperty;
+        
+        private P<String> _NameProperty;
+        
+        private P<Boolean> _ReadyProperty;
+        
+        private P<ExitGames.Client.Photon.LoadBalancing.Player> _PlayerProperty;
+        
+        private P<Boolean> _IsLocalProperty;
+        
+        private Signal<RefreshByPlayerCommand> _RefreshByPlayer;
+        
+        public PlayerItemViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual P<Int32> ActerIdProperty {
+            get {
+                return _ActerIdProperty;
+            }
+            set {
+                _ActerIdProperty = value;
+            }
+        }
+        
+        public virtual P<String> NameProperty {
+            get {
+                return _NameProperty;
+            }
+            set {
+                _NameProperty = value;
+            }
+        }
+        
+        public virtual P<Boolean> ReadyProperty {
+            get {
+                return _ReadyProperty;
+            }
+            set {
+                _ReadyProperty = value;
+            }
+        }
+        
+        public virtual P<ExitGames.Client.Photon.LoadBalancing.Player> PlayerProperty {
+            get {
+                return _PlayerProperty;
+            }
+            set {
+                _PlayerProperty = value;
+            }
+        }
+        
+        public virtual P<Boolean> IsLocalProperty {
+            get {
+                return _IsLocalProperty;
+            }
+            set {
+                _IsLocalProperty = value;
+            }
+        }
+        
+        public virtual Int32 ActerId {
+            get {
+                return ActerIdProperty.Value;
+            }
+            set {
+                ActerIdProperty.Value = value;
+            }
+        }
+        
+        public virtual String Name {
+            get {
+                return NameProperty.Value;
+            }
+            set {
+                NameProperty.Value = value;
+            }
+        }
+        
+        public virtual Boolean Ready {
+            get {
+                return ReadyProperty.Value;
+            }
+            set {
+                ReadyProperty.Value = value;
+            }
+        }
+        
+        public virtual ExitGames.Client.Photon.LoadBalancing.Player Player {
+            get {
+                return PlayerProperty.Value;
+            }
+            set {
+                PlayerProperty.Value = value;
+            }
+        }
+        
+        public virtual Boolean IsLocal {
+            get {
+                return IsLocalProperty.Value;
+            }
+            set {
+                IsLocalProperty.Value = value;
+            }
+        }
+        
+        public virtual Signal<RefreshByPlayerCommand> RefreshByPlayer {
+            get {
+                return _RefreshByPlayer;
+            }
+            set {
+                _RefreshByPlayer = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            this.RefreshByPlayer = new Signal<RefreshByPlayerCommand>(this);
+            _ActerIdProperty = new P<Int32>(this, "ActerId");
+            _NameProperty = new P<String>(this, "Name");
+            _ReadyProperty = new P<Boolean>(this, "Ready");
+            _PlayerProperty = new P<ExitGames.Client.Photon.LoadBalancing.Player>(this, "Player");
+            _IsLocalProperty = new P<Boolean>(this, "IsLocal");
+        }
+        
+        public virtual void ExecuteRefreshByPlayer() {
+            this.RefreshByPlayer.OnNext(new RefreshByPlayerCommand());
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+            this.ActerId = stream.DeserializeInt("ActerId");;
+            this.Ready = stream.DeserializeBool("Ready");;
+            this.IsLocal = stream.DeserializeBool("IsLocal");;
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+            stream.SerializeInt("ActerId", this.ActerId);
+            stream.SerializeBool("Ready", this.Ready);
+            stream.SerializeBool("IsLocal", this.IsLocal);
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("RefreshByPlayer", RefreshByPlayer) { ParameterType = typeof(void) });
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_ActerIdProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_NameProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_ReadyProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PlayerProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_IsLocalProperty, false, false, false, false));
+        }
+    }
+    
+    public partial class PlayerItemViewModel {
+        
+        public PlayerItemViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
     }
