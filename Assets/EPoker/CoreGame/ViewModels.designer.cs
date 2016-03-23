@@ -31,27 +31,29 @@ namespace yigame.epoker {
         
         private P<Int32> _PlayerCountProperty;
         
-        private P<Newtonsoft.Json.Linq.JObject> _InfoJsonProperty;
-        
         private P<CardsPileViewModel> _PileProperty;
         
-        private P<String> _MyIdProperty;
+        private P<String> _PlayerNameProperty;
+        
+        private P<ExitGames.Client.Photon.LoadBalancing.Room> _LBRoomProperty;
         
         private ModelCollection<PlayerViewModel> _PlayerCollection;
         
         private Signal<RefreshCoreGameCommand> _RefreshCoreGame;
         
-        private Signal<ResetPlayerCountCommand> _ResetPlayerCount;
-        
         private Signal<RootMatchBeganCommand> _RootMatchBegan;
-        
-        private Signal<SimulateMatchBeganCommand> _SimulateMatchBegan;
         
         private Signal<CreateDeckToPileCommand> _CreateDeckToPile;
         
         private Signal<DealPileCommand> _DealPile;
         
         private Signal<QuitCoreGameCommand> _QuitCoreGame;
+        
+        private Signal<PlayerJoinCommand> _PlayerJoin;
+        
+        private Signal<PlayerLeaveCommand> _PlayerLeave;
+        
+        private Signal<CalcPosIdAndReposCommand> _CalcPosIdAndRepos;
         
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -93,15 +95,6 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual P<Newtonsoft.Json.Linq.JObject> InfoJsonProperty {
-            get {
-                return _InfoJsonProperty;
-            }
-            set {
-                _InfoJsonProperty = value;
-            }
-        }
-        
         public virtual P<CardsPileViewModel> PileProperty {
             get {
                 return _PileProperty;
@@ -111,12 +104,21 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual P<String> MyIdProperty {
+        public virtual P<String> PlayerNameProperty {
             get {
-                return _MyIdProperty;
+                return _PlayerNameProperty;
             }
             set {
-                _MyIdProperty = value;
+                _PlayerNameProperty = value;
+            }
+        }
+        
+        public virtual P<ExitGames.Client.Photon.LoadBalancing.Room> LBRoomProperty {
+            get {
+                return _LBRoomProperty;
+            }
+            set {
+                _LBRoomProperty = value;
             }
         }
         
@@ -138,15 +140,6 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual Newtonsoft.Json.Linq.JObject InfoJson {
-            get {
-                return InfoJsonProperty.Value;
-            }
-            set {
-                InfoJsonProperty.Value = value;
-            }
-        }
-        
         public virtual CardsPileViewModel Pile {
             get {
                 return PileProperty.Value;
@@ -156,12 +149,21 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual String MyId {
+        public virtual String PlayerName {
             get {
-                return MyIdProperty.Value;
+                return PlayerNameProperty.Value;
             }
             set {
-                MyIdProperty.Value = value;
+                PlayerNameProperty.Value = value;
+            }
+        }
+        
+        public virtual ExitGames.Client.Photon.LoadBalancing.Room LBRoom {
+            get {
+                return LBRoomProperty.Value;
+            }
+            set {
+                LBRoomProperty.Value = value;
             }
         }
         
@@ -183,30 +185,12 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual Signal<ResetPlayerCountCommand> ResetPlayerCount {
-            get {
-                return _ResetPlayerCount;
-            }
-            set {
-                _ResetPlayerCount = value;
-            }
-        }
-        
         public virtual Signal<RootMatchBeganCommand> RootMatchBegan {
             get {
                 return _RootMatchBegan;
             }
             set {
                 _RootMatchBegan = value;
-            }
-        }
-        
-        public virtual Signal<SimulateMatchBeganCommand> SimulateMatchBegan {
-            get {
-                return _SimulateMatchBegan;
-            }
-            set {
-                _SimulateMatchBegan = value;
             }
         }
         
@@ -237,20 +221,48 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<PlayerJoinCommand> PlayerJoin {
+            get {
+                return _PlayerJoin;
+            }
+            set {
+                _PlayerJoin = value;
+            }
+        }
+        
+        public virtual Signal<PlayerLeaveCommand> PlayerLeave {
+            get {
+                return _PlayerLeave;
+            }
+            set {
+                _PlayerLeave = value;
+            }
+        }
+        
+        public virtual Signal<CalcPosIdAndReposCommand> CalcPosIdAndRepos {
+            get {
+                return _CalcPosIdAndRepos;
+            }
+            set {
+                _CalcPosIdAndRepos = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
-            this.ResetPlayerCount = new Signal<ResetPlayerCountCommand>(this);
             this.RootMatchBegan = new Signal<RootMatchBeganCommand>(this);
-            this.SimulateMatchBegan = new Signal<SimulateMatchBeganCommand>(this);
             this.CreateDeckToPile = new Signal<CreateDeckToPileCommand>(this);
             this.DealPile = new Signal<DealPileCommand>(this);
             this.QuitCoreGame = new Signal<QuitCoreGameCommand>(this);
+            this.PlayerJoin = new Signal<PlayerJoinCommand>(this);
+            this.PlayerLeave = new Signal<PlayerLeaveCommand>(this);
+            this.CalcPosIdAndRepos = new Signal<CalcPosIdAndReposCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
-            _InfoJsonProperty = new P<Newtonsoft.Json.Linq.JObject>(this, "InfoJson");
             _PileProperty = new P<CardsPileViewModel>(this, "Pile");
-            _MyIdProperty = new P<String>(this, "MyId");
+            _PlayerNameProperty = new P<String>(this, "PlayerName");
+            _LBRoomProperty = new P<ExitGames.Client.Photon.LoadBalancing.Room>(this, "LBRoom");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
             _CoreGameStatusProperty = new CoreGameSM(this, "CoreGameStatus");
         }
@@ -259,16 +271,8 @@ namespace yigame.epoker {
             this.RefreshCoreGame.OnNext(new RefreshCoreGameCommand());
         }
         
-        public virtual void ExecuteResetPlayerCount() {
-            this.ResetPlayerCount.OnNext(new ResetPlayerCountCommand());
-        }
-        
         public virtual void ExecuteRootMatchBegan() {
             this.RootMatchBegan.OnNext(new RootMatchBeganCommand());
-        }
-        
-        public virtual void ExecuteSimulateMatchBegan() {
-            this.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand());
         }
         
         public virtual void ExecuteCreateDeckToPile() {
@@ -281,6 +285,18 @@ namespace yigame.epoker {
         
         public virtual void ExecuteQuitCoreGame() {
             this.QuitCoreGame.OnNext(new QuitCoreGameCommand());
+        }
+        
+        public virtual void ExecutePlayerJoin() {
+            this.PlayerJoin.OnNext(new PlayerJoinCommand());
+        }
+        
+        public virtual void ExecutePlayerLeave() {
+            this.PlayerLeave.OnNext(new PlayerLeaveCommand());
+        }
+        
+        public virtual void ExecuteCalcPosIdAndRepos() {
+            this.CalcPosIdAndRepos.OnNext(new CalcPosIdAndReposCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -307,12 +323,13 @@ namespace yigame.epoker {
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("RefreshCoreGame", RefreshCoreGame) { ParameterType = typeof(void) });
-            list.Add(new ViewModelCommandInfo("ResetPlayerCount", ResetPlayerCount) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RootMatchBegan", RootMatchBegan) { ParameterType = typeof(void) });
-            list.Add(new ViewModelCommandInfo("SimulateMatchBegan", SimulateMatchBegan) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("CreateDeckToPile", CreateDeckToPile) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("DealPile", DealPile) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("QuitCoreGame", QuitCoreGame) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("PlayerJoin", PlayerJoin) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("PlayerLeave", PlayerLeave) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("CalcPosIdAndRepos", CalcPosIdAndRepos) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -324,11 +341,11 @@ namespace yigame.epoker {
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_CoreGameStatusProperty, false, false, false, false));
             // PropertiesChildItem
-            list.Add(new ViewModelPropertyInfo(_InfoJsonProperty, false, false, false, false));
-            // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PileProperty, true, false, false, false));
             // PropertiesChildItem
-            list.Add(new ViewModelPropertyInfo(_MyIdProperty, false, false, false, false));
+            list.Add(new ViewModelPropertyInfo(_PlayerNameProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_LBRoomProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_PlayerCollection, true, true, false, false));
         }
     }
@@ -493,9 +510,13 @@ namespace yigame.epoker {
         
         private P<RoomIdentity> _PlayerRoomIdentityProperty;
         
-        private P<String> _DisplayNameProperty;
+        private P<String> _PlayerNameProperty;
         
         private P<Boolean> _IsSelfProperty;
+        
+        private P<String> _ReadyStatusTextProperty;
+        
+        private P<ExitGames.Client.Photon.LoadBalancing.Player> _LBPlayerProperty;
         
         private ModelCollection<CardViewModel> _HandCards;
         
@@ -518,6 +539,8 @@ namespace yigame.epoker {
         private Signal<OverCommand> _Over;
         
         private Signal<InitOKCommand> _InitOK;
+        
+        private Signal<RefreshPlayerCommand> _RefreshPlayer;
         
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -577,12 +600,12 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual P<String> DisplayNameProperty {
+        public virtual P<String> PlayerNameProperty {
             get {
-                return _DisplayNameProperty;
+                return _PlayerNameProperty;
             }
             set {
-                _DisplayNameProperty = value;
+                _PlayerNameProperty = value;
             }
         }
         
@@ -592,6 +615,24 @@ namespace yigame.epoker {
             }
             set {
                 _IsSelfProperty = value;
+            }
+        }
+        
+        public virtual P<String> ReadyStatusTextProperty {
+            get {
+                return _ReadyStatusTextProperty;
+            }
+            set {
+                _ReadyStatusTextProperty = value;
+            }
+        }
+        
+        public virtual P<ExitGames.Client.Photon.LoadBalancing.Player> LBPlayerProperty {
+            get {
+                return _LBPlayerProperty;
+            }
+            set {
+                _LBPlayerProperty = value;
             }
         }
         
@@ -631,12 +672,12 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual String DisplayName {
+        public virtual String PlayerName {
             get {
-                return DisplayNameProperty.Value;
+                return PlayerNameProperty.Value;
             }
             set {
-                DisplayNameProperty.Value = value;
+                PlayerNameProperty.Value = value;
             }
         }
         
@@ -646,6 +687,24 @@ namespace yigame.epoker {
             }
             set {
                 IsSelfProperty.Value = value;
+            }
+        }
+        
+        public virtual String ReadyStatusText {
+            get {
+                return ReadyStatusTextProperty.Value;
+            }
+            set {
+                ReadyStatusTextProperty.Value = value;
+            }
+        }
+        
+        public virtual ExitGames.Client.Photon.LoadBalancing.Player LBPlayer {
+            get {
+                return LBPlayerProperty.Value;
+            }
+            set {
+                LBPlayerProperty.Value = value;
             }
         }
         
@@ -748,6 +807,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RefreshPlayerCommand> RefreshPlayer {
+            get {
+                return _RefreshPlayer;
+            }
+            set {
+                _RefreshPlayer = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.PlayerReady = new Signal<PlayerReadyCommand>(this);
@@ -760,12 +828,15 @@ namespace yigame.epoker {
             this.Win = new Signal<WinCommand>(this);
             this.Over = new Signal<OverCommand>(this);
             this.InitOK = new Signal<InitOKCommand>(this);
+            this.RefreshPlayer = new Signal<RefreshPlayerCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
             _PlayerRoomIdentityProperty = new P<RoomIdentity>(this, "PlayerRoomIdentity");
-            _DisplayNameProperty = new P<String>(this, "DisplayName");
+            _PlayerNameProperty = new P<String>(this, "PlayerName");
             _IsSelfProperty = new P<Boolean>(this, "IsSelf");
+            _ReadyStatusTextProperty = new P<String>(this, "ReadyStatusText");
+            _LBPlayerProperty = new P<ExitGames.Client.Photon.LoadBalancing.Player>(this, "LBPlayer");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -820,6 +891,10 @@ namespace yigame.epoker {
             this.InitOK.OnNext(new InitOKCommand());
         }
         
+        public virtual void ExecuteRefreshPlayer() {
+            this.RefreshPlayer.OnNext(new RefreshPlayerCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             this.ActorId = stream.DeserializeInt("ActorId");;
@@ -853,6 +928,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("Win", Win) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("Over", Over) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("InitOK", InitOK) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshPlayer", RefreshPlayer) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -868,9 +944,13 @@ namespace yigame.epoker {
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PlayerRoomIdentityProperty, false, false, true, false));
             // PropertiesChildItem
-            list.Add(new ViewModelPropertyInfo(_DisplayNameProperty, false, false, false, false));
+            list.Add(new ViewModelPropertyInfo(_PlayerNameProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_IsSelfProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_ReadyStatusTextProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_LBPlayerProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }

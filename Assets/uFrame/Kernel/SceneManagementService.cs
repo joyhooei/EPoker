@@ -184,7 +184,7 @@ namespace uFrame.Kernel
 			this.Publish (new SceneLoaderEvent () { State = SceneState.Unloaded, SceneRoot = sceneRoot });
 
 			LoadedScenes.Remove (sceneRoot);
-//			Destroy ((sceneRoot as MonoBehaviour).gameObject);
+			Destroy ((sceneRoot as MonoBehaviour).gameObject);
 			UnityEngine.SceneManagement.SceneManager.UnloadScene (sceneRoot.Name);
 
 			this.Publish (new SceneLoaderEvent () { State = SceneState.Destructed, SceneRoot = sceneRoot });

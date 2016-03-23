@@ -23,10 +23,6 @@ namespace yigame.epoker {
         
         private String _CustomID;
         
-        private Action<string> _SuccessCallback;
-        
-        private Action<string> _ErrorCallback;
-        
         public String CustomID {
             get {
                 return _CustomID;
@@ -35,61 +31,17 @@ namespace yigame.epoker {
                 _CustomID = value;
             }
         }
-        
-        public Action<string> SuccessCallback {
-            get {
-                return _SuccessCallback;
-            }
-            set {
-                _SuccessCallback = value;
-            }
-        }
-        
-        public Action<string> ErrorCallback {
-            get {
-                return _ErrorCallback;
-            }
-            set {
-                _ErrorCallback = value;
-            }
-        }
     }
     
     public class NetInitBase : object {
     }
     
     public class NetLogoutBase : object {
-        
-        private Action<string> _SuccessCallback;
-        
-        private Action<string> _ErrorCallback;
-        
-        public Action<string> SuccessCallback {
-            get {
-                return _SuccessCallback;
-            }
-            set {
-                _SuccessCallback = value;
-            }
-        }
-        
-        public Action<string> ErrorCallback {
-            get {
-                return _ErrorCallback;
-            }
-            set {
-                _ErrorCallback = value;
-            }
-        }
     }
     
     public class NetJoinOrCreateRoomBase : object {
         
         private String _RoomId;
-        
-        private Action<string> _SuccessCallback;
-        
-        private Action<string> _ErrorCallback;
         
         public String RoomId {
             get {
@@ -99,38 +51,9 @@ namespace yigame.epoker {
                 _RoomId = value;
             }
         }
-        
-        public Action<string> SuccessCallback {
-            get {
-                return _SuccessCallback;
-            }
-            set {
-                _SuccessCallback = value;
-            }
-        }
-        
-        public Action<string> ErrorCallback {
-            get {
-                return _ErrorCallback;
-            }
-            set {
-                _ErrorCallback = value;
-            }
-        }
     }
     
     public class NetLeaveRoomBase : object {
-        
-        private Action<string> _SuccessCallback;
-        
-        public Action<string> SuccessCallback {
-            get {
-                return _SuccessCallback;
-            }
-            set {
-                _SuccessCallback = value;
-            }
-        }
     }
     
     public class NetSetRoomPropertiesBase : object {

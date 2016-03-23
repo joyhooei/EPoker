@@ -18,12 +18,16 @@ namespace yigame.epoker
     
 	public class CoreGameRootView : CoreGameRootViewBase
 	{
-
 		[Inject] public GameService GameSrv;
+		[Inject] public Network Network;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
+			CoreGameRootViewModel coreGame = model as CoreGameRootViewModel;
+
+			coreGame.LBRoom = Network.Client.CurrentRoom;
+			coreGame.PlayerName = Network.Client.PlayerName;
 		}
 
 		public override void Bind ()

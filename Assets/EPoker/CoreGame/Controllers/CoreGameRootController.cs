@@ -11,9 +11,15 @@ namespace yigame.epoker
 	using UniRx;
 	using Newtonsoft.Json;
 	using Newtonsoft.Json.Linq;
+	using ExitGames.Client.Photon.LoadBalancing;
+
+	#if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WII || UNITY_IPHONE || UNITY_ANDROID || UNITY_PS3 || UNITY_XBOX360 || UNITY_NACL  || UNITY_FLASH  || UNITY_BLACKBERRY
+	using Hashtable = ExitGames.Client.Photon.Hashtable;
+	#endif
 
 	public class CoreGameRootController : CoreGameRootControllerBase
 	{
+		[Inject] public Network Network;
 		[Inject] public GameService GameService;
 		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
 
@@ -22,55 +28,70 @@ namespace yigame.epoker
 			base.InitializeCoreGameRoot (viewModel);
 		}
 
-		public static string posid_arrange_player_count = @"{
-			2: [0,3],
-			3: [0,2,4],
-			4: [0,1,3,5],
-			5: [0,1,2,4,5],
-			6: [0,1,2,3,4,5]
-		}";
 
 		public override void RefreshCoreGame (CoreGameRootViewModel viewModel)
 		{
 			base.RefreshCoreGame (viewModel);
-			if (viewModel.CoreGameStatus is Waiting) {
-				viewModel.ExecuteResetPlayerCount ();
-			}
+
+			viewModel.PlayerCollection.ToList ().ForEach (vm => {
+				vm.ExecuteRefreshPlayer ();
+			});
 		}
 
-		public override void ResetPlayerCount (CoreGameRootViewModel viewModel)
-		{
-			base.ResetPlayerCount (viewModel);
-
-			int count = viewModel.InfoJson ["player_count"].Value<int> ();
-			int idx = viewModel.InfoJson ["players"]
-				.Select ((jt, _idx) => new {jt, _idx})
-				.Where (kv => kv.jt ["playfab_id"].Value<string> () == viewModel.MyId)
-				.Select (kv => kv._idx)
-				.Single ();
-			
-			JObject jArrange = JObject.Parse (posid_arrange_player_count);
-			JArray jArrangeItem = jArrange [count.ToString ()] as JArray;
-
-			viewModel.PlayerCount = count;
-
-			viewModel.PlayerCollection.Clear ();
-
-			for (int i = 0; i < count; i++) {
-
-				int idx_in_players = (i + idx) % count;
-				var jPlayer = viewModel.InfoJson ["players"] [idx_in_players];
-
-				PlayerViewModel player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
-				player.PosId = jArrangeItem [i].Value<string> ();
-				player.Id = jPlayer ["playfab_id"].Value<string> ();
-				player.ActorId = jPlayer ["actor_id"].Value<int> ();
-				player.DisplayName = jPlayer ["display_name"].Value<string> ();
-				player.PlayerRoomIdentity = (RoomIdentity)Enum.Parse (typeof(RoomIdentity), jPlayer ["player_room_identity"].Value<string> ());
-
-				viewModel.PlayerCollection.Add (player);
-			}
-		}
+		//		public override void ResetPlayerCount (CoreGameRootViewModel viewModel)
+		//		{
+		//			base.ResetPlayerCount (viewModel);
+		//
+		//			int count = viewModel.InfoJson ["player_count"].Value<int> ();
+		//			int idx = viewModel.InfoJson ["players"]
+		//				.Select ((jt, _idx) => new {jt, _idx})
+		//				.Where (kv => kv.jt ["display_name"].Value<string> () == Network.Client.PlayerName)
+		//				.Select (kv => kv._idx)
+		//				.Single ();
+		//
+		//			JObject jArrange = JObject.Parse (posid_arrange_player_count);
+		//			JArray jArrangeItem = jArrange [count.ToString ()] as JArray;
+		//
+		//			viewModel.PlayerCount = count;
+		//
+		////			viewModel.PlayerCollection.Clear ();
+		//			List<PlayerViewModel> vm_need_remove = new List<PlayerViewModel> ();
+		//			viewModel.PlayerCollection.ToList ().ForEach (vm => {
+		//				if (viewModel.InfoJson ["players"].ToList ().Exists (jt => (jt as JObject) ["actor_id"].Value<int> () == vm.ActorId) == false) {
+		//					vm_need_remove.Add (vm);
+		//				}
+		//			});
+		//
+		//			vm_need_remove.ForEach (vm => viewModel.PlayerCollection.Remove (vm));
+		//
+		//			for (int i = 0; i < count; i++) {
+		//
+		//				int idx_in_players = (i + idx) % count;
+		//				var jPlayer = viewModel.InfoJson ["players"] [idx_in_players];
+		//
+		//				PlayerViewModel player = null;
+		//				bool newly_created = false;
+		//				if (viewModel.PlayerCollection.ToList ().Exists (vm => (vm as PlayerViewModel).ActorId == jPlayer ["actor_id"].Value<int> ())) {
+		//					player = viewModel.PlayerCollection.Where (vm => (vm as PlayerViewModel).ActorId == jPlayer ["actor_id"].Value<int> ()).Single ();
+		//				} else {
+		//					player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
+		//					newly_created = true;
+		//				}
+		//
+		//				player.PosId = jArrangeItem [i].Value<string> ();
+		//				player.Id = jPlayer ["playfab_id"].Value<string> ();
+		//				player.ActorId = jPlayer ["actor_id"].Value<int> ();
+		//				player.DisplayName = jPlayer ["display_name"].Value<string> ();
+		//				player.PlayerRoomIdentity = (RoomIdentity)Enum.Parse (typeof(RoomIdentity), jPlayer ["player_room_identity"].Value<string> ());
+		//				player.IsSelf = i == 0;
+		//
+		//				if (newly_created) {
+		//					viewModel.PlayerCollection.Add (player);
+		//				}
+		//
+		//				player.ExecuteRefreshPlayer ();
+		//			}
+		//		}
 
 		public override void RootMatchBegan (CoreGameRootViewModel viewModel)
 		{
@@ -81,85 +102,30 @@ namespace yigame.epoker
 			});
 		}
 
-		public override void SimulateMatchBegan (CoreGameRootViewModel viewModel)
-		{
-			base.SimulateMatchBegan (viewModel);
-
-			// 初始化本人 id
-			viewModel.MyId = "1002";
-
-			// 此处应从服务器读取房间初始数据
-			var json_str = @"
-							{
-							  ""player_count"": 2,
-							  ""players"": [
-							    {
-							      ""idx"": 0,
-							      ""actor_id"": ""1"",
-							      ""playfab_id"": ""1001"",
-							      ""display_name"": ""ethan"",
-							      ""player_room_identity"": ""RoomMaster"",
-							      ""get_card_first"": true,
-							      ""hand_cards"": []
-							    },
-							    {
-							      ""idx"": 1,
-							      ""actor_id"": ""2"",
-							      ""playfab_id"": ""1002"",
-							      ""display_name"": ""dream"",
-							      ""player_room_identity"": ""RoomGuest"",
-							      ""get_card_first"": false,
-							      ""hand_cards"": []
-							    }
-							  ],
-							  ""pile_for_show"": []
-							}
-						";
-			viewModel.InfoJson = JObject.Parse (json_str);
-
-			Observable.Interval (TimeSpan.FromMilliseconds (100)).Take (4).Subscribe (step => {
-				UnityEngine.Debug.LogFormat ("Simulate Match Began: {0}", step);
-
-				if (step == 0) {
-					viewModel.ExecuteResetPlayerCount ();
-				} else if (step == 1) {
-					viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
-						playerVM.ExecuteInitOK ();
-					});
-				} else if (step == 2) {
-					viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
-						playerVM.ExecutePlayerReady ();
-					});
-				} else if (step == 3) {
-					viewModel.ExecuteRootMatchBegan ();
-				}
-			});
-		}
-
 		public override void CreateDeckToPile (CoreGameRootViewModel viewModel)
 		{
 			base.CreateDeckToPile (viewModel);
 
-			List<CardInfo> card_info_list = this.GameService.GetDeck (true);
-			JObject jInfo = CoreGameRoot.InfoJson;
-//			jInfo ["pile_for_show"] = JArray.Parse (JsonConvert.SerializeObject (card_info_list.Select (ci => ci.ToString ())));
-
-
-			int get_card_first_idx = jInfo ["players"]
-				.Where (jp => jp ["get_card_first"].Value<bool> ())
-				.Select (jp => jp ["idx"].Value<int> ())
-				.Single ();
-
-			int i = get_card_first_idx;
-			card_info_list.ForEach (ci => {
-				JArray j_hand_cards = jInfo ["players"] [i] ["hand_cards"] as JArray;
-				j_hand_cards.Add (ci.ToString ());
-				i = (i + 1) % viewModel.PlayerCount;
-			});
-
-			UnityEngine.Debug.Log ("jInfo: " + JsonConvert.SerializeObject (jInfo, Formatting.Indented));
-
-			Publish (new UploadInfoJson ());
+//			List<CardInfo> card_info_list = this.GameService.GetDeck (true);
+//			JObject jInfo = CoreGameRoot.InfoJson;
+////			jInfo ["pile_for_show"] = JArray.Parse (JsonConvert.SerializeObject (card_info_list.Select (ci => ci.ToString ())));
+//
+//
+//			int get_card_first_idx = jInfo ["players"]
+//				.Where (jp => jp ["get_card_first"].Value<bool> ())
+//				.Select (jp => jp ["idx"].Value<int> ())
+//				.Single ();
+//
+//			int i = get_card_first_idx;
+//			card_info_list.ForEach (ci => {
+//				JArray j_hand_cards = jInfo ["players"] [i] ["hand_cards"] as JArray;
+//				j_hand_cards.Add (ci.ToString ());
+//				i = (i + 1) % viewModel.PlayerCount;
+//			});
+//
+//			UnityEngine.Debug.Log ("jInfo: " + JsonConvert.SerializeObject (jInfo, Formatting.Indented));
+//
+//			Publish (new UploadInfoJson ());
 		}
 
 		public override void DealPile (CoreGameRootViewModel viewModel)
@@ -171,11 +137,81 @@ namespace yigame.epoker
 		{
 			base.QuitCoreGame (viewModel);
 
-			Publish (new NetLeaveRoom () {
-				SuccessCallback = s => {
-					OutOfGameRoot.ExecuteDoQuitRoom ();
-					Publish (new CloseCoreGame ());
+			Publish (new NetLeaveRoom ());
+		}
+
+		public override void PlayerJoin (CoreGameRootViewModel viewModel)
+		{
+			base.PlayerJoin (viewModel);
+			// 在 LBRoom 中查找 PlayerCollection 中没有的, 加入
+			Network.Client.CurrentRoom.Players.OrderBy (_ => _.Key).ToList ().ForEach (kv => {
+				int actorId = kv.Key;
+				Player player = kv.Value;
+
+				if (viewModel.PlayerCollection.ToList ().Exists (vm => vm.ActorId == actorId) == false) {
+					PlayerViewModel playerVM = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
+					playerVM.ActorId = player.ID;
+					playerVM.PlayerName = player.Name;
+					playerVM.IsSelf = player.IsLocal;
+					playerVM.PlayerRoomIdentity = player.IsMasterClient ? RoomIdentity.RoomMaster : RoomIdentity.RoomGuest;
+					playerVM.LBPlayer = player;
+
+					viewModel.PlayerCollection.Add (playerVM);
 				}
+			});
+
+			viewModel.ExecuteCalcPosIdAndRepos ();
+		}
+
+		public override void PlayerLeave (CoreGameRootViewModel viewModel)
+		{
+			base.PlayerLeave (viewModel);
+
+			// 在 PlayerCollection 中查找 LBRoom 中没有的, 删除
+			List<PlayerViewModel> player_need_remove = new List<PlayerViewModel> ();
+
+			viewModel.PlayerCollection.ToList ().ForEach (vm => {
+				if (Network.Client.CurrentRoom.Players.ToList ().Exists (kv => kv.Value.ID == vm.ActorId) == false) {
+					player_need_remove.Add (vm);
+				}
+			});
+
+			foreach (var vm in player_need_remove) {
+				viewModel.PlayerCollection.Remove (vm);
+			}
+
+			viewModel.ExecuteCalcPosIdAndRepos ();
+		}
+
+		public static string posid_arrange_player_count = @"{
+			1: [0],
+			2: [0,3],
+			3: [0,2,4],
+			4: [0,1,3,5],
+			5: [0,1,2,4,5],
+			6: [0,1,2,3,4,5]
+		}";
+
+		public override void CalcPosIdAndRepos (CoreGameRootViewModel viewModel)
+		{
+			base.CalcPosIdAndRepos (viewModel);
+
+			int count = Network.Client.CurrentRoom.Players.Count;
+			int idx = viewModel.PlayerCollection.ToList ()
+				.Select ((vm, _idx) => new {vm, _idx})
+				.Where (kv => kv.vm.PlayerName == Network.Client.PlayerName)
+				.Select (kv => kv._idx)
+				.Single ();
+
+			JObject jArrange = JObject.Parse (posid_arrange_player_count);
+			JArray jArrangeItem = jArrange [count.ToString ()] as JArray;
+
+			viewModel.PlayerCollection.ToList ()
+				.Select ((vm, _idx) => new {vm, _idx})
+				.ToList ()
+				.ForEach (kv => {
+				int idx_in_players = (kv._idx + idx) % count;
+				kv.vm.PosId = jArrangeItem [idx_in_players].Value<string> ();
 			});
 		}
 	}

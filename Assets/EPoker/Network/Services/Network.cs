@@ -6,9 +6,9 @@ namespace yigame.epoker
 	using System.Linq;
 	using uFrame.IOC;
 	using uFrame.MVVM;
+	using uFrame.Kernel;
 	using UnityEngine;
 	using UniRx;
-	using uFrame.Kernel;
 	using PlayFab;
 	using PlayFab.ClientModels;
 	using Newtonsoft.Json;
@@ -19,6 +19,7 @@ namespace yigame.epoker
 	{
 		[Inject ("DebugInfoPanel")] public DebugInfoPanelViewModel DebugInfoPanel;
 		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
+		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
 
 		#region 成员变量
 
@@ -95,11 +96,11 @@ namespace yigame.epoker
 							DisplayName = data.CustomID;
 							RefreshUserInfo ();
 							// PlayFab 部分登录及初始化完毕
-							OnPlayFabSuccessLogin (data.SuccessCallback, data.ErrorCallback, loginResult);
+							OnPlayFabSuccessLogin ();
 						}, error2 => {
 							ResetUserInfo ();
 							Client.State = ClientState.Uninitialized;
-							data.ErrorCallback.Invoke (JsonConvert.SerializeObject (error2));
+							RefreshNetInfo ("错误:未能更新用户显示名称");
 						});
 					} else {
 						RefreshNetInfo ("登录成功,正在同步用户信息...");
@@ -111,24 +112,24 @@ namespace yigame.epoker
 							DisplayName = rs1.AccountInfo.TitleInfo.DisplayName;
 							RefreshUserInfo ();
 							// PlayFab 部分登录及初始化完毕
-							OnPlayFabSuccessLogin (data.SuccessCallback, data.ErrorCallback, loginResult);
+							OnPlayFabSuccessLogin ();
 						}, re1 => {
 							ResetUserInfo ();
 							Client.State = ClientState.Uninitialized;
-							data.ErrorCallback.Invoke (JsonConvert.SerializeObject (re1));
+							RefreshNetInfo ("错误:未能获取用户信息");
 						});
 					}
 				}, error => {
 					ResetUserInfo ();
 					Client.State = ClientState.Uninitialized;
-					data.ErrorCallback.Invoke (JsonConvert.SerializeObject (error));
+					RefreshNetInfo ("错误:未能成功登录 PlayFab");
 				});
 			}
 		}
 
 		IDisposable WaitPhotonStateDisposable = null;
 
-		public void OnPlayFabSuccessLogin (Action<string> successCallback, Action<string> errorCallback, LoginResult loginResult)
+		public void OnPlayFabSuccessLogin ()
 		{
 			Client.PlayerName = DisplayName;
 
@@ -142,15 +143,10 @@ namespace yigame.epoker
 					WaitPhotonStateDisposable.Dispose ();
 				}
 
-				ClientStateRP.Where (cs => cs == ClientState.JoinedLobby).Subscribe (_ => {
-					RefreshUserInfo ();
-					successCallback.Invoke (JsonConvert.SerializeObject (loginResult));
-				});
-
 				ConnectToMasterServer (PlayFabId, res.PhotonCustomAuthenticationToken);
 
 			}, err => {
-				errorCallback.Invoke (JsonConvert.SerializeObject (err));
+				RefreshNetInfo ("错误:无法从 PlayFab 获取 Photon Token");
 			});
 
 		}
@@ -161,12 +157,6 @@ namespace yigame.epoker
 
 			if (Client.IsConnectedAndReady) {
 				Client.Disconnect ();
-
-				ClientStateRP.Where (cs => cs == ClientState.Disconnected).Subscribe (_ => {
-					if (Client.State == ClientState.Disconnected) {
-						data.SuccessCallback.Invoke (null);
-					}
-				}).AddTo (this.gameObject);
 			}
 		}
 
@@ -175,10 +165,6 @@ namespace yigame.epoker
 			base.NetJoinOrCreateRoomHandler (data);
 
 			if (Client.IsConnectedAndReady) {
-				ClientStateRP.Where (cs => cs == ClientState.Joined).Subscribe (_ => {
-					data.SuccessCallback.Invoke (null);
-				});
-
 				Client.OpJoinOrCreateRoom (data.RoomId, 0, null);
 			}
 		}
@@ -187,10 +173,6 @@ namespace yigame.epoker
 		{
 			base.NetLeaveRoomHandler (data);
 			if (Client.IsConnectedAndReady) {
-				ClientStateRP.Where (cs => cs == ClientState.JoinedLobby).Subscribe (_ => {
-					data.SuccessCallback.Invoke (null);
-				});
-
 				Client.OpLeaveRoom ();
 			}
 		}
@@ -204,7 +186,6 @@ namespace yigame.epoker
 		public override void NetRaiseEventHandler (NetRaiseEvent data)
 		{
 			base.NetRaiseEventHandler (data);
-
 			Client.OpRaiseEvent (data.EventCode, data.EventContent, true, null);
 		}
 
@@ -248,6 +229,7 @@ namespace yigame.epoker
 				break;
 			case ClientState.JoinedLobby:
 				RefreshNetInfo ("已连接大厅");
+				OutOfGameRoot.ExecuteDoLogin ();
 				break;
 			case ClientState.DisconnectingFromMasterserver:
 				RefreshNetInfo ("正在从主服务器断开...");
@@ -263,12 +245,17 @@ namespace yigame.epoker
 				break;
 			case ClientState.Joined:
 				RefreshNetInfo ("已经加入游戏");
+				OutOfGameRoot.ExecuteDoEnterRoom ();
+				Publish (new OpenCoreGame ());
 				break;
 			case ClientState.Leaving:
 				RefreshNetInfo ("正在离开游戏..");
+				OutOfGameRoot.ExecuteDoQuitRoom ();
+				Publish (new CloseCoreGame ());
 				break;
 			case ClientState.Left:
 				RefreshNetInfo ("已经离开游戏");
+				// 在此没有响应
 				break;
 			case ClientState.DisconnectingFromGameserver:
 				RefreshNetInfo ("正在从游戏服务器断开...");
@@ -315,6 +302,43 @@ namespace yigame.epoker
 				Client.CustomAuthenticationValues.SetAuthParameters (id, ticket);
 			}
 			Client.ConnectToRegionMaster ("US");
+		}
+
+		public void OnEvent (ExitGames.Client.Photon.EventData photonEvent)
+		{
+			switch (photonEvent.Code) {
+			case EventCode.Join:
+				{
+					RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.ExecuteRefreshRoom ();
+					CoreGameRoot.ExecutePlayerJoin ();
+					break;
+				}
+			case EventCode.Leave:
+				{
+					RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.ExecuteRefreshRoom ();
+					CoreGameRoot.ExecutePlayerLeave ();
+					break;
+				}
+			case EventCode.PropertiesChanged:
+				{
+					RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.ExecuteRefreshRoomProperties ();
+					roomPanelVM.ExecuteRefreshPlayerProperties ();
+					CoreGameRoot.ExecuteRefreshCoreGame ();
+					break;
+				}
+			default:
+				{
+					RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+					roomPanelVM.Execute (new RefreshEventCommand () {
+						EventCode = photonEvent.Code,
+						EventContent = photonEvent.Parameters
+					});
+					break;
+				}
+			}
 		}
 	}
 }

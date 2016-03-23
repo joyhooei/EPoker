@@ -29,12 +29,7 @@ namespace yigame.epoker
 		public override void QuitRoom (RoomPanelViewModel viewModel)
 		{
 			base.QuitRoom (viewModel);
-			Publish (new NetLeaveRoom () {
-				SuccessCallback = s => {
-					OutOfGameRoot.ExecuteDoQuitRoom ();
-					Publish (new CloseCoreGame ());
-				}
-			});
+			Publish (new NetLeaveRoom ());
 		}
 
 		public override void RefreshRoom (RoomPanelViewModel viewModel)

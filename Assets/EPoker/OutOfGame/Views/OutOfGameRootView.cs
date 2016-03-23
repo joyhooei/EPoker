@@ -56,7 +56,7 @@ namespace yigame.epoker
 		{
 			base.OnUIRoom ();
 			OutOfGameRoot.CanvasRoot.Execute (new OpenClosePanelCommand () {
-				OpenPanels = new List<Type> () { typeof(RoomPanelViewModel) },
+				OpenPanels = new List<Type> () { /* typeof(RoomPanelViewModel) */ },
 				ClosePanels = new List<Type> () { typeof(LoginPanelViewModel), typeof(LobbyPanelViewModel) }
 			});
 		}

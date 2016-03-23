@@ -41,17 +41,17 @@ namespace yigame.epoker {
         [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
-        public Newtonsoft.Json.Linq.JObject _InfoJson;
-        
-        [UnityEngine.SerializeField()]
-        [UFGroup("View Model Properties")]
-        [UnityEngine.HideInInspector()]
         public uFrame.MVVM.ViewBase _Pile;
         
         [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
-        public String _MyId;
+        public String _PlayerName;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public ExitGames.Client.Photon.LoadBalancing.Room _LBRoom;
         
         [UFToggleGroup("PlayerCollection")]
         [UnityEngine.HideInInspector()]
@@ -78,16 +78,6 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_CoreGameStatusonlyWhenChanged")]
         protected bool _CoreGameStatusOnlyWhenChanged;
-        
-        [UFToggleGroup("SimulateMatchBegan")]
-        [UnityEngine.HideInInspector()]
-        public bool _BindSimulateMatchBegan = true;
-        
-        [UFGroup("SimulateMatchBegan")]
-        [UnityEngine.SerializeField()]
-        [UnityEngine.HideInInspector()]
-        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SimulateMatchBeganbutton")]
-        protected UnityEngine.UI.Button _SimulateMatchBeganButton;
         
         [UFToggleGroup("QuitCoreGame")]
         [UnityEngine.HideInInspector()]
@@ -131,9 +121,9 @@ namespace yigame.epoker {
             var coregamerootview = ((CoreGameRootViewModel)model);
             coregamerootview.BackGround = this._BackGround == null ? null :  ViewService.FetchViewModel(this._BackGround) as BackGroundViewModel;
             coregamerootview.PlayerCount = this._PlayerCount;
-            coregamerootview.InfoJson = this._InfoJson;
             coregamerootview.Pile = this._Pile == null ? null :  ViewService.FetchViewModel(this._Pile) as CardsPileViewModel;
-            coregamerootview.MyId = this._MyId;
+            coregamerootview.PlayerName = this._PlayerName;
+            coregamerootview.LBRoom = this._LBRoom;
         }
         
         public override void Bind() {
@@ -146,9 +136,6 @@ namespace yigame.epoker {
             }
             if (_BindCoreGameStatus) {
                 this.BindStateProperty(this.CoreGameRoot.CoreGameStatusProperty, this.CoreGameStatusChanged, _CoreGameStatusOnlyWhenChanged);
-            }
-            if (_BindSimulateMatchBegan) {
-                this.BindButtonToCommand(_SimulateMatchBeganButton, this.CoreGameRoot.SimulateMatchBegan);
             }
             if (_BindQuitCoreGame) {
                 this.BindButtonToCommand(_QuitCoreGameButton, this.CoreGameRoot.QuitCoreGame);
@@ -184,16 +171,8 @@ namespace yigame.epoker {
             CoreGameRoot.RefreshCoreGame.OnNext(new RefreshCoreGameCommand() { Sender = CoreGameRoot });
         }
         
-        public virtual void ExecuteResetPlayerCount() {
-            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot });
-        }
-        
         public virtual void ExecuteRootMatchBegan() {
             CoreGameRoot.RootMatchBegan.OnNext(new RootMatchBeganCommand() { Sender = CoreGameRoot });
-        }
-        
-        public virtual void ExecuteSimulateMatchBegan() {
-            CoreGameRoot.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteCreateDeckToPile() {
@@ -208,24 +187,26 @@ namespace yigame.epoker {
             CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecutePlayerJoin() {
+            CoreGameRoot.PlayerJoin.OnNext(new PlayerJoinCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecutePlayerLeave() {
+            CoreGameRoot.PlayerLeave.OnNext(new PlayerLeaveCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteCalcPosIdAndRepos() {
+            CoreGameRoot.CalcPosIdAndRepos.OnNext(new CalcPosIdAndReposCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
         }
         
-        public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.ResetPlayerCount.OnNext(command);
-        }
-        
         public virtual void ExecuteRootMatchBegan(RootMatchBeganCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RootMatchBegan.OnNext(command);
-        }
-        
-        public virtual void ExecuteSimulateMatchBegan(SimulateMatchBeganCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.SimulateMatchBegan.OnNext(command);
         }
         
         public virtual void ExecuteCreateDeckToPile(CreateDeckToPileCommand command) {
@@ -241,6 +222,21 @@ namespace yigame.epoker {
         public virtual void ExecuteQuitCoreGame(QuitCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.QuitCoreGame.OnNext(command);
+        }
+        
+        public virtual void ExecutePlayerJoin(PlayerJoinCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.PlayerJoin.OnNext(command);
+        }
+        
+        public virtual void ExecutePlayerLeave(PlayerLeaveCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.PlayerLeave.OnNext(command);
+        }
+        
+        public virtual void ExecuteCalcPosIdAndRepos(CalcPosIdAndReposCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.CalcPosIdAndRepos.OnNext(command);
         }
     }
     
@@ -374,12 +370,22 @@ namespace yigame.epoker {
         [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
-        public String _DisplayName;
+        public String _PlayerName;
         
         [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
         public Boolean _IsSelf;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _ReadyStatusText;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public ExitGames.Client.Photon.LoadBalancing.Player _LBPlayer;
         
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
@@ -390,6 +396,40 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_StatusonlyWhenChanged")]
         protected bool _StatusOnlyWhenChanged;
+        
+        [UFToggleGroup("ReadyStatusText")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindReadyStatusText = true;
+        
+        [UFGroup("ReadyStatusText")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ReadyStatusTextinput")]
+        protected UnityEngine.UI.Text _ReadyStatusTextInput;
+        
+        [UFToggleGroup("IsSelf")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindIsSelf = true;
+        
+        [UFGroup("IsSelf")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_IsSelfonlyWhenChanged")]
+        protected bool _IsSelfOnlyWhenChanged;
+        
+        [UFToggleGroup("RefreshPlayer")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRefreshPlayer = true;
+        
+        [UFToggleGroup("PosId")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindPosId = true;
+        
+        [UFGroup("PosId")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PosIdonlyWhenChanged")]
+        protected bool _PosIdOnlyWhenChanged;
         
         public override string DefaultIdentifier {
             get {
@@ -419,8 +459,10 @@ namespace yigame.epoker {
             playerview.ActorId = this._ActorId;
             playerview.PosId = this._PosId;
             playerview.PlayerRoomIdentity = this._PlayerRoomIdentity;
-            playerview.DisplayName = this._DisplayName;
+            playerview.PlayerName = this._PlayerName;
             playerview.IsSelf = this._IsSelf;
+            playerview.ReadyStatusText = this._ReadyStatusText;
+            playerview.LBPlayer = this._LBPlayer;
         }
         
         public override void Bind() {
@@ -430,6 +472,18 @@ namespace yigame.epoker {
             // Any designer bindings are created in the base implementation.
             if (_BindStatus) {
                 this.BindStateProperty(this.Player.StatusProperty, this.StatusChanged, _StatusOnlyWhenChanged);
+            }
+            if (_BindReadyStatusText) {
+                this.BindTextToProperty(_ReadyStatusTextInput, this.Player.ReadyStatusTextProperty);
+            }
+            if (_BindIsSelf) {
+                this.BindProperty(this.Player.IsSelfProperty, this.IsSelfChanged, _IsSelfOnlyWhenChanged);
+            }
+            if (_BindRefreshPlayer) {
+                this.BindCommandExecuted(this.Player.RefreshPlayer, this.RefreshPlayerExecuted);
+            }
+            if (_BindPosId) {
+                this.BindProperty(this.Player.PosIdProperty, this.PosIdChanged, _PosIdOnlyWhenChanged);
             }
         }
         
@@ -484,6 +538,15 @@ namespace yigame.epoker {
         public virtual void OnWait() {
         }
         
+        public virtual void IsSelfChanged(Boolean arg1) {
+        }
+        
+        public virtual void RefreshPlayerExecuted(RefreshPlayerCommand command) {
+        }
+        
+        public virtual void PosIdChanged(String arg1) {
+        }
+        
         public virtual void ExecutePlayerReady() {
             Player.PlayerReady.OnNext(new PlayerReadyCommand() { Sender = Player });
         }
@@ -522,6 +585,10 @@ namespace yigame.epoker {
         
         public virtual void ExecuteInitOK() {
             Player.InitOK.OnNext(new InitOKCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteRefreshPlayer() {
+            Player.RefreshPlayer.OnNext(new RefreshPlayerCommand() { Sender = Player });
         }
         
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
@@ -572,6 +639,11 @@ namespace yigame.epoker {
         public virtual void ExecuteInitOK(InitOKCommand command) {
             command.Sender = Player;
             Player.InitOK.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshPlayer(RefreshPlayerCommand command) {
+            command.Sender = Player;
+            Player.RefreshPlayer.OnNext(command);
         }
     }
     

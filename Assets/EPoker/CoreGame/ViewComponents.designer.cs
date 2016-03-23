@@ -32,16 +32,8 @@ namespace yigame.epoker {
             CoreGameRoot.RefreshCoreGame.OnNext(new RefreshCoreGameCommand() { Sender = CoreGameRoot });
         }
         
-        public virtual void ExecuteResetPlayerCount() {
-            CoreGameRoot.ResetPlayerCount.OnNext(new ResetPlayerCountCommand() { Sender = CoreGameRoot });
-        }
-        
         public virtual void ExecuteRootMatchBegan() {
             CoreGameRoot.RootMatchBegan.OnNext(new RootMatchBeganCommand() { Sender = CoreGameRoot });
-        }
-        
-        public virtual void ExecuteSimulateMatchBegan() {
-            CoreGameRoot.SimulateMatchBegan.OnNext(new SimulateMatchBeganCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteCreateDeckToPile() {
@@ -56,24 +48,26 @@ namespace yigame.epoker {
             CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecutePlayerJoin() {
+            CoreGameRoot.PlayerJoin.OnNext(new PlayerJoinCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecutePlayerLeave() {
+            CoreGameRoot.PlayerLeave.OnNext(new PlayerLeaveCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteCalcPosIdAndRepos() {
+            CoreGameRoot.CalcPosIdAndRepos.OnNext(new CalcPosIdAndReposCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
         }
         
-        public virtual void ExecuteResetPlayerCount(ResetPlayerCountCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.ResetPlayerCount.OnNext(command);
-        }
-        
         public virtual void ExecuteRootMatchBegan(RootMatchBeganCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RootMatchBegan.OnNext(command);
-        }
-        
-        public virtual void ExecuteSimulateMatchBegan(SimulateMatchBeganCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.SimulateMatchBegan.OnNext(command);
         }
         
         public virtual void ExecuteCreateDeckToPile(CreateDeckToPileCommand command) {
@@ -89,6 +83,21 @@ namespace yigame.epoker {
         public virtual void ExecuteQuitCoreGame(QuitCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.QuitCoreGame.OnNext(command);
+        }
+        
+        public virtual void ExecutePlayerJoin(PlayerJoinCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.PlayerJoin.OnNext(command);
+        }
+        
+        public virtual void ExecutePlayerLeave(PlayerLeaveCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.PlayerLeave.OnNext(command);
+        }
+        
+        public virtual void ExecuteCalcPosIdAndRepos(CalcPosIdAndReposCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.CalcPosIdAndRepos.OnNext(command);
         }
     }
 }

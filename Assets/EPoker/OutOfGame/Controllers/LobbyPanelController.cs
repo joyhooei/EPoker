@@ -25,13 +25,8 @@ namespace yigame.epoker
 			base.EnterRoom (viewModel);
 
 			Publish (new NetJoinOrCreateRoom () {
-				RoomId = viewModel.RoomId,
-				SuccessCallback = _ => {
-					UnityEngine.Debug.Log ("SuccessCallback: " + _);
-					OutOfGameRoot.ExecuteDoEnterRoom ();
-
-					Publish (new OpenCoreGame ());
-				}
+				RoomId = viewModel.RoomId
+					
 			});
 		}
 
@@ -40,14 +35,7 @@ namespace yigame.epoker
 			base.QuitLobby (viewModel);
 
 			// 进行登出
-			Publish (new NetLogout () {
-				SuccessCallback = _ => {
-					UnityEngine.Debug.Log ("SuccessCallback: " + _);
-				},
-				ErrorCallback = _ => {
-					UnityEngine.Debug.Log ("ErrorCallback: " + _);
-				}
-			});
+			Publish (new NetLogout ());
 		}
 	}
 }

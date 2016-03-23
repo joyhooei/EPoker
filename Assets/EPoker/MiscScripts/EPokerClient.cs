@@ -6,6 +6,7 @@
 	using System.Linq;
 	using uFrame.IOC;
 	using uFrame.MVVM;
+	using uFrame.Serialization;
 	using UnityEngine;
 	using UniRx;
 	using uFrame.Kernel;
@@ -42,41 +43,37 @@
 		public override void OnEvent (ExitGames.Client.Photon.EventData photonEvent)
 		{
 			base.OnEvent (photonEvent);
-
-			switch (photonEvent.Code) {
-			case EventCode.Join:
-				{
-					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-					roomPanelVM.ExecuteRefreshRoom ();
-					break;
-				}
-			case EventCode.Leave:
-				{
-					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-					roomPanelVM.ExecuteRefreshRoom ();
-					break;
-				}
-
-			case EventCode.PropertiesChanged:
-				{
-					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-					roomPanelVM.ExecuteRefreshRoomProperties ();
-					roomPanelVM.ExecuteRefreshPlayerProperties ();
-					break;
-				}
-			default:
-				{
-					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-					roomPanelVM.Execute (new RefreshEventCommand () {
-						EventCode = photonEvent.Code,
-						EventContent = photonEvent.Parameters
-					});
-
-					break;
-				}
-
-				break;
-			}
+			this.NetWork.OnEvent (photonEvent);
+//			switch (photonEvent.Code) {
+//			case EventCode.Join:
+//				{
+//					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+//					roomPanelVM.ExecuteRefreshRoom ();
+//					break;
+//				}
+//			case EventCode.Leave:
+//				{
+//					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+//					roomPanelVM.ExecuteRefreshRoom ();
+//					break;
+//				}
+//			case EventCode.PropertiesChanged:
+//				{
+//					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+//					roomPanelVM.ExecuteRefreshRoomProperties ();
+//					roomPanelVM.ExecuteRefreshPlayerProperties ();
+//					break;
+//				}
+//			default:
+//				{
+//					RoomPanelViewModel roomPanelVM = this.NetWork.OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+//					roomPanelVM.Execute (new RefreshEventCommand () {
+//						EventCode = photonEvent.Code,
+//						EventContent = photonEvent.Parameters
+//					});
+//					break;
+//				}
+//			}
 		}
 
 		public override void OnMessage (object message)

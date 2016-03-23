@@ -49,7 +49,7 @@ namespace yigame.epoker
 			if (PlayerItem.IsLocal) {
 
 				Hashtable ht = new Hashtable ();
-				ht.Add ("ready", arg1);
+				ht.Add ("is_ready", arg1);
 
 				Publish (new NetSetPlayerProperties () {
 					ActerId = PlayerItem.ActerId,
@@ -68,7 +68,7 @@ namespace yigame.epoker
 		public override void RefreshByPlayerExecuted (RefreshByPlayerCommand command)
 		{
 			var toggle_ready = gameObject.Children ().Where (go => go.name == "Ready").Single ().GetComponent<Toggle> ();
-			toggle_ready.isOn = Convert.ToBoolean (PlayerItem.Player.CustomProperties ["ready"]);
+			toggle_ready.isOn = Convert.ToBoolean (PlayerItem.Player.CustomProperties ["is_ready"]);
 		}
 	}
 }

@@ -75,12 +75,13 @@ namespace yigame.epoker {
         public virtual void InitializeCoreGameRoot(CoreGameRootViewModel viewModel) {
             // This is called when a CoreGameRootViewModel is created
             viewModel.RefreshCoreGame.Action = this.RefreshCoreGameHandler;
-            viewModel.ResetPlayerCount.Action = this.ResetPlayerCountHandler;
             viewModel.RootMatchBegan.Action = this.RootMatchBeganHandler;
-            viewModel.SimulateMatchBegan.Action = this.SimulateMatchBeganHandler;
             viewModel.CreateDeckToPile.Action = this.CreateDeckToPileHandler;
             viewModel.DealPile.Action = this.DealPileHandler;
             viewModel.QuitCoreGame.Action = this.QuitCoreGameHandler;
+            viewModel.PlayerJoin.Action = this.PlayerJoinHandler;
+            viewModel.PlayerLeave.Action = this.PlayerLeaveHandler;
+            viewModel.CalcPosIdAndRepos.Action = this.CalcPosIdAndReposHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -92,13 +93,7 @@ namespace yigame.epoker {
         public virtual void RefreshCoreGame(CoreGameRootViewModel viewModel) {
         }
         
-        public virtual void ResetPlayerCount(CoreGameRootViewModel viewModel) {
-        }
-        
         public virtual void RootMatchBegan(CoreGameRootViewModel viewModel) {
-        }
-        
-        public virtual void SimulateMatchBegan(CoreGameRootViewModel viewModel) {
         }
         
         public virtual void CreateDeckToPile(CoreGameRootViewModel viewModel) {
@@ -110,20 +105,21 @@ namespace yigame.epoker {
         public virtual void QuitCoreGame(CoreGameRootViewModel viewModel) {
         }
         
+        public virtual void PlayerJoin(CoreGameRootViewModel viewModel) {
+        }
+        
+        public virtual void PlayerLeave(CoreGameRootViewModel viewModel) {
+        }
+        
+        public virtual void CalcPosIdAndRepos(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void RefreshCoreGameHandler(RefreshCoreGameCommand command) {
             this.RefreshCoreGame(command.Sender as CoreGameRootViewModel);
         }
         
-        public virtual void ResetPlayerCountHandler(ResetPlayerCountCommand command) {
-            this.ResetPlayerCount(command.Sender as CoreGameRootViewModel);
-        }
-        
         public virtual void RootMatchBeganHandler(RootMatchBeganCommand command) {
             this.RootMatchBegan(command.Sender as CoreGameRootViewModel);
-        }
-        
-        public virtual void SimulateMatchBeganHandler(SimulateMatchBeganCommand command) {
-            this.SimulateMatchBegan(command.Sender as CoreGameRootViewModel);
         }
         
         public virtual void CreateDeckToPileHandler(CreateDeckToPileCommand command) {
@@ -136,6 +132,18 @@ namespace yigame.epoker {
         
         public virtual void QuitCoreGameHandler(QuitCoreGameCommand command) {
             this.QuitCoreGame(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void PlayerJoinHandler(PlayerJoinCommand command) {
+            this.PlayerJoin(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void PlayerLeaveHandler(PlayerLeaveCommand command) {
+            this.PlayerLeave(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void CalcPosIdAndReposHandler(CalcPosIdAndReposCommand command) {
+            this.CalcPosIdAndRepos(command.Sender as CoreGameRootViewModel);
         }
     }
     
@@ -326,6 +334,7 @@ namespace yigame.epoker {
             viewModel.Win.Action = this.WinHandler;
             viewModel.Over.Action = this.OverHandler;
             viewModel.InitOK.Action = this.InitOKHandler;
+            viewModel.RefreshPlayer.Action = this.RefreshPlayerHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
@@ -362,6 +371,9 @@ namespace yigame.epoker {
         }
         
         public virtual void InitOK(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void RefreshPlayer(PlayerViewModel viewModel) {
         }
         
         public virtual void PlayerReadyHandler(PlayerReadyCommand command) {
@@ -402,6 +414,10 @@ namespace yigame.epoker {
         
         public virtual void InitOKHandler(InitOKCommand command) {
             this.InitOK(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void RefreshPlayerHandler(RefreshPlayerCommand command) {
+            this.RefreshPlayer(command.Sender as PlayerViewModel);
         }
     }
     

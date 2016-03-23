@@ -21,13 +21,7 @@ namespace yigame.epoker {
     public partial class RefreshCoreGameCommand : uFrame.MVVM.ViewModelCommand {
     }
     
-    public partial class ResetPlayerCountCommand : uFrame.MVVM.ViewModelCommand {
-    }
-    
     public partial class RootMatchBeganCommand : uFrame.MVVM.ViewModelCommand {
-    }
-    
-    public partial class SimulateMatchBeganCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class CreateDeckToPileCommand : uFrame.MVVM.ViewModelCommand {
@@ -37,6 +31,15 @@ namespace yigame.epoker {
     }
     
     public partial class QuitCoreGameCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class PlayerJoinCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class PlayerLeaveCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class CalcPosIdAndReposCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class PlayerReadyCommand : uFrame.MVVM.ViewModelCommand {
@@ -67,5 +70,8 @@ namespace yigame.epoker {
     }
     
     public partial class InitOKCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class RefreshPlayerCommand : uFrame.MVVM.ViewModelCommand {
     }
 }

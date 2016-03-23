@@ -45,9 +45,10 @@ namespace yigame.epoker
 		{
 			base.DoLogout (viewModel);
 		}
-    
-    public override void DoDisconnect(OutOfGameRootViewModel viewModel) {
-        base.DoDisconnect(viewModel);
-    }
+
+		public override void DoDisconnect (OutOfGameRootViewModel viewModel)
+		{
+			base.DoDisconnect (viewModel);
+		}
 	}
 }

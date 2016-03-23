@@ -12,14 +12,18 @@ namespace yigame.epoker
 	using uFrame.IOC;
 	using UniRx;
 	using UnityEngine;
+	using UnityEngine.UI;
 	using yigame.epoker;
 	using Newtonsoft.Json;
 	using Newtonsoft.Json.Linq;
+	using Unity.Linq;
 
     
 	public class PlayerView : PlayerViewBase
 	{
 		[Inject] public GameService GameService;
+
+		public Button ReadyButton;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
@@ -34,6 +38,14 @@ namespace yigame.epoker
 		public override void Bind ()
 		{
 			base.Bind ();
+
+			this.BindButtonToHandler (ReadyButton, () => {
+				if (Player.Status is Wait) {
+					Player.ExecutePlayerReady ();
+				} else if (Player.Status is Ready) {
+					Player.ExecutePlayerCancel ();
+				}
+			});
 		}
 
 		#region Status Changed
@@ -46,11 +58,24 @@ namespace yigame.epoker
 		public override void OnInit ()
 		{
 			base.OnInit ();
+
+			Player.ReadyStatusText = "Initializing...";
+			Observable.Timer (TimeSpan.FromSeconds (1)).Subscribe (_ => {
+				Player.ExecuteInitOK ();
+				this.ExecuteRefreshPlayer ();
+			});
+		}
+
+		public override void OnWait ()
+		{
+			base.OnWait ();
+			Player.ReadyStatusText = "Wait...";
 		}
 
 		public override void OnReady ()
 		{
 			base.OnReady ();
+			Player.ReadyStatusText = "Ready!";
 		}
 
 		public override void OnMatchPrepare ()
@@ -64,15 +89,16 @@ namespace yigame.epoker
 			}
 		}
 
+		public override void OnMatchDeal ()
+		{
+			base.OnMatchDeal ();
+		}
+
 		public override void OnMatchIdle ()
 		{
 			base.OnMatchIdle ();
 		}
 
-		public override void OnMatchDeal ()
-		{
-			base.OnMatchDeal ();
-		}
 
 		public override void OnMatchWin ()
 		{
@@ -84,12 +110,13 @@ namespace yigame.epoker
 			base.OnMatchOver ();
 		}
 
-		public override void OnWait ()
-		{
-			base.OnWait ();
-		}
 
 		#endregion
+
+		public override void PosIdChanged (String arg1)
+		{
+			SetPanelPosByPosId ();
+		}
 
 		public void SetPanelPosByPosId ()
 		{
@@ -103,6 +130,19 @@ namespace yigame.epoker
 			transform.position = pos;
 
 			Debug.Log (pos_obj_name + pos.ToString ());
+		}
+
+		public override void IsSelfChanged (Boolean arg1)
+		{
+			if (arg1) {
+				gameObject.Descendants ("Button_Ready").Single ().SetActive (true);
+			} else {
+				gameObject.Descendants ("Button_Ready").Single ().SetActive (false);
+			}
+		}
+
+		public override void RefreshPlayerExecuted (RefreshPlayerCommand command)
+		{
 		}
 
 	}

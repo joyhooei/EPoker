@@ -3,18 +3,24 @@
   "players": [
     {
       "idx": 0,
+      "actor_id": 1,
       "playfab_id": "1001",
       "display_name": "ethan",
       "player_room_identity": "RoomMaster",
       "get_card_first": true,
+      "is_self": true,
+      "is_ready": false,
       "hand_cards": []
     },
     {
       "idx": 1,
+      "actor_id": 2,
       "playfab_id": "1002",
-      "display_name": "dream",
+      "display_name": "e2",
       "player_room_identity": "RoomGuest",
       "get_card_first": false,
+      "is_self": true,
+      "is_ready": false,
       "hand_cards": []
     }
   ],

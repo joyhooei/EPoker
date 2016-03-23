@@ -13,7 +13,7 @@ namespace yigame.epoker
     
 	public class LoginPanelController : LoginPanelControllerBase
 	{
-//		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
+		//		[Inject ("OutOfGameRoot")] public OutOfGameRootViewModel OutOfGameRoot;
 
 		public override void InitializeLoginPanel (LoginPanelViewModel viewModel)
 		{
@@ -27,14 +27,7 @@ namespace yigame.epoker
 
 			// 进行登录
 			Publish (new NetLogin () {
-				CustomID = viewModel.CustomId,
-				SuccessCallback = _ => {
-					UnityEngine.Debug.Log ("SuccessCallback: " + _);
-					OutOfGameRoot.ExecuteDoLogin ();
-				},
-				ErrorCallback = _ => {
-					UnityEngine.Debug.Log ("ErrorCallback: " + _);
-				}
+				CustomID = viewModel.CustomId
 			});
 		}
 	}
