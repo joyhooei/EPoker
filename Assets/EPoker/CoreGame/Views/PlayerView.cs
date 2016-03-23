@@ -69,13 +69,13 @@ namespace yigame.epoker
 		public override void OnWait ()
 		{
 			base.OnWait ();
-			Player.ReadyStatusText = "Wait...";
+			Player.ReadyStatusText = string.Format("{0}|{1} Wait...", Player.ActorId, Player.PlayerName);
 		}
 
 		public override void OnReady ()
 		{
 			base.OnReady ();
-			Player.ReadyStatusText = "Ready!";
+			Player.ReadyStatusText = string.Format("{0}|{1} Ready!", Player.ActorId, Player.PlayerName);
 		}
 
 		public override void OnMatchPrepare ()
