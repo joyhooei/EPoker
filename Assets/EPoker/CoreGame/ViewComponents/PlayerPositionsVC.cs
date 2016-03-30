@@ -11,6 +11,7 @@ namespace yigame.epoker
 	using yigame.epoker;
 	using UnityEngine;
 	using Newtonsoft.Json;
+	using Unity.Linq;
 
 	public class PlayerPositionsVC : PlayerPositionsVCBase
 	{
@@ -20,12 +21,17 @@ namespace yigame.epoker
 			base.Bind (view);
 
 			CoreGameRoot.PosIdPosition.Clear ();
-			for (int i = 0; i < transform.childCount; i++) {
-				Transform t = transform.GetChild (i);
-				CoreGameRoot.PosIdPosition.Add (t.gameObject.name, t.position);
-			}
 
-//			Debug.Log (JsonConvert.SerializeObject (CoreGameRoot.PosIdPosition));
+			gameObject.Descendants ().OfComponent<PlayerPos> ().ToList ().ForEach (pp => {
+				CoreGameRoot.PosIdPosition.Add (pp.gameObject.name, pp.transform.position);
+			});
+
+//			for (int i = 0; i < transform.childCount; i++) {
+//				Transform t = transform.GetChild (i);
+//				CoreGameRoot.PosIdPosition.Add (t.gameObject.name, t.position);
+//			}
+//
+////			Debug.Log (JsonConvert.SerializeObject (CoreGameRoot.PosIdPosition));
 		}
 	}
 }
