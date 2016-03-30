@@ -197,7 +197,8 @@ namespace yigame.epoker
 			base.CalcPosIdAndRepos (viewModel);
 
 			int count = Network.Client.CurrentRoom.Players.Count;
-			int idx = viewModel.PlayerCollection.ToList ()
+
+			int idx = viewModel.PlayerCollection.OrderBy (o_vm => o_vm.ActorId).ToList ()
 				.Select ((vm, _idx) => new {vm, _idx})
 				.Where (kv => kv.vm.PlayerName == Network.Client.PlayerName)
 				.Select (kv => kv._idx)
@@ -206,11 +207,11 @@ namespace yigame.epoker
 			JObject jArrange = JObject.Parse (posid_arrange_player_count);
 			JArray jArrangeItem = jArrange [count.ToString ()] as JArray;
 
-			viewModel.PlayerCollection.ToList ()
+			viewModel.PlayerCollection.OrderBy (o_vm => o_vm.ActorId).ToList ()
 				.Select ((vm, _idx) => new {vm, _idx})
 				.ToList ()
 				.ForEach (kv => {
-				int idx_in_players = (kv._idx + idx) % count;
+				int idx_in_players = (kv._idx + count - idx) % count;
 				kv.vm.PosId = jArrangeItem [idx_in_players].Value<string> ();
 			});
 		}

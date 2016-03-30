@@ -721,8 +721,7 @@ MonoBehaviour:
     "y":140}, "2a9a02f7-cb5e-4d44-9797-a1a910d0680a":{"x":1230, "y":110}}, "5c78edbe-3a11-44bb-a7b4-1371d8673f25":{"5c78edbe-3a11-44bb-a7b4-1371d8673f25":{"x":650,
     "y":240}, "bbd2d5ef-99ce-4878-86cb-0cf9742dc8d4":{"x":1250, "y":200}}}, "FilterState":{"_CLRType":"FilterState,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null",
-    "FilterStack":[ "f070c4e2-ed90-4403-86bb-3bce3640e36f", "746c620b-89ed-485a-8f3b-242a26dfa8e1"
-    ]}, "Settings":{"_CLRType":"ElementDiagramSettings, Invert.Core.GraphDesigner,
+    "FilterStack":[  ]}, "Settings":{"_CLRType":"ElementDiagramSettings, Invert.Core.GraphDesigner,
     Version=1.1.0.0, Culture=neutral, PublicKeyToken=null", "CodeGenDisabled":false,
     "SnapSize":10, "Snap":true, "CodePathStrategyName":"Default", "GridLinesColor":{"r":"0.271",
     "g":"0.271", "b":"0.271", "a":1}, "GridLinesColorSecondary":{"r":"0.169", "g":"0.169",
