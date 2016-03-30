@@ -38,61 +38,6 @@ namespace yigame.epoker
 			});
 		}
 
-		//		public override void ResetPlayerCount (CoreGameRootViewModel viewModel)
-		//		{
-		//			base.ResetPlayerCount (viewModel);
-		//
-		//			int count = viewModel.InfoJson ["player_count"].Value<int> ();
-		//			int idx = viewModel.InfoJson ["players"]
-		//				.Select ((jt, _idx) => new {jt, _idx})
-		//				.Where (kv => kv.jt ["display_name"].Value<string> () == Network.Client.PlayerName)
-		//				.Select (kv => kv._idx)
-		//				.Single ();
-		//
-		//			JObject jArrange = JObject.Parse (posid_arrange_player_count);
-		//			JArray jArrangeItem = jArrange [count.ToString ()] as JArray;
-		//
-		//			viewModel.PlayerCount = count;
-		//
-		////			viewModel.PlayerCollection.Clear ();
-		//			List<PlayerViewModel> vm_need_remove = new List<PlayerViewModel> ();
-		//			viewModel.PlayerCollection.ToList ().ForEach (vm => {
-		//				if (viewModel.InfoJson ["players"].ToList ().Exists (jt => (jt as JObject) ["actor_id"].Value<int> () == vm.ActorId) == false) {
-		//					vm_need_remove.Add (vm);
-		//				}
-		//			});
-		//
-		//			vm_need_remove.ForEach (vm => viewModel.PlayerCollection.Remove (vm));
-		//
-		//			for (int i = 0; i < count; i++) {
-		//
-		//				int idx_in_players = (i + idx) % count;
-		//				var jPlayer = viewModel.InfoJson ["players"] [idx_in_players];
-		//
-		//				PlayerViewModel player = null;
-		//				bool newly_created = false;
-		//				if (viewModel.PlayerCollection.ToList ().Exists (vm => (vm as PlayerViewModel).ActorId == jPlayer ["actor_id"].Value<int> ())) {
-		//					player = viewModel.PlayerCollection.Where (vm => (vm as PlayerViewModel).ActorId == jPlayer ["actor_id"].Value<int> ()).Single ();
-		//				} else {
-		//					player = MVVMKernelExtensions.CreateViewModel<PlayerViewModel> ();
-		//					newly_created = true;
-		//				}
-		//
-		//				player.PosId = jArrangeItem [i].Value<string> ();
-		//				player.Id = jPlayer ["playfab_id"].Value<string> ();
-		//				player.ActorId = jPlayer ["actor_id"].Value<int> ();
-		//				player.DisplayName = jPlayer ["display_name"].Value<string> ();
-		//				player.PlayerRoomIdentity = (RoomIdentity)Enum.Parse (typeof(RoomIdentity), jPlayer ["player_room_identity"].Value<string> ());
-		//				player.IsSelf = i == 0;
-		//
-		//				if (newly_created) {
-		//					viewModel.PlayerCollection.Add (player);
-		//				}
-		//
-		//				player.ExecuteRefreshPlayer ();
-		//			}
-		//		}
-
 		public override void RootMatchBegan (CoreGameRootViewModel viewModel)
 		{
 			base.RootMatchBegan (viewModel);

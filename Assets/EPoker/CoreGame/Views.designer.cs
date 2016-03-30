@@ -431,6 +431,26 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PosIdonlyWhenChanged")]
         protected bool _PosIdOnlyWhenChanged;
         
+        [UFToggleGroup("ButtonReadyClicked")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindButtonReadyClicked = true;
+        
+        [UFGroup("ButtonReadyClicked")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonReadyClickedbutton")]
+        protected UnityEngine.UI.Button _ButtonReadyClickedButton;
+        
+        [UFToggleGroup("ButtonStartClicked")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindButtonStartClicked = true;
+        
+        [UFGroup("ButtonStartClicked")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonStartClickedbutton")]
+        protected UnityEngine.UI.Button _ButtonStartClickedButton;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -484,6 +504,12 @@ namespace yigame.epoker {
             }
             if (_BindPosId) {
                 this.BindProperty(this.Player.PosIdProperty, this.PosIdChanged, _PosIdOnlyWhenChanged);
+            }
+            if (_BindButtonReadyClicked) {
+                this.BindButtonToCommand(_ButtonReadyClickedButton, this.Player.ButtonReadyClicked);
+            }
+            if (_BindButtonStartClicked) {
+                this.BindButtonToCommand(_ButtonStartClickedButton, this.Player.ButtonStartClicked);
             }
         }
         
@@ -591,6 +617,14 @@ namespace yigame.epoker {
             Player.RefreshPlayer.OnNext(new RefreshPlayerCommand() { Sender = Player });
         }
         
+        public virtual void ExecuteButtonReadyClicked() {
+            Player.ButtonReadyClicked.OnNext(new ButtonReadyClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonStartClicked() {
+            Player.ButtonStartClicked.OnNext(new ButtonStartClickedCommand() { Sender = Player });
+        }
+        
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
             command.Sender = Player;
             Player.PlayerReady.OnNext(command);
@@ -644,6 +678,16 @@ namespace yigame.epoker {
         public virtual void ExecuteRefreshPlayer(RefreshPlayerCommand command) {
             command.Sender = Player;
             Player.RefreshPlayer.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonReadyClicked(ButtonReadyClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonReadyClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonStartClicked(ButtonStartClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonStartClicked.OnNext(command);
         }
     }
     

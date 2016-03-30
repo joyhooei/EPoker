@@ -542,6 +542,10 @@ namespace yigame.epoker {
         
         private Signal<RefreshPlayerCommand> _RefreshPlayer;
         
+        private Signal<ButtonReadyClickedCommand> _ButtonReadyClicked;
+        
+        private Signal<ButtonStartClickedCommand> _ButtonStartClicked;
+        
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -816,6 +820,24 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<ButtonReadyClickedCommand> ButtonReadyClicked {
+            get {
+                return _ButtonReadyClicked;
+            }
+            set {
+                _ButtonReadyClicked = value;
+            }
+        }
+        
+        public virtual Signal<ButtonStartClickedCommand> ButtonStartClicked {
+            get {
+                return _ButtonStartClicked;
+            }
+            set {
+                _ButtonStartClicked = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.PlayerReady = new Signal<PlayerReadyCommand>(this);
@@ -829,6 +851,8 @@ namespace yigame.epoker {
             this.Over = new Signal<OverCommand>(this);
             this.InitOK = new Signal<InitOKCommand>(this);
             this.RefreshPlayer = new Signal<RefreshPlayerCommand>(this);
+            this.ButtonReadyClicked = new Signal<ButtonReadyClickedCommand>(this);
+            this.ButtonStartClicked = new Signal<ButtonStartClickedCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
@@ -895,6 +919,14 @@ namespace yigame.epoker {
             this.RefreshPlayer.OnNext(new RefreshPlayerCommand());
         }
         
+        public virtual void ExecuteButtonReadyClicked() {
+            this.ButtonReadyClicked.OnNext(new ButtonReadyClickedCommand());
+        }
+        
+        public virtual void ExecuteButtonStartClicked() {
+            this.ButtonStartClicked.OnNext(new ButtonStartClickedCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             this.ActorId = stream.DeserializeInt("ActorId");;
@@ -929,6 +961,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("Over", Over) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("InitOK", InitOK) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RefreshPlayer", RefreshPlayer) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ButtonReadyClicked", ButtonReadyClicked) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ButtonStartClicked", ButtonStartClicked) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

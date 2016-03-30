@@ -99,12 +99,34 @@ namespace yigame.epoker
 			base.RefreshPlayer (viewModel);
 
 			// ready
-//			bool is_ready = Convert.ToBoolean (viewModel.LBPlayer.CustomProperties ["is_ready"]);
-//			if (is_ready) {
-//				viewModel.ExecutePlayerReady ();
-//			} else {
-//				viewModel.ExecutePlayerCancel ();
-//			}
+
+			if (viewModel.IsSelf == false) {
+				bool is_ready = false;
+				if (viewModel.LBPlayer.CustomProperties.ContainsKey ("is_ready")) {
+					is_ready = Convert.ToBoolean (viewModel.LBPlayer.CustomProperties ["is_ready"]);
+				}
+				if (is_ready) {
+					viewModel.ExecutePlayerReady ();
+				} else {
+					viewModel.ExecutePlayerCancel ();
+				}
+			}
+		}
+
+		public override void ButtonReadyClicked (PlayerViewModel viewModel)
+		{
+			base.ButtonReadyClicked (viewModel);
+
+			if (viewModel.Status is Wait) {
+				viewModel.ExecutePlayerReady ();	
+			} else if (viewModel.Status is Ready) {
+				viewModel.ExecutePlayerCancel ();
+			}
+		}
+
+		public override void ButtonStartClicked (PlayerViewModel viewModel)
+		{
+			base.ButtonStartClicked (viewModel);
 		}
 	}
 }

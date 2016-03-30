@@ -15,6 +15,15 @@ namespace yigame.epoker
     
 	public partial class CoreGameRootViewModel : CoreGameRootViewModelBase
 	{
+		[Inject] public Network Network;
+
 		public Dictionary<string, Vector3> PosIdPosition = new Dictionary<string, Vector3> ();
+
+		public bool IsAllReady {
+			get {
+				return Network.Client.CurrentRoom.Players.ToList ().Exists (kv => Convert.ToBoolean (kv.Value.CustomProperties ["is_ready"]) == false) == false;
+			}
+		}
+
 	}
 }

@@ -74,4 +74,10 @@ namespace yigame.epoker {
     
     public partial class RefreshPlayerCommand : uFrame.MVVM.ViewModelCommand {
     }
+    
+    public partial class ButtonReadyClickedCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class ButtonStartClickedCommand : uFrame.MVVM.ViewModelCommand {
+    }
 }

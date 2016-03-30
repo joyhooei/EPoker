@@ -24,6 +24,7 @@ namespace yigame.epoker
 		[Inject] public GameService GameService;
 
 		public Button ReadyButton;
+		public Button StartButton;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
@@ -38,14 +39,6 @@ namespace yigame.epoker
 		public override void Bind ()
 		{
 			base.Bind ();
-
-			this.BindButtonToHandler (ReadyButton, () => {
-				if (Player.Status is Wait) {
-					Player.ExecutePlayerReady ();
-				} else if (Player.Status is Ready) {
-					Player.ExecutePlayerCancel ();
-				}
-			});
 		}
 
 		#region Status Changed
@@ -59,6 +52,10 @@ namespace yigame.epoker
 		{
 			base.OnInit ();
 
+			// 忽略初始设计用的 Player
+			if (string.IsNullOrEmpty (Player.PlayerName))
+				return;
+			
 			Player.ReadyStatusText = "Initializing...";
 			Observable.Timer (TimeSpan.FromSeconds (1)).Subscribe (_ => {
 				Player.ExecuteInitOK ();
@@ -69,13 +66,15 @@ namespace yigame.epoker
 		public override void OnWait ()
 		{
 			base.OnWait ();
-			Player.ReadyStatusText = string.Format("{0}|{1} Wait...", Player.ActorId, Player.PlayerName);
+			Player.ReadyStatusText = string.Format ("{0}|{1} Wait...", Player.ActorId, Player.PlayerName);
+			ReadyButton.gameObject.Child ("Text").GetComponent<Text> ().text = "Ready";
 		}
 
 		public override void OnReady ()
 		{
 			base.OnReady ();
-			Player.ReadyStatusText = string.Format("{0}|{1} Ready!", Player.ActorId, Player.PlayerName);
+			Player.ReadyStatusText = string.Format ("{0}|{1} Ready!", Player.ActorId, Player.PlayerName);
+			ReadyButton.gameObject.Child ("Text").GetComponent<Text> ().text = "Cancel";
 		}
 
 		public override void OnMatchPrepare ()
@@ -143,6 +142,14 @@ namespace yigame.epoker
 
 		public override void RefreshPlayerExecuted (RefreshPlayerCommand command)
 		{
+			if (Player.IsSelf) {
+				 // todo:
+				if (Player.CoreGameRoot.IsAllReady) {
+				} else {
+				}
+			} else {
+				StartButton.gameObject.SetActive (false);
+			}
 		}
 
 	}
