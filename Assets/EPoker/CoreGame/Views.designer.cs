@@ -385,6 +385,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public ExitGames.Client.Photon.LoadBalancing.Player _LBPlayer;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public PlayerNodeMode _PlayerNodeMode;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -449,6 +454,32 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonStartClickedbutton")]
         protected UnityEngine.UI.Button _ButtonStartClickedButton;
         
+        [UFToggleGroup("HandCards")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindHandCards = true;
+        
+        [UFGroup("HandCards")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_HandCardsparent")]
+        protected UnityEngine.Transform _HandCardsParent;
+        
+        [UFGroup("HandCards")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_HandCardsviewFirst")]
+        protected bool _HandCardsViewFirst;
+        
+        [UFToggleGroup("PlayerNodeMode")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindPlayerNodeMode = true;
+        
+        [UFGroup("PlayerNodeMode")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerNodeModeonlyWhenChanged")]
+        protected bool _PlayerNodeModeOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -481,6 +512,7 @@ namespace yigame.epoker {
             playerview.IsSelf = this._IsSelf;
             playerview.ReadyStatusText = this._ReadyStatusText;
             playerview.LBPlayer = this._LBPlayer;
+            playerview.PlayerNodeMode = this._PlayerNodeMode;
         }
         
         public override void Bind() {
@@ -508,6 +540,12 @@ namespace yigame.epoker {
             }
             if (_BindButtonStartClicked) {
                 this.BindButtonToCommand(_ButtonStartClickedButton, this.Player.ButtonStartClicked);
+            }
+            if (_BindHandCards) {
+                this.BindToViewCollection(this.Player.HandCards, this.HandCardsCreateView, this.HandCardsAdded, this.HandCardsRemoved, _HandCardsParent, _HandCardsViewFirst);
+            }
+            if (_BindPlayerNodeMode) {
+                this.BindProperty(this.Player.PlayerNodeModeProperty, this.PlayerNodeModeChanged, _PlayerNodeModeOnlyWhenChanged);
             }
         }
         
@@ -569,6 +607,19 @@ namespace yigame.epoker {
         }
         
         public virtual void PosIdChanged(String arg1) {
+        }
+        
+        public virtual uFrame.MVVM.ViewBase HandCardsCreateView(uFrame.MVVM.ViewModel viewModel) {
+            return InstantiateView(viewModel);
+        }
+        
+        public virtual void HandCardsAdded(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void HandCardsRemoved(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void PlayerNodeModeChanged(PlayerNodeMode arg1) {
         }
         
         public virtual void ExecutePlayerReady() {
@@ -695,6 +746,16 @@ namespace yigame.epoker {
         public virtual void ExecuteLogInfo(LogInfoCommand command) {
             command.Sender = Player;
             Player.LogInfo.OnNext(command);
+        }
+        
+        public virtual void ExecuteAddCards(AddCardsCommand command) {
+            command.Sender = Player;
+            Player.AddCards.OnNext(command);
+        }
+        
+        public virtual void ExecuteRemoveCards(RemoveCardsCommand command) {
+            command.Sender = Player;
+            Player.RemoveCards.OnNext(command);
         }
     }
     

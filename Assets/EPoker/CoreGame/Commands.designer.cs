@@ -16,6 +16,8 @@ namespace yigame.epoker {
     using uFrame.Kernel;
     using uFrame.MVVM;
     using uFrame.Serialization;
+    using yigame.epoker;
+    using UnityEngine;
     
     
     public partial class RefreshCoreGameCommand : uFrame.MVVM.ViewModelCommand {
@@ -76,5 +78,33 @@ namespace yigame.epoker {
     }
     
     public partial class LogInfoCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class AddCardsCommand : ViewModelCommand {
+        
+        private List<CardInfo> _CardInfos;
+        
+        public List<CardInfo> CardInfos {
+            get {
+                return _CardInfos;
+            }
+            set {
+                _CardInfos = value;
+            }
+        }
+    }
+    
+    public partial class RemoveCardsCommand : ViewModelCommand {
+        
+        private List<CardInfo> _CardInfos;
+        
+        public List<CardInfo> CardInfos {
+            get {
+                return _CardInfos;
+            }
+            set {
+                _CardInfos = value;
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@ namespace yigame.epoker
 		public override void InitializePlayer (PlayerViewModel viewModel)
 		{
 			base.InitializePlayer (viewModel);
-			// This is called when a PlayerViewModel is created
 		}
 
 		public override void PlayerReady (PlayerViewModel viewModel)
@@ -207,6 +206,29 @@ namespace yigame.epoker
 			base.LogInfo (viewModel);
 
 			UnityEngine.Debug.Log (viewModel.LBPlayer.ToString ());
+		}
+
+		public override void AddCards (PlayerViewModel viewModel, AddCardsCommand arg)
+		{
+			base.AddCards (viewModel, arg);
+
+			foreach (CardInfo ci in arg.CardInfos) {
+				CardViewModel card = MVVMKernelExtensions.CreateViewModel<CardViewModel> ();
+				card.Info = ci;
+				card.Face = CardFace.FaceUp;
+				card.Place = CardPlace.Floor;
+
+				viewModel.HandCards.Add (card);
+			}
+		}
+
+		public override void RemoveCards (PlayerViewModel viewModel, RemoveCardsCommand arg)
+		{
+			base.RemoveCards (viewModel, arg);
+			foreach (CardInfo ci in arg.CardInfos) {
+				CardViewModel card = viewModel.HandCards.FirstOrDefault (cardVM => CardInfo.ValueEqual (cardVM.Info, ci));
+				viewModel.HandCards.Remove (card);
+			}
 		}
 	}
 }

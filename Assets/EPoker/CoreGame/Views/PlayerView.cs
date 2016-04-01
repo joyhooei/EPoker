@@ -26,6 +26,9 @@ namespace yigame.epoker
 		public Button ReadyButton;
 		public Button StartButton;
 
+		public GameObject WaitingNode;
+		public GameObject PlayingNode;
+
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
@@ -55,6 +58,8 @@ namespace yigame.epoker
 			ReadyButton.gameObject.SetActive (false);
 			StartButton.gameObject.SetActive (false);
 
+			Player.PlayerNodeMode = PlayerNodeMode.Waiting;
+
 			// 忽略初始设计用的 Player
 			if (string.IsNullOrEmpty (Player.PlayerName))
 				return;
@@ -83,6 +88,7 @@ namespace yigame.epoker
 		public override void OnMatchPrepare ()
 		{
 			base.OnMatchPrepare ();
+			Player.PlayerNodeMode = PlayerNodeMode.Playing;
 		}
 
 		public override void OnMatchDeal ()
@@ -99,11 +105,13 @@ namespace yigame.epoker
 		public override void OnMatchWin ()
 		{
 			base.OnMatchWin ();
+			Player.PlayerNodeMode = PlayerNodeMode.Waiting;
 		}
 
 		public override void OnMatchOver ()
 		{
 			base.OnMatchOver ();
+			Player.PlayerNodeMode = PlayerNodeMode.Waiting;
 		}
 
 
@@ -152,5 +160,36 @@ namespace yigame.epoker
 			}
 		}
 
+    
+		public override uFrame.MVVM.ViewBase HandCardsCreateView (uFrame.MVVM.ViewModel viewModel)
+		{
+			GameObject prefab = Resources.Load<GameObject> ("_Card_Blue_");
+			return InstantiateView (prefab, viewModel);
+		}
+
+		public override void HandCardsAdded (uFrame.MVVM.ViewBase view)
+		{
+		}
+
+		public override void HandCardsRemoved (uFrame.MVVM.ViewBase view)
+		{
+		}
+
+
+		public override void PlayerNodeModeChanged (PlayerNodeMode arg1)
+		{
+			switch (arg1) {
+			case PlayerNodeMode.Waiting:
+				WaitingNode.SetActive (true);
+				PlayingNode.SetActive (false);
+				break;
+			case PlayerNodeMode.Playing:
+				WaitingNode.SetActive (false);
+				PlayingNode.SetActive (true);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException ();
+			}
+		}
 	}
 }

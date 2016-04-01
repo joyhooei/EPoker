@@ -322,6 +322,8 @@ namespace yigame.epoker {
             viewModel.ButtonReadyClicked.Action = this.ButtonReadyClickedHandler;
             viewModel.ButtonStartClicked.Action = this.ButtonStartClickedHandler;
             viewModel.LogInfo.Action = this.LogInfoHandler;
+            viewModel.AddCards.Action = this.AddCardsHandler;
+            viewModel.RemoveCards.Action = this.RemoveCardsHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
@@ -426,6 +428,20 @@ namespace yigame.epoker {
         
         public virtual void LogInfoHandler(LogInfoCommand command) {
             this.LogInfo(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void AddCardsHandler(AddCardsCommand command) {
+            this.AddCards(command.Sender as PlayerViewModel, command);
+        }
+        
+        public virtual void RemoveCardsHandler(RemoveCardsCommand command) {
+            this.RemoveCards(command.Sender as PlayerViewModel, command);
+        }
+        
+        public virtual void AddCards(PlayerViewModel viewModel, AddCardsCommand arg) {
+        }
+        
+        public virtual void RemoveCards(PlayerViewModel viewModel, RemoveCardsCommand arg) {
         }
     }
     

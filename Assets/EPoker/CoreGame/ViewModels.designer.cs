@@ -484,6 +484,8 @@ namespace yigame.epoker {
         
         private P<ExitGames.Client.Photon.LoadBalancing.Player> _LBPlayerProperty;
         
+        private P<PlayerNodeMode> _PlayerNodeModeProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         private Signal<PlayerReadyCommand> _PlayerReady;
@@ -513,6 +515,10 @@ namespace yigame.epoker {
         private Signal<ButtonStartClickedCommand> _ButtonStartClicked;
         
         private Signal<LogInfoCommand> _LogInfo;
+        
+        private Signal<AddCardsCommand> _AddCards;
+        
+        private Signal<RemoveCardsCommand> _RemoveCards;
         
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -608,6 +614,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<PlayerNodeMode> PlayerNodeModeProperty {
+            get {
+                return _PlayerNodeModeProperty;
+            }
+            set {
+                _PlayerNodeModeProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
@@ -677,6 +692,15 @@ namespace yigame.epoker {
             }
             set {
                 LBPlayerProperty.Value = value;
+            }
+        }
+        
+        public virtual PlayerNodeMode PlayerNodeMode {
+            get {
+                return PlayerNodeModeProperty.Value;
+            }
+            set {
+                PlayerNodeModeProperty.Value = value;
             }
         }
         
@@ -815,6 +839,24 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<AddCardsCommand> AddCards {
+            get {
+                return _AddCards;
+            }
+            set {
+                _AddCards = value;
+            }
+        }
+        
+        public virtual Signal<RemoveCardsCommand> RemoveCards {
+            get {
+                return _RemoveCards;
+            }
+            set {
+                _RemoveCards = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.PlayerReady = new Signal<PlayerReadyCommand>(this);
@@ -831,6 +873,8 @@ namespace yigame.epoker {
             this.ButtonReadyClicked = new Signal<ButtonReadyClickedCommand>(this);
             this.ButtonStartClicked = new Signal<ButtonStartClickedCommand>(this);
             this.LogInfo = new Signal<LogInfoCommand>(this);
+            this.AddCards = new Signal<AddCardsCommand>(this);
+            this.RemoveCards = new Signal<RemoveCardsCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
@@ -839,6 +883,7 @@ namespace yigame.epoker {
             _IsSelfProperty = new P<Boolean>(this, "IsSelf");
             _ReadyStatusTextProperty = new P<String>(this, "ReadyStatusText");
             _LBPlayerProperty = new P<ExitGames.Client.Photon.LoadBalancing.Player>(this, "LBPlayer");
+            _PlayerNodeModeProperty = new P<PlayerNodeMode>(this, "PlayerNodeMode");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -909,12 +954,21 @@ namespace yigame.epoker {
             this.LogInfo.OnNext(new LogInfoCommand());
         }
         
+        public virtual void Execute(AddCardsCommand argument) {
+            this.AddCards.OnNext(argument);
+        }
+        
+        public virtual void Execute(RemoveCardsCommand argument) {
+            this.RemoveCards.OnNext(argument);
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             this.ActorId = stream.DeserializeInt("ActorId");;
             this._StatusProperty.SetState(stream.DeserializeString("Status"));
             this.PlayerRoomIdentity = (RoomIdentity)stream.DeserializeInt("PlayerRoomIdentity");;
             this.IsSelf = stream.DeserializeBool("IsSelf");;
+            this.PlayerNodeMode = (PlayerNodeMode)stream.DeserializeInt("PlayerNodeMode");;
             if (stream.DeepSerialize) {
                 this.HandCards.Clear();
                 this.HandCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("HandCards"));
@@ -927,6 +981,7 @@ namespace yigame.epoker {
             stream.SerializeString("Status", this.Status.Name);;
             stream.SerializeInt("PlayerRoomIdentity", (int)this.PlayerRoomIdentity);;
             stream.SerializeBool("IsSelf", this.IsSelf);
+            stream.SerializeInt("PlayerNodeMode", (int)this.PlayerNodeMode);;
             if (stream.DeepSerialize) stream.SerializeArray("HandCards", this.HandCards);
         }
         
@@ -946,6 +1001,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("ButtonReadyClicked", ButtonReadyClicked) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ButtonStartClicked", ButtonStartClicked) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("LogInfo", LogInfo) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("AddCards", AddCards) { ParameterType = typeof(AddCardsCommand) });
+            list.Add(new ViewModelCommandInfo("RemoveCards", RemoveCards) { ParameterType = typeof(RemoveCardsCommand) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -968,6 +1025,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_ReadyStatusTextProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_LBPlayerProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PlayerNodeModeProperty, false, false, true, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }

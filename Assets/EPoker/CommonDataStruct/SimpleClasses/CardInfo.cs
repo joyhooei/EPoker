@@ -25,6 +25,11 @@ namespace yigame.epoker
 			this.NumericalValue = numericalValue;
 		}
 
+		public static bool ValueEqual (CardInfo a, CardInfo b)
+		{
+			return a.Suit == b.Suit && a.NumericalValue == b.NumericalValue;
+		}
+
 		public override string ToString ()
 		{
 			return string.Format ("({0},{1})", Suit.ToString (), NumericalValue.ToString ());

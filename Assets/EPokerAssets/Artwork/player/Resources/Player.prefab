@@ -152,6 +152,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &170794
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 433578}
+  m_Layer: 0
+  m_Name: CardContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &429778
 Transform:
   m_ObjectHideFlags: 1
@@ -161,9 +176,22 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 433578}
   m_Father: {fileID: 438318}
   m_RootOrder: 1
+--- !u!4 &433578
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 170794}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 429778}
+  m_RootOrder: 0
 --- !u!4 &438318
 Transform:
   m_ObjectHideFlags: 1
@@ -502,6 +530,7 @@ MonoBehaviour:
   _PlayerName: 
   _IsSelf: 0
   _ReadyStatusText: 
+  _PlayerNodeMode: 0
   _BindStatus: 1
   _StatusOnlyWhenChanged: 0
   _BindReadyStatusText: 1
@@ -515,9 +544,16 @@ MonoBehaviour:
   _ButtonReadyClickedButton: {fileID: 11445020}
   _BindButtonStartClicked: 1
   _ButtonStartClickedButton: {fileID: 11477224}
+  _BindHandCards: 1
+  _HandCardsParent: {fileID: 433578}
+  _HandCardsViewFirst: 0
+  _BindPlayerNodeMode: 1
+  _PlayerNodeModeOnlyWhenChanged: 0
   GameService: {fileID: 0}
   ReadyButton: {fileID: 11445020}
   StartButton: {fileID: 11477224}
+  WaitingNode: {fileID: 118704}
+  PlayingNode: {fileID: 144904}
 --- !u!222 &22225856
 CanvasRenderer:
   m_ObjectHideFlags: 1
