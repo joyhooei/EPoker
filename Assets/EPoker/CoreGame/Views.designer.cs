@@ -625,6 +625,10 @@ namespace yigame.epoker {
             Player.ButtonStartClicked.OnNext(new ButtonStartClickedCommand() { Sender = Player });
         }
         
+        public virtual void ExecuteLogInfo() {
+            Player.LogInfo.OnNext(new LogInfoCommand() { Sender = Player });
+        }
+        
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
             command.Sender = Player;
             Player.PlayerReady.OnNext(command);
@@ -688,6 +692,11 @@ namespace yigame.epoker {
         public virtual void ExecuteButtonStartClicked(ButtonStartClickedCommand command) {
             command.Sender = Player;
             Player.ButtonStartClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteLogInfo(LogInfoCommand command) {
+            command.Sender = Player;
+            Player.LogInfo.OnNext(command);
         }
     }
     

@@ -337,6 +337,7 @@ namespace yigame.epoker {
             viewModel.RefreshPlayer.Action = this.RefreshPlayerHandler;
             viewModel.ButtonReadyClicked.Action = this.ButtonReadyClickedHandler;
             viewModel.ButtonStartClicked.Action = this.ButtonStartClickedHandler;
+            viewModel.LogInfo.Action = this.LogInfoHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
@@ -382,6 +383,9 @@ namespace yigame.epoker {
         }
         
         public virtual void ButtonStartClicked(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void LogInfo(PlayerViewModel viewModel) {
         }
         
         public virtual void PlayerReadyHandler(PlayerReadyCommand command) {
@@ -434,6 +438,10 @@ namespace yigame.epoker {
         
         public virtual void ButtonStartClickedHandler(ButtonStartClickedCommand command) {
             this.ButtonStartClicked(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void LogInfoHandler(LogInfoCommand command) {
+            this.LogInfo(command.Sender as PlayerViewModel);
         }
     }
     

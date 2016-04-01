@@ -80,4 +80,7 @@ namespace yigame.epoker {
     
     public partial class ButtonStartClickedCommand : uFrame.MVVM.ViewModelCommand {
     }
+    
+    public partial class LogInfoCommand : uFrame.MVVM.ViewModelCommand {
+    }
 }

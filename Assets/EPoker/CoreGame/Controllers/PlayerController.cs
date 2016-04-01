@@ -21,6 +21,7 @@ namespace yigame.epoker
 	public class PlayerController : PlayerControllerBase
 	{
 		[Inject] public Network Network;
+		[Inject] public GameService GameService;
 
 		public override void InitializePlayer (PlayerViewModel viewModel)
 		{
@@ -35,7 +36,7 @@ namespace yigame.epoker
 				Hashtable ht = new Hashtable ();
 				ht.Add ("is_ready", true);
 				Publish (new NetSetPlayerProperties () {
-					ActerId = viewModel.ActorId,
+					ActorId = viewModel.ActorId,
 					PropertiesToSet = ht
 				});
 			}
@@ -48,7 +49,7 @@ namespace yigame.epoker
 				Hashtable ht = new Hashtable ();
 				ht.Add ("is_ready", false);
 				Publish (new NetSetPlayerProperties () {
-					ActerId = viewModel.ActorId,
+					ActorId = viewModel.ActorId,
 					PropertiesToSet = ht
 				});
 			}
@@ -129,6 +130,67 @@ namespace yigame.epoker
 		public override void ButtonStartClicked (PlayerViewModel viewModel)
 		{
 			base.ButtonStartClicked (viewModel);
+
+			if (viewModel.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
+
+				// 点击开始按钮后,生成每个人的手牌
+				List<CardInfo> card_info = GameService.GetDeck (true);
+				Dictionary<int, List<CardInfo>> card_info_dic = Network.Client.CurrentRoom.Players.ToDictionary (kv1 => kv1.Key, kv2 => new List<CardInfo> ());
+
+				int first_get_actor_id = Network.Client.LocalPlayer.ID;
+				try {
+					first_get_actor_id = Network.Client.CurrentRoom.Players.Where (kv => {
+						return kv.Value.CustomProperties.ContainsKey ("first_get")
+						&& Convert.ToBoolean (kv.Value.CustomProperties ["first_get"]);
+					}).Select (kv => kv.Key).Single ();
+				} catch (Exception ex) {
+					UnityEngine.Debug.Log ("没有指定先抓牌的 actorid, 使用 RoomMaster 的 actorid");
+				}
+
+				List<int> actor_id_list = Network.Client.CurrentRoom.Players.Select (kv => kv.Key).OrderBy (id => id).ToList ();
+				bool has_find_first = false;
+
+				int i = 0;
+
+				while (i < card_info.Count) {
+
+					foreach (int actor_id in actor_id_list) {
+						if (actor_id == first_get_actor_id) {
+							has_find_first = true;
+						}
+
+						if (has_find_first) {
+							CardInfo ci = card_info [i];
+							card_info_dic [actor_id].Add (ci);
+							if (++i >= card_info.Count) {
+								break;
+							}
+						}
+					}
+				}
+
+				foreach (int actor_id in actor_id_list) {
+
+					Hashtable ht = new Hashtable ();
+					ht.Add ("hand_cards", JsonConvert.SerializeObject (card_info_dic [actor_id]));
+					ht.Add ("first_get", Convert.ToString (actor_id == first_get_actor_id));
+
+					Publish (new NetSetPlayerProperties () {
+						ActorId = actor_id,
+						PropertiesToSet = ht
+					});
+				}
+			}
+
+			// 发出事件,开始抓牌
+
+		}
+
+		public override void LogInfo (PlayerViewModel viewModel)
+		{
+			base.LogInfo (viewModel);
+
+			UnityEngine.Debug.Log (viewModel.LBPlayer.ToString ());
 		}
 	}
 }

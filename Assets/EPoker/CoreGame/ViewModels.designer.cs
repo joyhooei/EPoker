@@ -546,6 +546,8 @@ namespace yigame.epoker {
         
         private Signal<ButtonStartClickedCommand> _ButtonStartClicked;
         
+        private Signal<LogInfoCommand> _LogInfo;
+        
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -838,6 +840,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<LogInfoCommand> LogInfo {
+            get {
+                return _LogInfo;
+            }
+            set {
+                _LogInfo = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.PlayerReady = new Signal<PlayerReadyCommand>(this);
@@ -853,6 +864,7 @@ namespace yigame.epoker {
             this.RefreshPlayer = new Signal<RefreshPlayerCommand>(this);
             this.ButtonReadyClicked = new Signal<ButtonReadyClickedCommand>(this);
             this.ButtonStartClicked = new Signal<ButtonStartClickedCommand>(this);
+            this.LogInfo = new Signal<LogInfoCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
@@ -927,6 +939,10 @@ namespace yigame.epoker {
             this.ButtonStartClicked.OnNext(new ButtonStartClickedCommand());
         }
         
+        public virtual void ExecuteLogInfo() {
+            this.LogInfo.OnNext(new LogInfoCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             this.ActorId = stream.DeserializeInt("ActorId");;
@@ -963,6 +979,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("RefreshPlayer", RefreshPlayer) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ButtonReadyClicked", ButtonReadyClicked) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ButtonStartClicked", ButtonStartClicked) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("LogInfo", LogInfo) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

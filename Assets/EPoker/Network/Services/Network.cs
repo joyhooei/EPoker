@@ -146,6 +146,7 @@ namespace yigame.epoker
 				ConnectToMasterServer (PlayFabId, res.PhotonCustomAuthenticationToken);
 
 			}, err => {
+				Client.State = ClientState.Uninitialized;
 				RefreshNetInfo ("错误:无法从 PlayFab 获取 Photon Token");
 			});
 
@@ -192,7 +193,7 @@ namespace yigame.epoker
 		public override void NetSetPlayerPropertiesHandler (NetSetPlayerProperties data)
 		{
 			base.NetSetPlayerPropertiesHandler (data);
-			Client.OpSetPropertiesOfActor (data.ActerId, data.PropertiesToSet);
+			Client.OpSetPropertiesOfActor (data.ActorId, data.PropertiesToSet);
 		}
 
 		public void RefreshNetInfo (string netStatusDesc)

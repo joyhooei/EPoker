@@ -97,16 +97,16 @@ namespace yigame.epoker {
     
     public class NetSetPlayerPropertiesBase : object {
         
-        private Int32 _ActerId;
+        private Int32 _ActorId;
         
         private ExitGames.Client.Photon.Hashtable _PropertiesToSet;
         
-        public Int32 ActerId {
+        public Int32 ActorId {
             get {
-                return _ActerId;
+                return _ActorId;
             }
             set {
-                _ActerId = value;
+                _ActorId = value;
             }
         }
         

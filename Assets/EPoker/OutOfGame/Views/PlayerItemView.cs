@@ -52,7 +52,7 @@ namespace yigame.epoker
 				ht.Add ("is_ready", arg1);
 
 				Publish (new NetSetPlayerProperties () {
-					ActerId = PlayerItem.ActerId,
+					ActorId = PlayerItem.ActerId,
 					PropertiesToSet = ht
 				});
 			}
