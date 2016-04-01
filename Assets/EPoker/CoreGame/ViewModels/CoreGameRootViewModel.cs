@@ -25,5 +25,11 @@ namespace yigame.epoker
 			}
 		}
 
+		public bool CanMatchBegan {
+			get {
+				return IsAllReady && Network.Client.CurrentRoom.PlayerCount > 1;
+			}
+		}
+
 	}
 }

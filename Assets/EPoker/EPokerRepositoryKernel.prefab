@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400c6efa856ee144da1ae077f9100374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Network: {fileID: 0}
 --- !u!114 &11451652
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -177,6 +178,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TitleId: 4214
+  PlayFabId: 
+  DisplayName: 
+  CustomId: 
+  AppId: 60090e03-9030-4321-b497-270418f42a37
+  AppVersion: 1.0
 --- !u!114 &11464268
 MonoBehaviour:
   m_ObjectHideFlags: 1

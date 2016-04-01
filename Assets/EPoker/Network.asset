@@ -110,7 +110,7 @@ MonoBehaviour:
     Invert.uFrame.MVVM, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "Name":"EventContent",
     "Identifier":"0ebc41e8-0b52-4855-b4eb-4d18c39c3617", "Precompiled":false, "Flags":{"_CLRType":true},
     "DataBag":{"_CLRType":"Invert.Core.GraphDesigner.DataBag, Invert.Core.GraphDesigner,
-    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null"}, "ItemType":"add91586-5c9c-4aa4-95c4-8605f2e57c05"}
+    Version=1.1.0.0, Culture=neutral, PublicKeyToken=null"}, "ItemType":"f77fb19d-5ae0-408a-8185-31e42dd0a33e"}
     ], "CollapsedValues":{}, "Flags":{"_CLRType":true}, "DataBag":{"_CLRType":"Invert.Core.GraphDesigner.DataBag,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null"},
     "IsNewNode":false}, {"_CLRType":"Invert.uFrame.MVVM.SimpleClassNode, Invert.uFrame.MVVM,
@@ -131,9 +131,9 @@ MonoBehaviour:
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null",
     "331ead67-3515-4f90-ac41-1a3030ff26cd":{"331ead67-3515-4f90-ac41-1a3030ff26cd":{"x":150,
     "y":70}, "aaef53a6-6948-44c7-b9f9-19b6e78b6407":{"x":350, "y":150}, "6b1ea791-64a3-4243-ac02-9c4beafe544a":{"x":350,
-    "y":70}, "89ad383f-9ef9-4805-b657-71c168c089ae":{"x":350, "y":330}, "9f1228c4-e9b7-45cc-aa71-4e75c1715b8b":{"x":570,
-    "y":150}, "b85e5274-e873-4962-ab4a-ed6167a47707":{"x":570, "y":330}, "6a2895da-e538-4015-ba3c-f4f156d4648b":{"x":790,
-    "y":150}, "a58efa64-fcf9-49a1-bdd6-ca3bff6e7c5b":{"x":1100, "y":150}, "896cc444-28cc-41a1-abbe-ad869fc79d7c":{"x":780,
+    "y":70}, "89ad383f-9ef9-4805-b657-71c168c089ae":{"x":350, "y":330}, "9f1228c4-e9b7-45cc-aa71-4e75c1715b8b":{"x":540,
+    "y":150}, "b85e5274-e873-4962-ab4a-ed6167a47707":{"x":560, "y":330}, "6a2895da-e538-4015-ba3c-f4f156d4648b":{"x":790,
+    "y":150}, "a58efa64-fcf9-49a1-bdd6-ca3bff6e7c5b":{"x":1150, "y":150}, "896cc444-28cc-41a1-abbe-ad869fc79d7c":{"x":780,
     "y":330}}}, "FilterState":{"_CLRType":"FilterState, Invert.Core.GraphDesigner,
     Version=1.1.0.0, Culture=neutral, PublicKeyToken=null", "FilterStack":[  ]}, "Settings":{"_CLRType":"ElementDiagramSettings,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null",
@@ -144,7 +144,7 @@ MonoBehaviour:
     "g":1, "b":0, "a":1}, "SceneManagerLinkColor":{"r":"0.5", "g":"0.5", "b":"0.5",
     "a":1}, "SubSystemLinkColor":{"r":"0.5", "g":"0.5", "b":"0.5", "a":1}, "TransitionLinkColor":{"r":1,
     "g":"0.9215686", "b":"0.01568628", "a":1}, "ViewLinkColor":{"r":0, "g":0, "b":1,
-    "a":1}, "RootNamespace":""}, "Changes":[ {"_CLRType":"Invert.Core.GraphDesigner.NameChange,
+    "a":1}, "RootNamespace":""}, "Changes":[ {"_CLRType":"Invert.Core.GraphDesigner.TypeChange,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null",
-    "ItemIdentifier":"979b451e-dfd3-4ef3-b1a8-62b7078e94bb", "Old":"ActerId", "New":"ActorId"}
-    ]}'
+    "ItemIdentifier":"0ebc41e8-0b52-4855-b4eb-4d18c39c3617", "Old":"add91586-5c9c-4aa4-95c4-8605f2e57c05",
+    "New":"ExitGames.Client.Photon.Hashtable"} ]}'

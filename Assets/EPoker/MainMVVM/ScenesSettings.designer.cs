@@ -22,4 +22,7 @@ namespace yigame.epoker {
     
     public class OutOfGameSceneSettingsBase : SceneSettings<OutOfGameScene> {
     }
+    
+    public class PlayerTestSceneSettingsBase : SceneSettings<PlayerTestScene> {
+    }
 }

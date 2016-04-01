@@ -19,15 +19,34 @@ namespace yigame.epoker {
     using uFrame.Serialization;
     
     
-    public class UploadInfoJsonBase : object {
-    }
-    
-    public class OnInfoJsonUpdateBase : object {
-    }
-    
     public class OpenCoreGameBase : object {
     }
     
     public class CloseCoreGameBase : object {
+    }
+    
+    public class OnCoreGameEventBase : object {
+        
+        private Byte _EventCode;
+        
+        private Object _EventContent;
+        
+        public Byte EventCode {
+            get {
+                return _EventCode;
+            }
+            set {
+                _EventCode = value;
+            }
+        }
+        
+        public Object EventContent {
+            get {
+                return _EventContent;
+            }
+            set {
+                _EventContent = value;
+            }
+        }
     }
 }

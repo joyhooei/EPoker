@@ -9,6 +9,6 @@ namespace yigame.epoker {
     using uFrame.Serialization;
     
     
-    public class UploadInfoJson : UploadInfoJsonBase {
+    public class OnCoreGameEvent : OnCoreGameEventBase {
     }
 }

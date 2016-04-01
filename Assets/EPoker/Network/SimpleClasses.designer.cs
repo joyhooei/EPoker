@@ -74,7 +74,7 @@ namespace yigame.epoker {
         
         private Byte _EventCode;
         
-        private ExitGames.Client.Photon.Hashtable _EventContent;
+        private Object _EventContent;
         
         public Byte EventCode {
             get {
@@ -85,7 +85,7 @@ namespace yigame.epoker {
             }
         }
         
-        public ExitGames.Client.Photon.Hashtable EventContent {
+        public Object EventContent {
             get {
                 return _EventContent;
             }

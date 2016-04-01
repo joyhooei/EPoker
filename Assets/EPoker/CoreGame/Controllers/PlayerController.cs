@@ -106,9 +106,9 @@ namespace yigame.epoker
 				if (viewModel.LBPlayer.CustomProperties.ContainsKey ("is_ready")) {
 					is_ready = Convert.ToBoolean (viewModel.LBPlayer.CustomProperties ["is_ready"]);
 				}
-				if (is_ready) {
+				if (is_ready && viewModel.Status is Ready == false) {
 					viewModel.ExecutePlayerReady ();
-				} else {
+				} else if (is_ready == false && viewModel.Status is Wait == false) {
 					viewModel.ExecutePlayerCancel ();
 				}
 			}
@@ -144,14 +144,15 @@ namespace yigame.epoker
 						&& Convert.ToBoolean (kv.Value.CustomProperties ["first_get"]);
 					}).Select (kv => kv.Key).Single ();
 				} catch (Exception ex) {
-					UnityEngine.Debug.Log ("没有指定先抓牌的 actorid, 使用 RoomMaster 的 actorid");
+					UnityEngine.Debug.Log ("没有指定先抓牌的 actorid, 使用 RoomMaster 的 actorid: " + ex.Message);
 				}
 
 				List<int> actor_id_list = Network.Client.CurrentRoom.Players.Select (kv => kv.Key).OrderBy (id => id).ToList ();
 				bool has_find_first = false;
 
-				int i = 0;
+				int first_turn_actor_id = -1;
 
+				int i = 0;
 				while (i < card_info.Count) {
 
 					foreach (int actor_id in actor_id_list) {
@@ -162,6 +163,11 @@ namespace yigame.epoker
 						if (has_find_first) {
 							CardInfo ci = card_info [i];
 							card_info_dic [actor_id].Add (ci);
+
+							if (ci.NumericalValue == NumericalValue.NV_BIG_JOKER && first_turn_actor_id == -1) {
+								first_turn_actor_id = actor_id;
+							}
+
 							if (++i >= card_info.Count) {
 								break;
 							}
@@ -169,20 +175,30 @@ namespace yigame.epoker
 					}
 				}
 
+				if (first_turn_actor_id == -1) {
+					first_turn_actor_id = first_get_actor_id;
+				}
+
 				foreach (int actor_id in actor_id_list) {
 
 					Hashtable ht = new Hashtable ();
 					ht.Add ("hand_cards", JsonConvert.SerializeObject (card_info_dic [actor_id]));
 					ht.Add ("first_get", Convert.ToString (actor_id == first_get_actor_id));
+					ht.Add ("my_turn", Convert.ToString (actor_id == first_turn_actor_id));
 
 					Publish (new NetSetPlayerProperties () {
 						ActorId = actor_id,
 						PropertiesToSet = ht
 					});
 				}
-			}
 
-			// 发出事件,开始抓牌
+				// 发出事件,开始抓牌
+				Publish (new NetRaiseEvent () {
+					EventCode = GameService.EventCode.MatchBegan
+				});
+
+				viewModel.ExecuteMatchBegan ();
+			}
 
 		}
 

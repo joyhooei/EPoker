@@ -43,10 +43,6 @@ namespace yigame.epoker {
         
         private Signal<RootMatchBeganCommand> _RootMatchBegan;
         
-        private Signal<CreateDeckToPileCommand> _CreateDeckToPile;
-        
-        private Signal<DealPileCommand> _DealPile;
-        
         private Signal<QuitCoreGameCommand> _QuitCoreGame;
         
         private Signal<PlayerJoinCommand> _PlayerJoin;
@@ -194,24 +190,6 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual Signal<CreateDeckToPileCommand> CreateDeckToPile {
-            get {
-                return _CreateDeckToPile;
-            }
-            set {
-                _CreateDeckToPile = value;
-            }
-        }
-        
-        public virtual Signal<DealPileCommand> DealPile {
-            get {
-                return _DealPile;
-            }
-            set {
-                _DealPile = value;
-            }
-        }
-        
         public virtual Signal<QuitCoreGameCommand> QuitCoreGame {
             get {
                 return _QuitCoreGame;
@@ -252,8 +230,6 @@ namespace yigame.epoker {
             base.Bind();
             this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
             this.RootMatchBegan = new Signal<RootMatchBeganCommand>(this);
-            this.CreateDeckToPile = new Signal<CreateDeckToPileCommand>(this);
-            this.DealPile = new Signal<DealPileCommand>(this);
             this.QuitCoreGame = new Signal<QuitCoreGameCommand>(this);
             this.PlayerJoin = new Signal<PlayerJoinCommand>(this);
             this.PlayerLeave = new Signal<PlayerLeaveCommand>(this);
@@ -273,14 +249,6 @@ namespace yigame.epoker {
         
         public virtual void ExecuteRootMatchBegan() {
             this.RootMatchBegan.OnNext(new RootMatchBeganCommand());
-        }
-        
-        public virtual void ExecuteCreateDeckToPile() {
-            this.CreateDeckToPile.OnNext(new CreateDeckToPileCommand());
-        }
-        
-        public virtual void ExecuteDealPile() {
-            this.DealPile.OnNext(new DealPileCommand());
         }
         
         public virtual void ExecuteQuitCoreGame() {
@@ -324,8 +292,6 @@ namespace yigame.epoker {
             base.FillCommands(list);
             list.Add(new ViewModelCommandInfo("RefreshCoreGame", RefreshCoreGame) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RootMatchBegan", RootMatchBegan) { ParameterType = typeof(void) });
-            list.Add(new ViewModelCommandInfo("CreateDeckToPile", CreateDeckToPile) { ParameterType = typeof(void) });
-            list.Add(new ViewModelCommandInfo("DealPile", DealPile) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("QuitCoreGame", QuitCoreGame) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("PlayerJoin", PlayerJoin) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("PlayerLeave", PlayerLeave) { ParameterType = typeof(void) });

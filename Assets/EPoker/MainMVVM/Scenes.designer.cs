@@ -76,4 +76,33 @@ namespace yigame.epoker {
             yield break;
         }
     }
+    
+    public class PlayerTestSceneBase : uFrame.Kernel.Scene {
+        
+        public override string DefaultKernelScene {
+            get {
+                return "EPokerRepositoryKernelScene";
+            }
+        }
+        
+        public virtual PlayerTestSceneSettings Settings {
+            get {
+                return _SettingsObject as PlayerTestSceneSettings;
+            }
+            set {
+                _SettingsObject = value;
+            }
+        }
+    }
+    
+    public class PlayerTestSceneLoaderBase : SceneLoader<PlayerTestScene> {
+        
+        protected override IEnumerator LoadScene(PlayerTestScene scene, Action<float, string> progressDelegate) {
+            yield break;
+        }
+        
+        protected override IEnumerator UnloadScene(PlayerTestScene scene, Action<float, string> progressDelegate) {
+            yield break;
+        }
+    }
 }

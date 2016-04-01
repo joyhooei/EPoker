@@ -175,14 +175,6 @@ namespace yigame.epoker {
             CoreGameRoot.RootMatchBegan.OnNext(new RootMatchBeganCommand() { Sender = CoreGameRoot });
         }
         
-        public virtual void ExecuteCreateDeckToPile() {
-            CoreGameRoot.CreateDeckToPile.OnNext(new CreateDeckToPileCommand() { Sender = CoreGameRoot });
-        }
-        
-        public virtual void ExecuteDealPile() {
-            CoreGameRoot.DealPile.OnNext(new DealPileCommand() { Sender = CoreGameRoot });
-        }
-        
         public virtual void ExecuteQuitCoreGame() {
             CoreGameRoot.QuitCoreGame.OnNext(new QuitCoreGameCommand() { Sender = CoreGameRoot });
         }
@@ -207,16 +199,6 @@ namespace yigame.epoker {
         public virtual void ExecuteRootMatchBegan(RootMatchBeganCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RootMatchBegan.OnNext(command);
-        }
-        
-        public virtual void ExecuteCreateDeckToPile(CreateDeckToPileCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.CreateDeckToPile.OnNext(command);
-        }
-        
-        public virtual void ExecuteDealPile(DealPileCommand command) {
-            command.Sender = CoreGameRoot;
-            CoreGameRoot.DealPile.OnNext(command);
         }
         
         public virtual void ExecuteQuitCoreGame(QuitCoreGameCommand command) {
@@ -302,6 +284,16 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_InfoonlyWhenChanged")]
         protected bool _InfoOnlyWhenChanged;
         
+        [UFToggleGroup("Face")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindFace = true;
+        
+        [UFGroup("Face")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_FaceonlyWhenChanged")]
+        protected bool _FaceOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -339,9 +331,15 @@ namespace yigame.epoker {
             if (_BindInfo) {
                 this.BindProperty(this.Card.InfoProperty, this.InfoChanged, _InfoOnlyWhenChanged);
             }
+            if (_BindFace) {
+                this.BindProperty(this.Card.FaceProperty, this.FaceChanged, _FaceOnlyWhenChanged);
+            }
         }
         
         public virtual void InfoChanged(CardInfo arg1) {
+        }
+        
+        public virtual void FaceChanged(CardFace arg1) {
         }
     }
     

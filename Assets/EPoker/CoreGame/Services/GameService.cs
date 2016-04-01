@@ -18,6 +18,11 @@ namespace yigame.epoker
 		[Inject] public Network Network;
 		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
 
+		public static class EventCode
+		{
+			public static byte MatchBegan = 10;
+		}
+
 		public List<CardInfo> GetDeck (bool disorder)
 		{
 			List<CardInfo> card_info_list = new List<CardInfo> ();
@@ -42,54 +47,6 @@ namespace yigame.epoker
 			return card_info_list;
 		}
 
-		public override void UploadInfoJsonHandler (UploadInfoJson data)
-		{
-			base.UploadInfoJsonHandler (data);
-			// 将 CoreGameRoot InfoJson 数据上传房间属性
-		}
-
-		public override void OnInfoJsonUpdateHandler (OnInfoJsonUpdate data)
-		{
-			base.OnInfoJsonUpdateHandler (data);
-
-//			if (Network.Client == null)
-//				return;
-//
-//			// 构造 InfoJson
-//			JObject infoJson = new JObject ();
-//			infoJson.Add (new JProperty ("player_count", Network.Client.CurrentRoom.PlayerCount));
-//			infoJson.Add (new JProperty ("players", new JArray ()));
-//
-//			int idx = 0;
-//			Network.Client.CurrentRoom.Players.OrderBy (_ => _.Key).ToList ().ForEach (kv => {
-//				int actorId = kv.Key;
-//				Player player = kv.Value;
-//
-//				JObject jo_player = new JObject ();
-//
-//				jo_player.Add (new JProperty ("idx", idx));
-//				jo_player.Add (new JProperty ("actor_id", player.ID));
-//				jo_player.Add (new JProperty ("playfab_id", ""));
-//				jo_player.Add (new JProperty ("display_name", player.Name));
-//				jo_player.Add (new JProperty ("player_room_identity", player.IsMasterClient ? RoomIdentity.RoomMaster : RoomIdentity.RoomGuest));
-//				jo_player.Add (new JProperty ("get_card_first", false));
-//				jo_player.Add (new JProperty ("is_self", player.IsLocal));
-//				jo_player.Add (new JProperty ("is_ready", player.CustomProperties ["is_ready"]));
-//				jo_player.Add (new JProperty ("hand_cards", new JArray ()));
-//
-//				((JArray)infoJson ["players"]).Add (jo_player);
-//
-//				idx++;
-//			});
-//
-//			infoJson.Add (new JProperty ("pile_for_show", new JArray ()));
-//
-//			CoreGameRoot.InfoJson = infoJson;
-//
-//			// 刷新
-//			CoreGameRoot.ExecuteRefreshCoreGame ();
-		}
-
 		public override void OpenCoreGameHandler (OpenCoreGame data)
 		{
 			base.OpenCoreGameHandler (data);
@@ -107,6 +64,13 @@ namespace yigame.epoker
 			Publish (new UnloadSceneCommand () {
 				SceneName = "CoreGameScene"
 			});
+		}
+
+		public override void OnCoreGameEventHandler (OnCoreGameEvent data)
+		{
+			base.OnCoreGameEventHandler (data);
+
+			CoreGameRoot.PlayerCollection.Where (pvm => pvm.IsSelf == false).ToList ().ForEach (pvm => pvm.ExecuteMatchBegan ());
 		}
 	}
 }

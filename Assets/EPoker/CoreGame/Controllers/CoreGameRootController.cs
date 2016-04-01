@@ -47,37 +47,6 @@ namespace yigame.epoker
 			});
 		}
 
-		public override void CreateDeckToPile (CoreGameRootViewModel viewModel)
-		{
-			base.CreateDeckToPile (viewModel);
-
-//			List<CardInfo> card_info_list = this.GameService.GetDeck (true);
-//			JObject jInfo = CoreGameRoot.InfoJson;
-////			jInfo ["pile_for_show"] = JArray.Parse (JsonConvert.SerializeObject (card_info_list.Select (ci => ci.ToString ())));
-//
-//
-//			int get_card_first_idx = jInfo ["players"]
-//				.Where (jp => jp ["get_card_first"].Value<bool> ())
-//				.Select (jp => jp ["idx"].Value<int> ())
-//				.Single ();
-//
-//			int i = get_card_first_idx;
-//			card_info_list.ForEach (ci => {
-//				JArray j_hand_cards = jInfo ["players"] [i] ["hand_cards"] as JArray;
-//				j_hand_cards.Add (ci.ToString ());
-//				i = (i + 1) % viewModel.PlayerCount;
-//			});
-//
-//			UnityEngine.Debug.Log ("jInfo: " + JsonConvert.SerializeObject (jInfo, Formatting.Indented));
-//
-//			Publish (new UploadInfoJson ());
-		}
-
-		public override void DealPile (CoreGameRootViewModel viewModel)
-		{
-			base.DealPile (viewModel);
-		}
-
 		public override void QuitCoreGame (CoreGameRootViewModel viewModel)
 		{
 			base.QuitCoreGame (viewModel);
@@ -106,6 +75,7 @@ namespace yigame.epoker
 			});
 
 			viewModel.ExecuteCalcPosIdAndRepos ();
+			viewModel.ExecuteRefreshCoreGame ();
 		}
 
 		public override void PlayerLeave (CoreGameRootViewModel viewModel)
@@ -126,6 +96,7 @@ namespace yigame.epoker
 			}
 
 			viewModel.ExecuteCalcPosIdAndRepos ();
+			viewModel.ExecuteRefreshCoreGame ();
 		}
 
 		public static string posid_arrange_player_count = @"{
@@ -158,6 +129,7 @@ namespace yigame.epoker
 				.ForEach (kv => {
 				int idx_in_players = (kv._idx + count - idx) % count;
 				kv.vm.PosId = jArrangeItem [idx_in_players].Value<string> ();
+				kv.vm.PlayerRoomIdentity = kv.vm.LBPlayer.IsMasterClient ? RoomIdentity.RoomMaster : RoomIdentity.RoomGuest;
 			});
 		}
 	}

@@ -4,11 +4,9 @@ namespace yigame.epoker {
     using System.Collections.Generic;
     using System.Linq;
     using uFrame.Kernel;
-    using uFrame.MVVM;
-    using uFrame.MVVM.Bindings;
     using uFrame.Serialization;
     
     
-    public class OnInfoJsonUpdate : OnInfoJsonUpdateBase {
+    public class PlayerTestSceneSettings : PlayerTestSceneSettingsBase {
     }
 }

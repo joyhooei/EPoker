@@ -76,8 +76,6 @@ namespace yigame.epoker {
             // This is called when a CoreGameRootViewModel is created
             viewModel.RefreshCoreGame.Action = this.RefreshCoreGameHandler;
             viewModel.RootMatchBegan.Action = this.RootMatchBeganHandler;
-            viewModel.CreateDeckToPile.Action = this.CreateDeckToPileHandler;
-            viewModel.DealPile.Action = this.DealPileHandler;
             viewModel.QuitCoreGame.Action = this.QuitCoreGameHandler;
             viewModel.PlayerJoin.Action = this.PlayerJoinHandler;
             viewModel.PlayerLeave.Action = this.PlayerLeaveHandler;
@@ -94,12 +92,6 @@ namespace yigame.epoker {
         }
         
         public virtual void RootMatchBegan(CoreGameRootViewModel viewModel) {
-        }
-        
-        public virtual void CreateDeckToPile(CoreGameRootViewModel viewModel) {
-        }
-        
-        public virtual void DealPile(CoreGameRootViewModel viewModel) {
         }
         
         public virtual void QuitCoreGame(CoreGameRootViewModel viewModel) {
@@ -120,14 +112,6 @@ namespace yigame.epoker {
         
         public virtual void RootMatchBeganHandler(RootMatchBeganCommand command) {
             this.RootMatchBegan(command.Sender as CoreGameRootViewModel);
-        }
-        
-        public virtual void CreateDeckToPileHandler(CreateDeckToPileCommand command) {
-            this.CreateDeckToPile(command.Sender as CoreGameRootViewModel);
-        }
-        
-        public virtual void DealPileHandler(DealPileCommand command) {
-            this.DealPile(command.Sender as CoreGameRootViewModel);
         }
         
         public virtual void QuitCoreGameHandler(QuitCoreGameCommand command) {

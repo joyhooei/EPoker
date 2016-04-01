@@ -15,6 +15,10 @@ namespace yigame.epoker
 	using ExitGames.Client.Photon;
 	using ExitGames.Client.Photon.LoadBalancing;
 
+	#if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WII || UNITY_IPHONE || UNITY_ANDROID || UNITY_PS3 || UNITY_XBOX360 || UNITY_NACL  || UNITY_FLASH  || UNITY_BLACKBERRY
+	using Hashtable = ExitGames.Client.Photon.Hashtable;
+	#endif
+
 	public class Network : NetworkBase
 	{
 		[Inject ("DebugInfoPanel")] public DebugInfoPanelViewModel DebugInfoPanel;
@@ -332,11 +336,20 @@ namespace yigame.epoker
 				}
 			default:
 				{
-					RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-					roomPanelVM.Execute (new RefreshEventCommand () {
-						EventCode = photonEvent.Code,
-						EventContent = photonEvent.Parameters
-					});
+					// photonEvent.Code == 245; custom raised event.
+					if (photonEvent.Parameters.ContainsKey (ParameterCode.CustomEventContent)) {
+
+//						RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
+//						roomPanelVM.Execute (new RefreshEventCommand () {
+//							EventCode = photonEvent.Code,
+//							EventContent = photonEvent.Parameters[ParameterCode.CustomEventContent]
+//						});
+
+						Publish (new OnCoreGameEvent () {
+							EventCode = photonEvent.Code,
+							EventContent = photonEvent.Parameters[ParameterCode.CustomEventContent]
+						});
+					}
 					break;
 				}
 			}

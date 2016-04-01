@@ -52,12 +52,12 @@ namespace yigame.epoker
 		{
 			base.OnInit ();
 
+			ReadyButton.gameObject.SetActive (false);
+			StartButton.gameObject.SetActive (false);
+
 			// 忽略初始设计用的 Player
 			if (string.IsNullOrEmpty (Player.PlayerName))
 				return;
-
-			ReadyButton.gameObject.SetActive (false);
-			StartButton.gameObject.SetActive (false);
 
 			Player.ReadyStatusText = "Initializing...";
 			Observable.Timer (TimeSpan.FromSeconds (1)).Subscribe (_ => {
@@ -83,12 +83,6 @@ namespace yigame.epoker
 		public override void OnMatchPrepare ()
 		{
 			base.OnMatchPrepare ();
-
-			// room-master 进行随机牌生成,更新房间属性/触发房间事件
-
-			if (Player.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
-				Player.CoreGameRoot.ExecuteCreateDeckToPile ();
-			}
 		}
 
 		public override void OnMatchDeal ()
@@ -145,12 +139,13 @@ namespace yigame.epoker
 
 		public override void RefreshPlayerExecuted (RefreshPlayerCommand command)
 		{
-			if (Player.IsSelf) {
-				// todo:
-				if (Player.CoreGameRoot.IsAllReady) {
-					StartButton.gameObject.SetActive (true);
-				} else {
-					StartButton.gameObject.SetActive (false);
+			if (Player.PlayerRoomIdentity == RoomIdentity.RoomMaster) {
+				if (Player.IsSelf) {
+					if (Player.CoreGameRoot.CanMatchBegan) {
+						StartButton.gameObject.SetActive (true);
+					} else {
+						StartButton.gameObject.SetActive (false);
+					}
 				}
 			} else {
 				StartButton.gameObject.SetActive (false);
