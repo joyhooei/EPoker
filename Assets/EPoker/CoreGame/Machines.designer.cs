@@ -288,7 +288,10 @@ namespace yigame.epoker {
             base.Compose(states);
             Init.InitOK = new StateTransition("InitOK", Init, Wait);
             Transitions.Add(Init.InitOK);
+            Init.PlayerReady = new StateTransition("PlayerReady", Init, Ready);
+            Transitions.Add(Init.PlayerReady);
             Init.AddTrigger(InitOK, Init.InitOK);
+            Init.AddTrigger(PlayerReady, Init.PlayerReady);
             Init.StateMachine = this;
             states.Add(Init);
             Ready.PlayerCancel = new StateTransition("PlayerCancel", Ready, Wait);
@@ -345,12 +348,23 @@ namespace yigame.epoker {
         
         private Invert.StateMachine.StateTransition _InitOK;
         
+        private Invert.StateMachine.StateTransition _PlayerReady;
+        
         public Invert.StateMachine.StateTransition InitOK {
             get {
                 return _InitOK;
             }
             set {
                 _InitOK = value;
+            }
+        }
+        
+        public Invert.StateMachine.StateTransition PlayerReady {
+            get {
+                return _PlayerReady;
+            }
+            set {
+                _PlayerReady = value;
             }
         }
         
@@ -362,6 +376,10 @@ namespace yigame.epoker {
         
         public virtual void InitOKTransition() {
             this.Transition(this.InitOK);
+        }
+        
+        public virtual void PlayerReadyTransition() {
+            this.Transition(this.PlayerReady);
         }
     }
     

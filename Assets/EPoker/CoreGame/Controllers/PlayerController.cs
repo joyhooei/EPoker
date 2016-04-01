@@ -117,11 +117,13 @@ namespace yigame.epoker
 		{
 			base.ButtonReadyClicked (viewModel);
 
-			if (viewModel.Status is Wait) {
+			if (viewModel.Status is Wait || viewModel.Status is Init) {
 				viewModel.ExecutePlayerReady ();	
 			} else if (viewModel.Status is Ready) {
 				viewModel.ExecutePlayerCancel ();
 			}
+
+			viewModel.ExecuteRefreshPlayer ();
 		}
 
 		public override void ButtonStartClicked (PlayerViewModel viewModel)

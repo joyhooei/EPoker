@@ -55,12 +55,15 @@ namespace yigame.epoker
 			// 忽略初始设计用的 Player
 			if (string.IsNullOrEmpty (Player.PlayerName))
 				return;
-			
+
+			ReadyButton.gameObject.SetActive (false);
+			StartButton.gameObject.SetActive (false);
+
 			Player.ReadyStatusText = "Initializing...";
 			Observable.Timer (TimeSpan.FromSeconds (1)).Subscribe (_ => {
 				Player.ExecuteInitOK ();
 				this.ExecuteRefreshPlayer ();
-			});
+			}).DisposeWhenChanged (Player.StatusProperty);
 		}
 
 		public override void OnWait ()
@@ -128,7 +131,7 @@ namespace yigame.epoker
 			Vector3 pos = Player.CoreGameRoot.PosIdPosition [pos_obj_name];
 			transform.position = pos;
 
-			Debug.Log (pos_obj_name + pos.ToString ());
+//			Debug.Log (pos_obj_name + pos.ToString ());
 		}
 
 		public override void IsSelfChanged (Boolean arg1)
@@ -143,9 +146,11 @@ namespace yigame.epoker
 		public override void RefreshPlayerExecuted (RefreshPlayerCommand command)
 		{
 			if (Player.IsSelf) {
-				 // todo:
+				// todo:
 				if (Player.CoreGameRoot.IsAllReady) {
+					StartButton.gameObject.SetActive (true);
 				} else {
+					StartButton.gameObject.SetActive (false);
 				}
 			} else {
 				StartButton.gameObject.SetActive (false);
