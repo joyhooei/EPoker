@@ -230,5 +230,20 @@ namespace yigame.epoker
 				viewModel.HandCards.Remove (card);
 			}
 		}
+
+		public override void Reorder (PlayerViewModel viewModel)
+		{
+			base.Reorder (viewModel);
+
+//			viewModel.HandCards.ToList ().Sort ((a, b) => {
+//				return CardInfo.SingleInHandCompare (a.Info, b.Info);
+//			});
+//
+//			viewModel.HandCards.ToList ().Select ((vm, idx) => {
+//				return new {vm, idx};
+//			}).ToList ().ForEach (t => {
+//				t.vm.PosIdx = t.idx;
+//			});
+		}
 	}
 }

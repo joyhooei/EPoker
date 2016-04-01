@@ -23,7 +23,7 @@ namespace yigame.epoker
 			public static byte MatchBegan = 10;
 		}
 
-		public List<CardInfo> GetDeck (bool disorder)
+		public static List<CardInfo> GetDeck (bool disorder)
 		{
 			List<CardInfo> card_info_list = new List<CardInfo> ();
 			for (int s = 0; s < 4; s++) {

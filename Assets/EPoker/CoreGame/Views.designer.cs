@@ -274,6 +274,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public CardPlace _Place;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _PosIdx;
+        
         [UFToggleGroup("Info")]
         [UnityEngine.HideInInspector()]
         public bool _BindInfo = true;
@@ -321,6 +326,7 @@ namespace yigame.epoker {
             cardview.Info = this._Info;
             cardview.Face = this._Face;
             cardview.Place = this._Place;
+            cardview.PosIdx = this._PosIdx;
         }
         
         public override void Bind() {
@@ -483,6 +489,10 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerNodeModeonlyWhenChanged")]
         protected bool _PlayerNodeModeOnlyWhenChanged;
         
+        [UFToggleGroup("Reorder")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindReorder = true;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -555,6 +565,9 @@ namespace yigame.epoker {
             }
             if (_BindPlayerNodeMode) {
                 this.BindProperty(this.Player.PlayerNodeModeProperty, this.PlayerNodeModeChanged, _PlayerNodeModeOnlyWhenChanged);
+            }
+            if (_BindReorder) {
+                this.BindCommandExecuted(this.Player.Reorder, this.ReorderExecuted);
             }
         }
         
@@ -631,6 +644,9 @@ namespace yigame.epoker {
         public virtual void PlayerNodeModeChanged(PlayerNodeMode arg1) {
         }
         
+        public virtual void ReorderExecuted(ReorderCommand command) {
+        }
+        
         public virtual void ExecutePlayerReady() {
             Player.PlayerReady.OnNext(new PlayerReadyCommand() { Sender = Player });
         }
@@ -685,6 +701,10 @@ namespace yigame.epoker {
         
         public virtual void ExecuteLogInfo() {
             Player.LogInfo.OnNext(new LogInfoCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteReorder() {
+            Player.Reorder.OnNext(new ReorderCommand() { Sender = Player });
         }
         
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
@@ -765,6 +785,11 @@ namespace yigame.epoker {
         public virtual void ExecuteRemoveCards(RemoveCardsCommand command) {
             command.Sender = Player;
             Player.RemoveCards.OnNext(command);
+        }
+        
+        public virtual void ExecuteReorder(ReorderCommand command) {
+            command.Sender = Player;
+            Player.Reorder.OnNext(command);
         }
     }
     

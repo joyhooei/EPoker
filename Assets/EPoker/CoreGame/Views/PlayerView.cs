@@ -179,8 +179,8 @@ namespace yigame.epoker
 
 		public override void HandCardsRemoved (uFrame.MVVM.ViewBase view)
 		{
+			Destroy (view.gameObject);
 		}
-
 
 		public override void PlayerNodeModeChanged (PlayerNodeMode arg1)
 		{
@@ -196,6 +196,10 @@ namespace yigame.epoker
 			default:
 				throw new ArgumentOutOfRangeException ();
 			}
+		}
+
+		public override void ReorderExecuted (ReorderCommand command)
+		{
 		}
 	}
 }

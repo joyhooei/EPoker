@@ -14,24 +14,12 @@ MonoBehaviour:
   _settingsKeys: []
   _settingsValues: 
   _diagrams:
-  - {fileID: 11400000, guid: e9d513f93623dcd43a5d66b8f7242e92, type: 2}
   - {fileID: 11400000, guid: c909684140fdf6644a30612578c4c32f, type: 2}
-  - {fileID: 11400000, guid: 91bf14eaae2e144f799a634fa6061cef, type: 2}
-  - {fileID: 11400000, guid: 594e4da74d1fa47c19876da083a5da44, type: 2}
   - {fileID: 11400000, guid: a471da125caffd341b0f24225146e40c, type: 2}
   _projectNamespace: yigame.epoker
   _currentTabs:
   - _graphIdentifier: a9bd8597-0ab3-4475-990f-ceb3b49d0dd8
     _graphName: CommonDataStruct
-    _path: []
-  - _graphIdentifier: b8b33b37-cc3f-411b-bb91-3d273c743688
-    _graphName: OutOfGame
-    _path: []
-  - _graphIdentifier: 0f3e817a-bce2-4a46-acf7-bad2b0145b6b
-    _graphName: Network
-    _path: []
-  - _graphIdentifier: ab918cee-3306-416d-b84d-a03efecd546e
-    _graphName: MainMVVM
     _path: []
   - _graphIdentifier: 986f579f-3723-4b3a-999b-976735719022
     _graphName: CoreGame

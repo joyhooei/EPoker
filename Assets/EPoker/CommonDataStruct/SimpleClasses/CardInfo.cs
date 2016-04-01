@@ -46,6 +46,27 @@ namespace yigame.epoker
 			);
 		}
 
+		public static int SingleInHandCompare (CardInfo a, CardInfo b)
+		{
+			return NumericalValueToCardSize (a.NumericalValue).CompareTo (NumericalValueToCardSize (b.NumericalValue));
+		}
+
+		public static int NumericalValueToCardSize (NumericalValue nv)
+		{
+			if (nv >= NumericalValue.NV_3 && nv <= NumericalValue.NV_KING) {
+				return (int)nv;
+			} else if (nv == NumericalValue.NV_ACE) {
+				return 20;
+			} else if (nv == NumericalValue.NV_2) {
+				return 21;
+			} else if (nv == NumericalValue.NV_SMALL_JOKER) {
+				return 30;
+			} else if (nv == NumericalValue.NV_BIG_JOKER) {
+				return 31;
+			}
+			return -1;
+		}
+
 		public string GetCardFrontPrefabName ()
 		{
 			string suit_str;
@@ -127,4 +148,7 @@ namespace yigame.epoker
 			return string.Format ("{0}_{1}", suit_str, nv_str);
 		}
 	}
+
+
+
 }

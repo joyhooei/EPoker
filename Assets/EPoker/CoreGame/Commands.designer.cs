@@ -80,6 +80,9 @@ namespace yigame.epoker {
     public partial class LogInfoCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class ReorderCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class AddCardsCommand : ViewModelCommand {
         
         private List<CardInfo> _CardInfos;

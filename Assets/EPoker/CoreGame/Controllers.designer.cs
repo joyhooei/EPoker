@@ -324,6 +324,7 @@ namespace yigame.epoker {
             viewModel.LogInfo.Action = this.LogInfoHandler;
             viewModel.AddCards.Action = this.AddCardsHandler;
             viewModel.RemoveCards.Action = this.RemoveCardsHandler;
+            viewModel.Reorder.Action = this.ReorderHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
@@ -372,6 +373,9 @@ namespace yigame.epoker {
         }
         
         public virtual void LogInfo(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void Reorder(PlayerViewModel viewModel) {
         }
         
         public virtual void PlayerReadyHandler(PlayerReadyCommand command) {
@@ -436,6 +440,10 @@ namespace yigame.epoker {
         
         public virtual void RemoveCardsHandler(RemoveCardsCommand command) {
             this.RemoveCards(command.Sender as PlayerViewModel, command);
+        }
+        
+        public virtual void ReorderHandler(ReorderCommand command) {
+            this.Reorder(command.Sender as PlayerViewModel);
         }
         
         public virtual void AddCards(PlayerViewModel viewModel, AddCardsCommand arg) {

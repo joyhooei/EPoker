@@ -147,6 +147,10 @@ namespace yigame.epoker {
             Player.LogInfo.OnNext(new LogInfoCommand() { Sender = Player });
         }
         
+        public virtual void ExecuteReorder() {
+            Player.Reorder.OnNext(new ReorderCommand() { Sender = Player });
+        }
+        
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
             command.Sender = Player;
             Player.PlayerReady.OnNext(command);
@@ -225,6 +229,11 @@ namespace yigame.epoker {
         public virtual void ExecuteRemoveCards(RemoveCardsCommand command) {
             command.Sender = Player;
             Player.RemoveCards.OnNext(command);
+        }
+        
+        public virtual void ExecuteReorder(ReorderCommand command) {
+            command.Sender = Player;
+            Player.Reorder.OnNext(command);
         }
     }
 }
