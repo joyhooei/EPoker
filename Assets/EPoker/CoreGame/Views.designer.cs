@@ -346,6 +346,9 @@ namespace yigame.epoker {
     public class PlayerViewBase : uFrame.MVVM.ViewBase {
         
         [UnityEngine.SerializeField()]
+        private PlayerTestToolsVC _PlayerTestToolsVC;
+        
+        [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
         public String _Id;
@@ -495,6 +498,12 @@ namespace yigame.epoker {
         public PlayerViewModel Player {
             get {
                 return (PlayerViewModel)ViewModelObject;
+            }
+        }
+        
+        public virtual PlayerTestToolsVC PlayerTestToolsVC {
+            get {
+                return _PlayerTestToolsVC ?? (_PlayerTestToolsVC = this.gameObject.EnsureComponent<PlayerTestToolsVC>());
             }
         }
         

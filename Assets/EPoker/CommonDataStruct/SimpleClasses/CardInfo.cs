@@ -46,7 +46,7 @@ namespace yigame.epoker
 			);
 		}
 
-		public string GetCardFrontSpriteName ()
+		public string GetCardFrontPrefabName ()
 		{
 			string suit_str;
 			string nv_str;
@@ -65,10 +65,10 @@ namespace yigame.epoker
 				suit_str = "D";
 				break;
 			case Suit.BIG_JOKER:
-				suit_str = "B";
+				suit_str = "joker";
 				break;
 			case Suit.SMALL_JOKER:
-				suit_str = "A";
+				suit_str = "joker";
 				break;
 			default:
 				throw new ArgumentOutOfRangeException ();
@@ -76,55 +76,55 @@ namespace yigame.epoker
 
 			switch (NumericalValue) {
 			case NumericalValue.NV_ACE:
-				nv_str = "0";
-				break;
-			case NumericalValue.NV_2:
 				nv_str = "1";
 				break;
-			case NumericalValue.NV_3:
+			case NumericalValue.NV_2:
 				nv_str = "2";
 				break;
-			case NumericalValue.NV_4:
+			case NumericalValue.NV_3:
 				nv_str = "3";
 				break;
-			case NumericalValue.NV_5:
+			case NumericalValue.NV_4:
 				nv_str = "4";
 				break;
-			case NumericalValue.NV_6:
+			case NumericalValue.NV_5:
 				nv_str = "5";
 				break;
-			case NumericalValue.NV_7:
+			case NumericalValue.NV_6:
 				nv_str = "6";
 				break;
-			case NumericalValue.NV_8:
+			case NumericalValue.NV_7:
 				nv_str = "7";
 				break;
-			case NumericalValue.NV_9:
+			case NumericalValue.NV_8:
 				nv_str = "8";
 				break;
-			case NumericalValue.NV_10:
+			case NumericalValue.NV_9:
 				nv_str = "9";
 				break;
-			case NumericalValue.NV_JACK:
+			case NumericalValue.NV_10:
 				nv_str = "10";
 				break;
-			case NumericalValue.NV_QUEEN:
+			case NumericalValue.NV_JACK:
 				nv_str = "11";
 				break;
-			case NumericalValue.NV_KING:
+			case NumericalValue.NV_QUEEN:
 				nv_str = "12";
 				break;
-			case NumericalValue.NV_SMALL_JOKER:
+			case NumericalValue.NV_KING:
 				nv_str = "13";
 				break;
+			case NumericalValue.NV_SMALL_JOKER:
+				nv_str = "small";
+				break;
 			case NumericalValue.NV_BIG_JOKER:
-				nv_str = "13";
+				nv_str = "big";
 				break;
 			default:
 				throw new ArgumentOutOfRangeException ();
 			}
 
-			return string.Format ("PlayingCards_{0}_{1}", suit_str, nv_str);
+			return string.Format ("{0}_{1}", suit_str, nv_str);
 		}
 	}
 }

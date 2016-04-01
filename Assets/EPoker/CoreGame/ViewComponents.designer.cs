@@ -82,4 +82,149 @@ namespace yigame.epoker {
             CoreGameRoot.CalcPosIdAndRepos.OnNext(command);
         }
     }
+    
+    public class PlayerTestToolsVCBase : uFrame.MVVM.ViewComponent {
+        
+        public virtual PlayerViewModel Player {
+            get {
+                return (PlayerViewModel)this.View.ViewModelObject;
+            }
+        }
+        
+        public virtual void ExecutePlayerReady() {
+            Player.PlayerReady.OnNext(new PlayerReadyCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecutePlayerCancel() {
+            Player.PlayerCancel.OnNext(new PlayerCancelCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteMatchBegan() {
+            Player.MatchBegan.OnNext(new MatchBeganCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteBeganToPlay() {
+            Player.BeganToPlay.OnNext(new BeganToPlayCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteBeganToWait() {
+            Player.BeganToWait.OnNext(new BeganToWaitCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteTurnOn() {
+            Player.TurnOn.OnNext(new TurnOnCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteTurnOff() {
+            Player.TurnOff.OnNext(new TurnOffCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteWin() {
+            Player.Win.OnNext(new WinCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteOver() {
+            Player.Over.OnNext(new OverCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteInitOK() {
+            Player.InitOK.OnNext(new InitOKCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteRefreshPlayer() {
+            Player.RefreshPlayer.OnNext(new RefreshPlayerCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonReadyClicked() {
+            Player.ButtonReadyClicked.OnNext(new ButtonReadyClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonStartClicked() {
+            Player.ButtonStartClicked.OnNext(new ButtonStartClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteLogInfo() {
+            Player.LogInfo.OnNext(new LogInfoCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
+            command.Sender = Player;
+            Player.PlayerReady.OnNext(command);
+        }
+        
+        public virtual void ExecutePlayerCancel(PlayerCancelCommand command) {
+            command.Sender = Player;
+            Player.PlayerCancel.OnNext(command);
+        }
+        
+        public virtual void ExecuteMatchBegan(MatchBeganCommand command) {
+            command.Sender = Player;
+            Player.MatchBegan.OnNext(command);
+        }
+        
+        public virtual void ExecuteBeganToPlay(BeganToPlayCommand command) {
+            command.Sender = Player;
+            Player.BeganToPlay.OnNext(command);
+        }
+        
+        public virtual void ExecuteBeganToWait(BeganToWaitCommand command) {
+            command.Sender = Player;
+            Player.BeganToWait.OnNext(command);
+        }
+        
+        public virtual void ExecuteTurnOn(TurnOnCommand command) {
+            command.Sender = Player;
+            Player.TurnOn.OnNext(command);
+        }
+        
+        public virtual void ExecuteTurnOff(TurnOffCommand command) {
+            command.Sender = Player;
+            Player.TurnOff.OnNext(command);
+        }
+        
+        public virtual void ExecuteWin(WinCommand command) {
+            command.Sender = Player;
+            Player.Win.OnNext(command);
+        }
+        
+        public virtual void ExecuteOver(OverCommand command) {
+            command.Sender = Player;
+            Player.Over.OnNext(command);
+        }
+        
+        public virtual void ExecuteInitOK(InitOKCommand command) {
+            command.Sender = Player;
+            Player.InitOK.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshPlayer(RefreshPlayerCommand command) {
+            command.Sender = Player;
+            Player.RefreshPlayer.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonReadyClicked(ButtonReadyClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonReadyClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonStartClicked(ButtonStartClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonStartClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteLogInfo(LogInfoCommand command) {
+            command.Sender = Player;
+            Player.LogInfo.OnNext(command);
+        }
+        
+        public virtual void ExecuteAddCards(AddCardsCommand command) {
+            command.Sender = Player;
+            Player.AddCards.OnNext(command);
+        }
+        
+        public virtual void ExecuteRemoveCards(RemoveCardsCommand command) {
+            command.Sender = Player;
+            Player.RemoveCards.OnNext(command);
+        }
+    }
 }

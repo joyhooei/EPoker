@@ -38,7 +38,7 @@ namespace yigame.epoker
 		{
 			Debug.LogFormat ("InfoChanged: {0}", arg1);
 
-			string front_sprite_name = arg1.GetCardFrontSpriteName ();
+			string front_sprite_name = arg1.GetCardFrontPrefabName ();
 			GameObject prefab = Resources.Load<GameObject> (front_sprite_name);
 			GameObject front_go = Instantiate (prefab);
 			front_go.transform.SetParent (gameObject.Descendants ("front").Single ().transform);
