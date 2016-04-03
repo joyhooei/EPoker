@@ -12,6 +12,7 @@ namespace yigame.epoker
 	using UniRx;
 	using UnityEngine;
 	using Unity.Linq;
+	using DG.Tweening;
 
 	public class CardView : CardViewBase
 	{
@@ -84,13 +85,15 @@ namespace yigame.epoker
 		public override void OnCardSelected ()
 		{
 			base.OnCardSelected ();
-			CardTouchVC.transform.localPosition = SelectedOffset;
+			DOTween.Kill (this);
+			CardTouchVC.transform.DOLocalMove (SelectedOffset, .2f).SetId (this);
 		}
 
 		public override void OnCardUnselected ()
 		{
 			base.OnCardUnselected ();
-			CardTouchVC.transform.localPosition = Vector3.zero;
+			DOTween.Kill (this);
+			CardTouchVC.transform.DOLocalMove (Vector3.zero, .2f).SetId (this);
 		}
 
 		#endregion
