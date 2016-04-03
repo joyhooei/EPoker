@@ -27,9 +27,17 @@ namespace yigame.epoker
 
 		public bool CanMatchBegan {
 			get {
-				return IsAllReady && Network.Client.CurrentRoom.PlayerCount > 1;
+				if (SinglePlayerStartForTest) {
+					return IsAllReady;
+				} else {
+					return IsAllReady && Network.Client.CurrentRoom.PlayerCount > 1;
+				}
 			}
 		}
 
+		public PlayerViewModel GetPlayerByActorId (int actorId)
+		{
+			return PlayerCollection.Where (vm => vm.ActorId == actorId).SingleOrDefault ();
+		}
 	}
 }

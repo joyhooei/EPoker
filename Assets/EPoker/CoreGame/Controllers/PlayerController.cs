@@ -57,6 +57,14 @@ namespace yigame.epoker
 		public override void MatchBegan (PlayerViewModel viewModel)
 		{
 			base.MatchBegan (viewModel);
+
+			string hand_cards_str = Convert.ToString (viewModel.LBPlayer.CustomProperties ["hand_cards"]);
+			List<CardInfo> card_info_list = JsonConvert.DeserializeObject<List<CardInfo>> (hand_cards_str);
+
+			// test
+			viewModel.Execute (new AddCardsCommand () {
+				CardInfos = card_info_list
+			});
 		}
 
 		public override void BeganToPlay (PlayerViewModel viewModel)
@@ -217,7 +225,7 @@ namespace yigame.epoker
 				card.Info = ci;
 				card.Face = CardFace.FaceUp;
 				card.Place = CardPlace.Floor;
-
+				card.OwnerActorId = viewModel.ActorId;
 				viewModel.HandCards.Add (card);
 			}
 

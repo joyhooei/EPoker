@@ -922,7 +922,7 @@ MonoBehaviour:
   _DisposeOnDestroy: 0
   _overrideViewModel: 0
   _BindCards: 1
-  _CardsParent: {fileID: 0}
+  _CardsParent: {fileID: 1707614485}
   _CardsViewFirst: 0
 --- !u!1 &1865408200
 GameObject:
@@ -1279,6 +1279,7 @@ MonoBehaviour:
   _PlayerCount: 0
   _Pile: {fileID: 1707614486}
   _PlayerName: 
+  _SinglePlayerStartForTest: 1
   _BindPlayerCollection: 1
   _PlayerCollectionParent: {fileID: 1615951201}
   _PlayerCollectionViewFirst: 0

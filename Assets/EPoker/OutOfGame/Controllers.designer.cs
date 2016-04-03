@@ -13,12 +13,12 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using yigame.epoker;
     using uFrame.MVVM;
-    using uFrame.Serialization;
-    using UniRx;
-    using uFrame.Kernel;
     using uFrame.IOC;
+    using uFrame.Kernel;
+    using yigame.epoker;
+    using UniRx;
+    using uFrame.Serialization;
     
     
     public class OutOfGameRootControllerBase : uFrame.MVVM.Controller {

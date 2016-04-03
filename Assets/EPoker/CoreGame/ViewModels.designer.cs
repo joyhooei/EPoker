@@ -37,7 +37,7 @@ namespace yigame.epoker {
         
         private P<ExitGames.Client.Photon.LoadBalancing.Room> _LBRoomProperty;
         
-        private ModelCollection<CardViewModel> _CurrentCards;
+        private P<Boolean> _SinglePlayerStartForTestProperty;
         
         private ModelCollection<PlayerViewModel> _PlayerCollection;
         
@@ -120,6 +120,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Boolean> SinglePlayerStartForTestProperty {
+            get {
+                return _SinglePlayerStartForTestProperty;
+            }
+            set {
+                _SinglePlayerStartForTestProperty = value;
+            }
+        }
+        
         public virtual BackGroundViewModel BackGround {
             get {
                 return BackGroundProperty.Value;
@@ -165,12 +174,12 @@ namespace yigame.epoker {
             }
         }
         
-        public virtual ModelCollection<CardViewModel> CurrentCards {
+        public virtual Boolean SinglePlayerStartForTest {
             get {
-                return _CurrentCards;
+                return SinglePlayerStartForTestProperty.Value;
             }
             set {
-                _CurrentCards = value;
+                SinglePlayerStartForTestProperty.Value = value;
             }
         }
         
@@ -250,7 +259,7 @@ namespace yigame.epoker {
             _PileProperty = new P<CardsPileViewModel>(this, "Pile");
             _PlayerNameProperty = new P<String>(this, "PlayerName");
             _LBRoomProperty = new P<ExitGames.Client.Photon.LoadBalancing.Room>(this, "LBRoom");
-            _CurrentCards = new ModelCollection<CardViewModel>(this, "CurrentCards");
+            _SinglePlayerStartForTestProperty = new P<Boolean>(this, "SinglePlayerStartForTest");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
             _CoreGameStatusProperty = new CoreGameSM(this, "CoreGameStatus");
         }
@@ -285,10 +294,7 @@ namespace yigame.epoker {
             this.PlayerCount = stream.DeserializeInt("PlayerCount");;
             this._CoreGameStatusProperty.SetState(stream.DeserializeString("CoreGameStatus"));
             		if (stream.DeepSerialize) this.Pile = stream.DeserializeObject<CardsPileViewModel>("Pile");;
-            if (stream.DeepSerialize) {
-                this.CurrentCards.Clear();
-                this.CurrentCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("CurrentCards"));
-            }
+            this.SinglePlayerStartForTest = stream.DeserializeBool("SinglePlayerStartForTest");;
             if (stream.DeepSerialize) {
                 this.PlayerCollection.Clear();
                 this.PlayerCollection.AddRange(stream.DeserializeObjectArray<PlayerViewModel>("PlayerCollection"));
@@ -301,7 +307,7 @@ namespace yigame.epoker {
             stream.SerializeInt("PlayerCount", this.PlayerCount);
             stream.SerializeString("CoreGameStatus", this.CoreGameStatus.Name);;
             if (stream.DeepSerialize) stream.SerializeObject("Pile", this.Pile);;
-            if (stream.DeepSerialize) stream.SerializeArray("CurrentCards", this.CurrentCards);
+            stream.SerializeBool("SinglePlayerStartForTest", this.SinglePlayerStartForTest);
             if (stream.DeepSerialize) stream.SerializeArray("PlayerCollection", this.PlayerCollection);
         }
         
@@ -329,7 +335,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PlayerNameProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_LBRoomProperty, false, false, false, false));
-            list.Add(new ViewModelPropertyInfo(_CurrentCards, true, true, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_SinglePlayerStartForTestProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_PlayerCollection, true, true, false, false));
         }
     }
@@ -396,6 +403,8 @@ namespace yigame.epoker {
         private P<Int32> _PosIdxProperty;
         
         private P<Int32> _TotalCountProperty;
+        
+        private P<Int32> _OwnerActorIdProperty;
         
         private Signal<SelectCardCommand> _SelectCard;
         
@@ -486,6 +495,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Int32> OwnerActorIdProperty {
+            get {
+                return _OwnerActorIdProperty;
+            }
+            set {
+                _OwnerActorIdProperty = value;
+            }
+        }
+        
         public virtual String CardInfoStr {
             get {
                 return CardInfoStrProperty.Value;
@@ -549,6 +567,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Int32 OwnerActorId {
+            get {
+                return OwnerActorIdProperty.Value;
+            }
+            set {
+                OwnerActorIdProperty.Value = value;
+            }
+        }
+        
         public virtual Signal<SelectCardCommand> SelectCard {
             get {
                 return _SelectCard;
@@ -578,6 +605,7 @@ namespace yigame.epoker {
             _PlaceProperty = new P<CardPlace>(this, "Place");
             _PosIdxProperty = new P<Int32>(this, "PosIdx");
             _TotalCountProperty = new P<Int32>(this, "TotalCount");
+            _OwnerActorIdProperty = new P<Int32>(this, "OwnerActorId");
             _SelectedStatusProperty = new CardSelectedStatusSM(this, "SelectedStatus");
             ResetCardInfoStr();
             ResetLocalPosition();
@@ -600,6 +628,7 @@ namespace yigame.epoker {
             this.PosIdx = stream.DeserializeInt("PosIdx");;
             this.TotalCount = stream.DeserializeInt("TotalCount");;
             this._SelectedStatusProperty.SetState(stream.DeserializeString("SelectedStatus"));
+            this.OwnerActorId = stream.DeserializeInt("OwnerActorId");;
         }
         
         public override void Write(ISerializerStream stream) {
@@ -609,6 +638,7 @@ namespace yigame.epoker {
             stream.SerializeInt("PosIdx", this.PosIdx);
             stream.SerializeInt("TotalCount", this.TotalCount);
             stream.SerializeString("SelectedStatus", this.SelectedStatus.Name);;
+            stream.SerializeInt("OwnerActorId", this.OwnerActorId);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
@@ -635,6 +665,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_TotalCountProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_SelectedStatusProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_OwnerActorIdProperty, false, false, false, false));
         }
         
         public virtual System.Collections.Generic.IEnumerable<uFrame.MVVM.IObservableProperty> GetCardInfoStrDependents() {

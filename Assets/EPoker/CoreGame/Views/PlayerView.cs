@@ -92,13 +92,6 @@ namespace yigame.epoker
 		{
 			base.OnMatchPrepare ();
 			Player.PlayerNodeMode = PlayerNodeMode.Playing;
-
-			// test
-			Player.Execute (new AddCardsCommand () {
-				CardInfos = new List<CardInfo> () { 
-					new CardInfo (Suit.SPADE, NumericalValue.NV_ACE)
-				}
-			});
 		}
 
 		public override void OnMatchDeal ()

@@ -14,6 +14,8 @@ namespace yigame.epoker
 
 	public partial class CardViewModel : CardViewModelBase
 	{
+		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+
 		public static Vector3 PositionUnitDiff = new Vector3 (.3f, 0f, -.01f);
 
 		public override string ComputeCardInfoStr ()

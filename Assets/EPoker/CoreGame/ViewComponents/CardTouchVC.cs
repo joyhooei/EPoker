@@ -18,22 +18,26 @@ namespace yigame.epoker
 
 		public void OnTouchStart (Gesture gesture)
 		{
-			CardViewModel vm = GetCard (gesture);
-			if (vm != null) {
-				// 确定本次的选择模式: 选择 or 取消选择
-				if (vm.IsSelected) {
-					CurrentSelectMode = CardSelectMode.Deselect;
-				} else {
-					CurrentSelectMode = CardSelectMode.Select;
-				}
+			PlayerViewModel player = Card.CoreGameRoot.GetPlayerByActorId (Card.OwnerActorId);
+			if (player != null && player.Status is MatchDeal) {
+				
+				CardViewModel vm = GetCard (gesture);
+				if (vm != null) {
+					// 确定本次的选择模式: 选择 or 取消选择
+					if (vm.IsSelected) {
+						CurrentSelectMode = CardSelectMode.Deselect;
+					} else {
+						CurrentSelectMode = CardSelectMode.Select;
+					}
 
-				if (CurrentSelectMode == CardSelectMode.Select) {
-					vm.ExecuteSelectCard ();
-				} else if (CurrentSelectMode == CardSelectMode.Deselect) {
-					vm.ExecuteDeselectCard ();
-				}
+					if (CurrentSelectMode == CardSelectMode.Select) {
+						vm.ExecuteSelectCard ();
+					} else if (CurrentSelectMode == CardSelectMode.Deselect) {
+						vm.ExecuteDeselectCard ();
+					}
 
-				Debug.Log ("OnTouchStart " + vm.CardInfoStr);
+					Debug.Log ("OnTouchStart " + vm.CardInfoStr);
+				}
 			}
 		}
 
