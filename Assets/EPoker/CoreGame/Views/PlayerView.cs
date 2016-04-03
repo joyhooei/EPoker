@@ -28,6 +28,7 @@ namespace yigame.epoker
 
 		public GameObject WaitingNode;
 		public GameObject PlayingNode;
+		public GameObject PlayingCanvasNode;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
@@ -48,6 +49,8 @@ namespace yigame.epoker
 
 		public override void StatusChanged (Invert.StateMachine.State arg1)
 		{
+			PlayingCanvasNode.SetActive (false);
+
 			base.StatusChanged (arg1);
 		}
 
@@ -100,6 +103,7 @@ namespace yigame.epoker
 
 		public override void OnMatchDeal ()
 		{
+			PlayingCanvasNode.SetActive (true);
 			base.OnMatchDeal ();
 		}
 
