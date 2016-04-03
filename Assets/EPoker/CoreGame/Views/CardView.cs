@@ -19,6 +19,8 @@ namespace yigame.epoker
 		public Transform MainBody;
 		public Transform Shadow;
 
+		public Vector3 SelectedOffset;
+
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
@@ -37,6 +39,9 @@ namespace yigame.epoker
 		public override void InfoChanged (CardInfo arg1)
 		{
 			Debug.LogFormat ("InfoChanged: {0}", arg1);
+
+			if (arg1 == null)
+				return;
 
 			string front_sprite_name = arg1.GetCardFrontPrefabName ();
 			GameObject prefab = Resources.Load<GameObject> (front_sprite_name);
@@ -63,5 +68,31 @@ namespace yigame.epoker
 		{
 			transform.localPosition = arg1;
 		}
+
+		#region selected status
+
+		public override void SelectedStatusChanged (Invert.StateMachine.State arg1)
+		{
+			base.SelectedStatusChanged (arg1);
+		}
+
+		public override void OnCardInit ()
+		{
+			base.OnCardInit ();
+		}
+
+		public override void OnCardSelected ()
+		{
+			base.OnCardSelected ();
+			CardTouchVC.transform.localPosition = SelectedOffset;
+		}
+
+		public override void OnCardUnselected ()
+		{
+			base.OnCardUnselected ();
+			CardTouchVC.transform.localPosition = Vector3.zero;
+		}
+
+		#endregion
 	}
 }

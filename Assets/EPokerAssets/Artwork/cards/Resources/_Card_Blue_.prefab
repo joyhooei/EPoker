@@ -23,6 +23,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 494518}
+  - 114: {fileID: 11474978}
   m_Layer: 0
   m_Name: shadow
   m_TagString: Untagged
@@ -101,6 +102,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 474066}
+  - 114: {fileID: 11404752}
+  - 114: {fileID: 11441776}
+  - 61: {fileID: 6196774}
   m_Layer: 0
   m_Name: main_body
   m_TagString: Untagged
@@ -198,6 +202,32 @@ Transform:
   - {fileID: 441618}
   m_Father: {fileID: 424646}
   m_RootOrder: 1
+--- !u!61 &6196774
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 198176}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 1.77, y: 2.48}
+--- !u!114 &11404752
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 198176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3d458bd1e7aa496d982f6d7afaf038b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 11423436}
 --- !u!114 &11423436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -214,12 +244,77 @@ MonoBehaviour:
   _BindOnStart: 1
   _DisposeOnDestroy: 0
   _overrideViewModel: 0
+  _CardTouchVC: {fileID: 11404752}
+  _CardShadowVC: {fileID: 11474978}
   _Face: 0
   _Place: 0
+  _PosIdx: 0
+  _TotalCount: 0
   _BindInfo: 1
   _InfoOnlyWhenChanged: 0
+  _BindFace: 1
+  _FaceOnlyWhenChanged: 0
+  _BindLocalPosition: 1
+  _LocalPositionOnlyWhenChanged: 0
+  _BindSelectedStatus: 1
+  _SelectedStatusOnlyWhenChanged: 0
   MainBody: {fileID: 474066}
   Shadow: {fileID: 494518}
+  SelectedOffset: {x: 0, y: 0.5, z: 0}
+--- !u!114 &11441776
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 198176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c8100645ce3444a84b9f5e0164ad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  receivers:
+  - enable: 1
+    triggerType: 0
+    name: New trigger
+    restricted: 1
+    gameObject: {fileID: 0}
+    otherReceiver: 0
+    gameObjectReceiver: {fileID: 198176}
+    eventName: 1
+    methodName: OnTouchStart
+    parameter: 1
+  - enable: 1
+    triggerType: 0
+    name: New trigger
+    restricted: 1
+    gameObject: {fileID: 0}
+    otherReceiver: 0
+    gameObjectReceiver: {fileID: 0}
+    eventName: 3
+    methodName: OnTouchUp
+    parameter: 1
+  - enable: 1
+    triggerType: 0
+    name: New trigger
+    restricted: 1
+    gameObject: {fileID: 0}
+    otherReceiver: 0
+    gameObjectReceiver: {fileID: 0}
+    eventName: 2
+    methodName: OnTouchDown
+    parameter: 1
+--- !u!114 &11474978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 114268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25533f1fffb45421098edd54761887d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 11423436}
 --- !u!212 &21200908
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -12,14 +12,17 @@ namespace yigame.epoker
 	using UnityEngine;
 	using UniRx;
 
-    
 	public partial class CardViewModel : CardViewModelBase
 	{
 		public static Vector3 PositionUnitDiff = new Vector3 (.3f, 0f, -.01f);
 
 		public override string ComputeCardInfoStr ()
 		{
-			return string.Format ("{0} : v({1}) : p({2})", Info.ToString (), CardInfo.NumericalValueToCardSize (Info.NumericalValue), Info.GetCardFrontPrefabName ());
+			return string.Format (
+				"{0} : v({1}) : p({2})", 
+				Info.ToString (), 
+				CardInfo.NumericalValueToCardSize (Info.NumericalValue), Info.GetCardFrontPrefabName ()
+			);
 		}
 
 		public override Vector3 ComputeLocalPosition ()
@@ -32,6 +35,12 @@ namespace yigame.epoker
 					PositionUnitDiff.y,
 					PosIdx * PositionUnitDiff.z
 				);
+			}
+		}
+
+		public bool IsSelected {
+			get {
+				return SelectedStatus is CardSelected;
 			}
 		}
 	}

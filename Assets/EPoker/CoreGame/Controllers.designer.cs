@@ -13,12 +13,12 @@ namespace yigame.epoker {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using yigame.epoker;
     using uFrame.MVVM;
-    using uFrame.Serialization;
-    using UniRx;
-    using uFrame.Kernel;
     using uFrame.IOC;
+    using uFrame.Kernel;
+    using yigame.epoker;
+    using UniRx;
+    using uFrame.Serialization;
     
     
     public class CoreGameRootControllerBase : uFrame.MVVM.Controller {
@@ -246,12 +246,28 @@ namespace yigame.epoker {
         
         public virtual void InitializeCard(CardViewModel viewModel) {
             // This is called when a CardViewModel is created
+            viewModel.SelectCard.Action = this.SelectCardHandler;
+            viewModel.DeselectCard.Action = this.DeselectCardHandler;
             CardViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             CardViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void SelectCard(CardViewModel viewModel) {
+        }
+        
+        public virtual void DeselectCard(CardViewModel viewModel) {
+        }
+        
+        public virtual void SelectCardHandler(SelectCardCommand command) {
+            this.SelectCard(command.Sender as CardViewModel);
+        }
+        
+        public virtual void DeselectCardHandler(DeselectCardCommand command) {
+            this.DeselectCard(command.Sender as CardViewModel);
         }
     }
     

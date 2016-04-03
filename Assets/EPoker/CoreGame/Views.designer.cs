@@ -260,6 +260,12 @@ namespace yigame.epoker {
     public class CardViewBase : uFrame.MVVM.ViewBase {
         
         [UnityEngine.SerializeField()]
+        private CardTouchVC _CardTouchVC;
+        
+        [UnityEngine.SerializeField()]
+        private CardShadowVC _CardShadowVC;
+        
+        [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
         public CardInfo _Info;
@@ -314,6 +320,16 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_LocalPositiononlyWhenChanged")]
         protected bool _LocalPositionOnlyWhenChanged;
         
+        [UFToggleGroup("SelectedStatus")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindSelectedStatus = true;
+        
+        [UFGroup("SelectedStatus")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SelectedStatusonlyWhenChanged")]
+        protected bool _SelectedStatusOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -329,6 +345,18 @@ namespace yigame.epoker {
         public CardViewModel Card {
             get {
                 return (CardViewModel)ViewModelObject;
+            }
+        }
+        
+        public virtual CardTouchVC CardTouchVC {
+            get {
+                return _CardTouchVC ?? (_CardTouchVC = this.gameObject.EnsureComponent<CardTouchVC>());
+            }
+        }
+        
+        public virtual CardShadowVC CardShadowVC {
+            get {
+                return _CardShadowVC ?? (_CardShadowVC = this.gameObject.EnsureComponent<CardShadowVC>());
             }
         }
         
@@ -359,6 +387,9 @@ namespace yigame.epoker {
             if (_BindLocalPosition) {
                 this.BindProperty(this.Card.LocalPositionProperty, this.LocalPositionChanged, _LocalPositionOnlyWhenChanged);
             }
+            if (_BindSelectedStatus) {
+                this.BindStateProperty(this.Card.SelectedStatusProperty, this.SelectedStatusChanged, _SelectedStatusOnlyWhenChanged);
+            }
         }
         
         public virtual void InfoChanged(CardInfo arg1) {
@@ -368,6 +399,45 @@ namespace yigame.epoker {
         }
         
         public virtual void LocalPositionChanged(Vector3 arg1) {
+        }
+        
+        public virtual void SelectedStatusChanged(Invert.StateMachine.State arg1) {
+            if (arg1 is CardInit) {
+                this.OnCardInit();
+            }
+            if (arg1 is CardSelected) {
+                this.OnCardSelected();
+            }
+            if (arg1 is CardUnselected) {
+                this.OnCardUnselected();
+            }
+        }
+        
+        public virtual void OnCardInit() {
+        }
+        
+        public virtual void OnCardSelected() {
+        }
+        
+        public virtual void OnCardUnselected() {
+        }
+        
+        public virtual void ExecuteSelectCard() {
+            Card.SelectCard.OnNext(new SelectCardCommand() { Sender = Card });
+        }
+        
+        public virtual void ExecuteDeselectCard() {
+            Card.DeselectCard.OnNext(new DeselectCardCommand() { Sender = Card });
+        }
+        
+        public virtual void ExecuteSelectCard(SelectCardCommand command) {
+            command.Sender = Card;
+            Card.SelectCard.OnNext(command);
+        }
+        
+        public virtual void ExecuteDeselectCard(DeselectCardCommand command) {
+            command.Sender = Card;
+            Card.DeselectCard.OnNext(command);
         }
     }
     

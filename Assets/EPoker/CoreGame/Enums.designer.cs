@@ -21,4 +21,13 @@ namespace yigame.epoker {
         
         Playing,
     }
+    
+    public enum CardSelectMode {
+        
+        None,
+        
+        Select,
+        
+        Deselect,
+    }
 }

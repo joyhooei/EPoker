@@ -38,6 +38,12 @@ namespace yigame.epoker {
     public partial class CalcPosIdAndReposCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class SelectCardCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class DeselectCardCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class PlayerReadyCommand : uFrame.MVVM.ViewModelCommand {
     }
     

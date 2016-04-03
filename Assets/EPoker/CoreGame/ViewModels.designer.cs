@@ -363,6 +363,8 @@ namespace yigame.epoker {
         
         private System.IDisposable _LocalPositionDisposable;
         
+        private CardSelectedStatusSM _SelectedStatusProperty;
+        
         private P<String> _CardInfoStrProperty;
         
         private P<Vector3> _LocalPositionProperty;
@@ -377,8 +379,30 @@ namespace yigame.epoker {
         
         private P<Int32> _TotalCountProperty;
         
+        private Signal<SelectCardCommand> _SelectCard;
+        
+        private Signal<DeselectCardCommand> _DeselectCard;
+        
         public CardViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
+        }
+        
+        public virtual CardSelectedStatusSM SelectedStatusProperty {
+            get {
+                return _SelectedStatusProperty;
+            }
+            set {
+                _SelectedStatusProperty = value;
+            }
+        }
+        
+        public virtual Invert.StateMachine.State SelectedStatus {
+            get {
+                return SelectedStatusProperty.Value;
+            }
+            set {
+                SelectedStatusProperty.Value = value;
+            }
         }
         
         public virtual P<String> CardInfoStrProperty {
@@ -507,8 +531,28 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<SelectCardCommand> SelectCard {
+            get {
+                return _SelectCard;
+            }
+            set {
+                _SelectCard = value;
+            }
+        }
+        
+        public virtual Signal<DeselectCardCommand> DeselectCard {
+            get {
+                return _DeselectCard;
+            }
+            set {
+                _DeselectCard = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.SelectCard = new Signal<SelectCardCommand>(this);
+            this.DeselectCard = new Signal<DeselectCardCommand>(this);
             _CardInfoStrProperty = new P<String>(this, "CardInfoStr");
             _LocalPositionProperty = new P<Vector3>(this, "LocalPosition");
             _InfoProperty = new P<CardInfo>(this, "Info");
@@ -516,8 +560,19 @@ namespace yigame.epoker {
             _PlaceProperty = new P<CardPlace>(this, "Place");
             _PosIdxProperty = new P<Int32>(this, "PosIdx");
             _TotalCountProperty = new P<Int32>(this, "TotalCount");
+            _SelectedStatusProperty = new CardSelectedStatusSM(this, "SelectedStatus");
             ResetCardInfoStr();
             ResetLocalPosition();
+            SelectCard.Subscribe(_ => SelectedStatusProperty.SelectCard.OnNext(true));
+            DeselectCard.Subscribe(_ => SelectedStatusProperty.DeselectCard.OnNext(true));
+        }
+        
+        public virtual void ExecuteSelectCard() {
+            this.SelectCard.OnNext(new SelectCardCommand());
+        }
+        
+        public virtual void ExecuteDeselectCard() {
+            this.DeselectCard.OnNext(new DeselectCardCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -526,6 +581,7 @@ namespace yigame.epoker {
             this.Place = (CardPlace)stream.DeserializeInt("Place");;
             this.PosIdx = stream.DeserializeInt("PosIdx");;
             this.TotalCount = stream.DeserializeInt("TotalCount");;
+            this._SelectedStatusProperty.SetState(stream.DeserializeString("SelectedStatus"));
         }
         
         public override void Write(ISerializerStream stream) {
@@ -534,10 +590,13 @@ namespace yigame.epoker {
             stream.SerializeInt("Place", (int)this.Place);;
             stream.SerializeInt("PosIdx", this.PosIdx);
             stream.SerializeInt("TotalCount", this.TotalCount);
+            stream.SerializeString("SelectedStatus", this.SelectedStatus.Name);;
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("SelectCard", SelectCard) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("DeselectCard", DeselectCard) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -556,6 +615,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PosIdxProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_TotalCountProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_SelectedStatusProperty, false, false, false, false));
         }
         
         public virtual System.Collections.Generic.IEnumerable<uFrame.MVVM.IObservableProperty> GetCardInfoStrDependents() {

@@ -745,4 +745,182 @@ namespace yigame.epoker {
             this.Transition(this.CoreGameOver);
         }
     }
+    
+    public class CardSelectedStatusSM : Invert.StateMachine.StateMachine {
+        
+        private Invert.StateMachine.StateMachineTrigger _SelectCard;
+        
+        private Invert.StateMachine.StateMachineTrigger _DeselectCard;
+        
+        private CardInit _CardInit;
+        
+        private CardSelected _CardSelected;
+        
+        private CardUnselected _CardUnselected;
+        
+        public CardSelectedStatusSM(uFrame.MVVM.ViewModel vm, string propertyName) : 
+                base(vm, propertyName) {
+        }
+        
+        public CardSelectedStatusSM() : 
+                base(null, string.Empty) {
+        }
+        
+        public override Invert.StateMachine.State StartState {
+            get {
+                return this.CardInit;
+            }
+        }
+        
+        public virtual Invert.StateMachine.StateMachineTrigger SelectCard {
+            get {
+                if (this._SelectCard == null) {
+                    this._SelectCard = new StateMachineTrigger(this , "SelectCard");
+                }
+                return _SelectCard;
+            }
+            set {
+                _SelectCard = value;
+            }
+        }
+        
+        public virtual Invert.StateMachine.StateMachineTrigger DeselectCard {
+            get {
+                if (this._DeselectCard == null) {
+                    this._DeselectCard = new StateMachineTrigger(this , "DeselectCard");
+                }
+                return _DeselectCard;
+            }
+            set {
+                _DeselectCard = value;
+            }
+        }
+        
+        public virtual CardInit CardInit {
+            get {
+                if (this._CardInit == null) {
+                    this._CardInit = new CardInit();
+                }
+                return _CardInit;
+            }
+            set {
+                _CardInit = value;
+            }
+        }
+        
+        public virtual CardSelected CardSelected {
+            get {
+                if (this._CardSelected == null) {
+                    this._CardSelected = new CardSelected();
+                }
+                return _CardSelected;
+            }
+            set {
+                _CardSelected = value;
+            }
+        }
+        
+        public virtual CardUnselected CardUnselected {
+            get {
+                if (this._CardUnselected == null) {
+                    this._CardUnselected = new CardUnselected();
+                }
+                return _CardUnselected;
+            }
+            set {
+                _CardUnselected = value;
+            }
+        }
+        
+        public override void Compose(System.Collections.Generic.List<Invert.StateMachine.State> states) {
+            base.Compose(states);
+            CardInit.SelectCard = new StateTransition("SelectCard", CardInit, CardSelected);
+            Transitions.Add(CardInit.SelectCard);
+            CardInit.AddTrigger(SelectCard, CardInit.SelectCard);
+            CardInit.StateMachine = this;
+            states.Add(CardInit);
+            CardSelected.DeselectCard = new StateTransition("DeselectCard", CardSelected, CardUnselected);
+            Transitions.Add(CardSelected.DeselectCard);
+            CardSelected.AddTrigger(DeselectCard, CardSelected.DeselectCard);
+            CardSelected.StateMachine = this;
+            states.Add(CardSelected);
+            CardUnselected.SelectCard = new StateTransition("SelectCard", CardUnselected, CardSelected);
+            Transitions.Add(CardUnselected.SelectCard);
+            CardUnselected.AddTrigger(SelectCard, CardUnselected.SelectCard);
+            CardUnselected.StateMachine = this;
+            states.Add(CardUnselected);
+        }
+    }
+    
+    public class CardInit : Invert.StateMachine.State {
+        
+        private Invert.StateMachine.StateTransition _SelectCard;
+        
+        public Invert.StateMachine.StateTransition SelectCard {
+            get {
+                return _SelectCard;
+            }
+            set {
+                _SelectCard = value;
+            }
+        }
+        
+        public override string Name {
+            get {
+                return "CardInit";
+            }
+        }
+        
+        public virtual void SelectCardTransition() {
+            this.Transition(this.SelectCard);
+        }
+    }
+    
+    public class CardSelected : Invert.StateMachine.State {
+        
+        private Invert.StateMachine.StateTransition _DeselectCard;
+        
+        public Invert.StateMachine.StateTransition DeselectCard {
+            get {
+                return _DeselectCard;
+            }
+            set {
+                _DeselectCard = value;
+            }
+        }
+        
+        public override string Name {
+            get {
+                return "CardSelected";
+            }
+        }
+        
+        public virtual void DeselectCardTransition() {
+            this.Transition(this.DeselectCard);
+        }
+    }
+    
+    public class CardUnselected : Invert.StateMachine.State {
+        
+        private Invert.StateMachine.StateTransition _SelectCard;
+        
+        public Invert.StateMachine.StateTransition SelectCard {
+            get {
+                return _SelectCard;
+            }
+            set {
+                _SelectCard = value;
+            }
+        }
+        
+        public override string Name {
+            get {
+                return "CardUnselected";
+            }
+        }
+        
+        public virtual void SelectCardTransition() {
+            this.Transition(this.SelectCard);
+        }
+    }
 }

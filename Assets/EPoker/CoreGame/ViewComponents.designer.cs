@@ -236,4 +236,58 @@ namespace yigame.epoker {
             Player.Reorder.OnNext(command);
         }
     }
+    
+    public class CardTouchVCBase : uFrame.MVVM.ViewComponent {
+        
+        public virtual CardViewModel Card {
+            get {
+                return (CardViewModel)this.View.ViewModelObject;
+            }
+        }
+        
+        public virtual void ExecuteSelectCard() {
+            Card.SelectCard.OnNext(new SelectCardCommand() { Sender = Card });
+        }
+        
+        public virtual void ExecuteDeselectCard() {
+            Card.DeselectCard.OnNext(new DeselectCardCommand() { Sender = Card });
+        }
+        
+        public virtual void ExecuteSelectCard(SelectCardCommand command) {
+            command.Sender = Card;
+            Card.SelectCard.OnNext(command);
+        }
+        
+        public virtual void ExecuteDeselectCard(DeselectCardCommand command) {
+            command.Sender = Card;
+            Card.DeselectCard.OnNext(command);
+        }
+    }
+    
+    public class CardShadowVCBase : uFrame.MVVM.ViewComponent {
+        
+        public virtual CardViewModel Card {
+            get {
+                return (CardViewModel)this.View.ViewModelObject;
+            }
+        }
+        
+        public virtual void ExecuteSelectCard() {
+            Card.SelectCard.OnNext(new SelectCardCommand() { Sender = Card });
+        }
+        
+        public virtual void ExecuteDeselectCard() {
+            Card.DeselectCard.OnNext(new DeselectCardCommand() { Sender = Card });
+        }
+        
+        public virtual void ExecuteSelectCard(SelectCardCommand command) {
+            command.Sender = Card;
+            Card.SelectCard.OnNext(command);
+        }
+        
+        public virtual void ExecuteDeselectCard(DeselectCardCommand command) {
+            command.Sender = Card;
+            Card.DeselectCard.OnNext(command);
+        }
+    }
 }
