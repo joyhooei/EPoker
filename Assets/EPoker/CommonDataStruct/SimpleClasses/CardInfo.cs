@@ -48,7 +48,8 @@ namespace yigame.epoker
 
 		public static int SingleInHandCompare (CardInfo a, CardInfo b)
 		{
-			return NumericalValueToCardSize (a.NumericalValue).CompareTo (NumericalValueToCardSize (b.NumericalValue));
+			// 负号为了从大到小排序
+			return -NumericalValueToCardSize (a.NumericalValue).CompareTo (NumericalValueToCardSize (b.NumericalValue));
 		}
 
 		public static int NumericalValueToCardSize (NumericalValue nv)

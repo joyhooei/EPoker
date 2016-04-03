@@ -359,6 +359,14 @@ namespace yigame.epoker {
     
     public partial class CardViewModelBase : uFrame.MVVM.ViewModel {
         
+        private System.IDisposable _CardInfoStrDisposable;
+        
+        private System.IDisposable _LocalPositionDisposable;
+        
+        private P<String> _CardInfoStrProperty;
+        
+        private P<Vector3> _LocalPositionProperty;
+        
         private P<CardInfo> _InfoProperty;
         
         private P<CardFace> _FaceProperty;
@@ -367,8 +375,28 @@ namespace yigame.epoker {
         
         private P<Int32> _PosIdxProperty;
         
+        private P<Int32> _TotalCountProperty;
+        
         public CardViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
+        }
+        
+        public virtual P<String> CardInfoStrProperty {
+            get {
+                return _CardInfoStrProperty;
+            }
+            set {
+                _CardInfoStrProperty = value;
+            }
+        }
+        
+        public virtual P<Vector3> LocalPositionProperty {
+            get {
+                return _LocalPositionProperty;
+            }
+            set {
+                _LocalPositionProperty = value;
+            }
         }
         
         public virtual P<CardInfo> InfoProperty {
@@ -404,6 +432,33 @@ namespace yigame.epoker {
             }
             set {
                 _PosIdxProperty = value;
+            }
+        }
+        
+        public virtual P<Int32> TotalCountProperty {
+            get {
+                return _TotalCountProperty;
+            }
+            set {
+                _TotalCountProperty = value;
+            }
+        }
+        
+        public virtual String CardInfoStr {
+            get {
+                return CardInfoStrProperty.Value;
+            }
+            set {
+                CardInfoStrProperty.Value = value;
+            }
+        }
+        
+        public virtual Vector3 LocalPosition {
+            get {
+                return LocalPositionProperty.Value;
+            }
+            set {
+                LocalPositionProperty.Value = value;
             }
         }
         
@@ -443,12 +498,26 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Int32 TotalCount {
+            get {
+                return TotalCountProperty.Value;
+            }
+            set {
+                TotalCountProperty.Value = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            _CardInfoStrProperty = new P<String>(this, "CardInfoStr");
+            _LocalPositionProperty = new P<Vector3>(this, "LocalPosition");
             _InfoProperty = new P<CardInfo>(this, "Info");
             _FaceProperty = new P<CardFace>(this, "Face");
             _PlaceProperty = new P<CardPlace>(this, "Place");
             _PosIdxProperty = new P<Int32>(this, "PosIdx");
+            _TotalCountProperty = new P<Int32>(this, "TotalCount");
+            ResetCardInfoStr();
+            ResetLocalPosition();
         }
         
         public override void Read(ISerializerStream stream) {
@@ -456,6 +525,7 @@ namespace yigame.epoker {
             this.Face = (CardFace)stream.DeserializeInt("Face");;
             this.Place = (CardPlace)stream.DeserializeInt("Place");;
             this.PosIdx = stream.DeserializeInt("PosIdx");;
+            this.TotalCount = stream.DeserializeInt("TotalCount");;
         }
         
         public override void Write(ISerializerStream stream) {
@@ -463,6 +533,7 @@ namespace yigame.epoker {
             stream.SerializeInt("Face", (int)this.Face);;
             stream.SerializeInt("Place", (int)this.Place);;
             stream.SerializeInt("PosIdx", this.PosIdx);
+            stream.SerializeInt("TotalCount", this.TotalCount);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
@@ -471,6 +542,10 @@ namespace yigame.epoker {
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
             base.FillProperties(list);
+            // ComputedPropertyNode
+            list.Add(new ViewModelPropertyInfo(_CardInfoStrProperty, false, false, false, true));
+            // ComputedPropertyNode
+            list.Add(new ViewModelPropertyInfo(_LocalPositionProperty, false, false, false, true));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_InfoProperty, false, false, false, false));
             // PropertiesChildItem
@@ -479,6 +554,43 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PlaceProperty, false, false, true, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PosIdxProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_TotalCountProperty, false, false, false, false));
+        }
+        
+        public virtual System.Collections.Generic.IEnumerable<uFrame.MVVM.IObservableProperty> GetCardInfoStrDependents() {
+            yield return InfoProperty;
+            if (InfoProperty.Value != null) {
+            }
+            yield break;
+        }
+        
+        public virtual System.Collections.Generic.IEnumerable<uFrame.MVVM.IObservableProperty> GetLocalPositionDependents() {
+            yield return PosIdxProperty;
+            yield return TotalCountProperty;
+            yield break;
+        }
+        
+        public virtual void ResetCardInfoStr() {
+            if (_CardInfoStrDisposable != null) {
+                _CardInfoStrDisposable.Dispose();
+            }
+            _CardInfoStrDisposable = _CardInfoStrProperty.ToComputed(ComputeCardInfoStr, this.GetCardInfoStrDependents().ToArray()).DisposeWith(this);
+        }
+        
+        public virtual void ResetLocalPosition() {
+            if (_LocalPositionDisposable != null) {
+                _LocalPositionDisposable.Dispose();
+            }
+            _LocalPositionDisposable = _LocalPositionProperty.ToComputed(ComputeLocalPosition, this.GetLocalPositionDependents().ToArray()).DisposeWith(this);
+        }
+        
+        public virtual String ComputeCardInfoStr() {
+            return default(String);
+        }
+        
+        public virtual Vector3 ComputeLocalPosition() {
+            return default(Vector3);
         }
     }
     

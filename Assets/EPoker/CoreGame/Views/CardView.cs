@@ -58,5 +58,10 @@ namespace yigame.epoker
 				sr_back.ForEach (sr => sr.enabled = true);
 			}
 		}
+
+		public override void LocalPositionChanged (Vector3 arg1)
+		{
+			transform.localPosition = arg1;
+		}
 	}
 }

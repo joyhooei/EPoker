@@ -279,6 +279,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public Int32 _PosIdx;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _TotalCount;
+        
         [UFToggleGroup("Info")]
         [UnityEngine.HideInInspector()]
         public bool _BindInfo = true;
@@ -298,6 +303,16 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_FaceonlyWhenChanged")]
         protected bool _FaceOnlyWhenChanged;
+        
+        [UFToggleGroup("LocalPosition")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindLocalPosition = true;
+        
+        [UFGroup("LocalPosition")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_LocalPositiononlyWhenChanged")]
+        protected bool _LocalPositionOnlyWhenChanged;
         
         public override string DefaultIdentifier {
             get {
@@ -327,6 +342,7 @@ namespace yigame.epoker {
             cardview.Face = this._Face;
             cardview.Place = this._Place;
             cardview.PosIdx = this._PosIdx;
+            cardview.TotalCount = this._TotalCount;
         }
         
         public override void Bind() {
@@ -340,12 +356,18 @@ namespace yigame.epoker {
             if (_BindFace) {
                 this.BindProperty(this.Card.FaceProperty, this.FaceChanged, _FaceOnlyWhenChanged);
             }
+            if (_BindLocalPosition) {
+                this.BindProperty(this.Card.LocalPositionProperty, this.LocalPositionChanged, _LocalPositionOnlyWhenChanged);
+            }
         }
         
         public virtual void InfoChanged(CardInfo arg1) {
         }
         
         public virtual void FaceChanged(CardFace arg1) {
+        }
+        
+        public virtual void LocalPositionChanged(Vector3 arg1) {
         }
     }
     
