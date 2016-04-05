@@ -204,7 +204,10 @@ namespace yigame.epoker
 					EventCode = GameService.EventCode.MatchBegan
 				});
 
-				viewModel.ExecuteMatchBegan ();
+				viewModel.CoreGameRoot.PlayerCollection.ToList ().ForEach (vm => {
+					vm.ExecuteMatchBegan ();
+				});
+
 			}
 
 		}

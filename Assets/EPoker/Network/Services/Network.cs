@@ -337,19 +337,13 @@ namespace yigame.epoker
 			default:
 				{
 					// photonEvent.Code == 245; custom raised event.
-					if (photonEvent.Parameters.ContainsKey (ParameterCode.CustomEventContent)) {
+					object event_content = null;
+					photonEvent.Parameters.TryGetValue (ParameterCode.CustomEventContent, out event_content);
 
-//						RoomPanelViewModel roomPanelVM = OutOfGameRoot.CanvasRoot.PanelCollection.ToList ().Single (vm => vm is RoomPanelViewModel) as RoomPanelViewModel;
-//						roomPanelVM.Execute (new RefreshEventCommand () {
-//							EventCode = photonEvent.Code,
-//							EventContent = photonEvent.Parameters[ParameterCode.CustomEventContent]
-//						});
-
-						Publish (new OnCoreGameEvent () {
-							EventCode = photonEvent.Code,
-							EventContent = photonEvent.Parameters[ParameterCode.CustomEventContent]
-						});
-					}
+					Publish (new OnCoreGameEvent () {
+						EventCode = photonEvent.Code,
+						EventContent = event_content
+					});
 					break;
 				}
 			}

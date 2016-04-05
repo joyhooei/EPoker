@@ -70,7 +70,7 @@ namespace yigame.epoker
 		{
 			base.OnCoreGameEventHandler (data);
 
-			CoreGameRoot.PlayerCollection.Where (pvm => pvm.IsSelf == false).ToList ().ForEach (pvm => pvm.ExecuteMatchBegan ());
+			CoreGameRoot.PlayerCollection.ToList ().ForEach (pvm => pvm.ExecuteMatchBegan ());
 		}
 	}
 }
