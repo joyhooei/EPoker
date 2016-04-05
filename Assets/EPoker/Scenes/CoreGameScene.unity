@@ -773,6 +773,18 @@ Prefab:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 443974, guid: 0efdf6da6181f5d4c85ca49ba2d0a976, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.927
+      objectReference: {fileID: 0}
+    - target: {fileID: 443974, guid: 0efdf6da6181f5d4c85ca49ba2d0a976, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.927
+      objectReference: {fileID: 0}
+    - target: {fileID: 443974, guid: 0efdf6da6181f5d4c85ca49ba2d0a976, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.927
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0efdf6da6181f5d4c85ca49ba2d0a976, type: 2}
   m_IsPrefabParent: 0
