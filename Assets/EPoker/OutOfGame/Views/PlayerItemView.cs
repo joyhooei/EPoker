@@ -48,13 +48,13 @@ namespace yigame.epoker
 
 			if (PlayerItem.IsLocal) {
 
-				Hashtable ht = new Hashtable ();
-				ht.Add ("is_ready", arg1);
-
-				Publish (new NetSetPlayerProperties () {
-					ActorId = PlayerItem.ActerId,
-					PropertiesToSet = ht
-				});
+//				Hashtable ht = new Hashtable ();
+//				ht.Add ("is_ready", arg1);
+//
+//				Publish (new NetSetPlayerProperties () {
+//					ActorId = PlayerItem.ActerId,
+//					PropertiesToSet = ht
+//				});
 			}
 		}
 

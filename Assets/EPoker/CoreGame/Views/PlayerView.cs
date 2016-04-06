@@ -45,6 +45,11 @@ namespace yigame.epoker
 			base.Bind ();
 		}
 
+		public override void AfterBind ()
+		{
+			base.AfterBind ();
+		}
+
 		#region Status Changed
 
 		public override void StatusChanged (Invert.StateMachine.State arg1)
@@ -70,7 +75,7 @@ namespace yigame.epoker
 			Player.ReadyStatusText = "Initializing...";
 			Observable.Timer (TimeSpan.FromSeconds (1)).Subscribe (_ => {
 				Player.ExecuteInitOK ();
-				this.ExecuteRefreshPlayer ();
+				Player.ExecuteRefreshPlayer ();
 			}).DisposeWhenChanged (Player.StatusProperty);
 		}
 
@@ -167,6 +172,8 @@ namespace yigame.epoker
 					} else {
 						StartButton.gameObject.SetActive (false);
 					}
+				} else {
+					StartButton.gameObject.SetActive (false);
 				}
 			} else {
 				StartButton.gameObject.SetActive (false);
@@ -204,8 +211,9 @@ namespace yigame.epoker
 				throw new ArgumentOutOfRangeException ();
 			}
 		}
-    
-    public override void ShowCardsToPileExecuted(ShowCardsToPileCommand command) {
-    }
+
+		public override void ShowCardsToPileExecuted (ShowCardsToPileCommand command)
+		{
+		}
 	}
 }

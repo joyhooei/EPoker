@@ -81,7 +81,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &121928
 GameObject:
   m_ObjectHideFlags: 1
@@ -213,7 +213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &155934
 GameObject:
   m_ObjectHideFlags: 1
@@ -315,7 +315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &182100
 GameObject:
   m_ObjectHideFlags: 1
@@ -1214,6 +1214,7 @@ MonoBehaviour:
   _Id: 
   _ActorId: 0
   _PosId: 
+  _OrderIdx: 0
   _PlayerRoomIdentity: 0
   _PlayerName: 
   _IsSelf: 0
@@ -1237,11 +1238,11 @@ MonoBehaviour:
   _HandCardsViewFirst: 0
   _BindPlayerNodeMode: 1
   _PlayerNodeModeOnlyWhenChanged: 0
-  _BindReorder: 1
   _BindButtonPassClicked: 1
   _ButtonPassClickedButton: {fileID: 11477224}
   _BindButtonDealClicked: 1
   _ButtonDealClickedButton: {fileID: 11445020}
+  _BindShowCardsToPile: 1
   GameService: {fileID: 0}
   ReadyButton: {fileID: 11483436}
   StartButton: {fileID: 11487144}
