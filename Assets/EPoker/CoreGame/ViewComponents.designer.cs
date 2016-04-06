@@ -52,6 +52,10 @@ namespace yigame.epoker {
             CoreGameRoot.CalcPosIdAndRepos.OnNext(new CalcPosIdAndReposCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteTurnNext() {
+            CoreGameRoot.TurnNext.OnNext(new TurnNextCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -80,6 +84,11 @@ namespace yigame.epoker {
         public virtual void ExecuteCalcPosIdAndRepos(CalcPosIdAndReposCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.CalcPosIdAndRepos.OnNext(command);
+        }
+        
+        public virtual void ExecuteTurnNext(TurnNextCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.TurnNext.OnNext(command);
         }
     }
     
@@ -149,6 +158,22 @@ namespace yigame.epoker {
         
         public virtual void ExecuteReorder() {
             Player.Reorder.OnNext(new ReorderCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonPassClicked() {
+            Player.ButtonPassClicked.OnNext(new ButtonPassClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonDealClicked() {
+            Player.ButtonDealClicked.OnNext(new ButtonDealClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonTurnNext() {
+            Player.ButtonTurnNext.OnNext(new ButtonTurnNextCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteShowCardsToPile() {
+            Player.ShowCardsToPile.OnNext(new ShowCardsToPileCommand() { Sender = Player });
         }
         
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
@@ -234,6 +259,26 @@ namespace yigame.epoker {
         public virtual void ExecuteReorder(ReorderCommand command) {
             command.Sender = Player;
             Player.Reorder.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonPassClicked(ButtonPassClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonPassClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonDealClicked(ButtonDealClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonDealClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonTurnNext(ButtonTurnNextCommand command) {
+            command.Sender = Player;
+            Player.ButtonTurnNext.OnNext(command);
+        }
+        
+        public virtual void ExecuteShowCardsToPile(ShowCardsToPileCommand command) {
+            command.Sender = Player;
+            Player.ShowCardsToPile.OnNext(command);
         }
     }
     

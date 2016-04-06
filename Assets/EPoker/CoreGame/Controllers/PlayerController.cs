@@ -22,6 +22,7 @@ namespace yigame.epoker
 	{
 		[Inject] public Network Network;
 		[Inject] public GameService GameService;
+		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
 
 		public override void InitializePlayer (PlayerViewModel viewModel)
 		{
@@ -61,10 +62,10 @@ namespace yigame.epoker
 			string hand_cards_str = Convert.ToString (viewModel.LBPlayer.CustomProperties ["hand_cards"]);
 			List<CardInfo> card_info_list = JsonConvert.DeserializeObject<List<CardInfo>> (hand_cards_str);
 
-			// test
 			viewModel.Execute (new AddCardsCommand () {
 				CardInfos = card_info_list
 			});
+
 		}
 
 		public override void BeganToPlay (PlayerViewModel viewModel)
@@ -106,9 +107,8 @@ namespace yigame.epoker
 		{
 			base.RefreshPlayer (viewModel);
 
-			// ready
-
 			if (viewModel.IsSelf == false) {
+				// ready 按钮
 				bool is_ready = false;
 				if (viewModel.LBPlayer.CustomProperties.ContainsKey ("is_ready")) {
 					is_ready = Convert.ToBoolean (viewModel.LBPlayer.CustomProperties ["is_ready"]);
@@ -119,6 +119,17 @@ namespace yigame.epoker
 					viewModel.ExecutePlayerCancel ();
 				}
 			}
+
+			// turn
+			object my_turn = false;
+			if (viewModel.LBPlayer.CustomProperties.TryGetValue ("my_turn", out my_turn)) {
+				if (viewModel.Status is MatchDeal && Convert.ToBoolean (my_turn) == false) {
+					viewModel.ExecuteTurnOff ();
+				} else if (viewModel.Status is MatchIdle && Convert.ToBoolean (my_turn)) {
+					viewModel.ExecuteTurnOn ();
+				}
+			}
+
 		}
 
 		public override void ButtonReadyClicked (PlayerViewModel viewModel)
@@ -190,14 +201,25 @@ namespace yigame.epoker
 
 					Hashtable ht = new Hashtable ();
 					ht.Add ("hand_cards", JsonConvert.SerializeObject (card_info_dic [actor_id]));
-					ht.Add ("first_get", Convert.ToString (actor_id == first_get_actor_id));
-					ht.Add ("my_turn", Convert.ToString (actor_id == first_turn_actor_id));
+					ht.Add ("first_get", actor_id == first_get_actor_id);
+					ht.Add ("my_turn", actor_id == first_turn_actor_id);
+					ht.Add ("is_win", false);
 
 					Publish (new NetSetPlayerProperties () {
 						ActorId = actor_id,
 						PropertiesToSet = ht
 					});
 				}
+
+				Hashtable ht2 = new Hashtable ();
+				ht2.Add ("is_playing", true);
+				ht2.Add ("current_cards", JsonConvert.SerializeObject (new List<CardInfo> ()));
+				ht2.Add ("current_cards_actor_id", -1);
+				ht2.Add ("active_actor_id", first_turn_actor_id);
+
+				Publish (new NetSetRoomProperties () {
+					PropertiesToSet = ht2
+				});
 
 				// 发出事件,开始抓牌
 				Publish (new NetRaiseEvent () {
@@ -262,6 +284,84 @@ namespace yigame.epoker
 				t.vm.PosIdx = t.idx;
 				t.vm.TotalCount = cards.Count;
 			});
+		}
+
+		public override void ButtonPassClicked (PlayerViewModel viewModel)
+		{
+			base.ButtonPassClicked (viewModel);
+			if (viewModel.Status is MatchDeal) {
+				viewModel.HandCards.Where (cardVM => {
+					return cardVM.IsSelected;
+				}).ToList ().ForEach (_ => _.ExecuteDeselectCard ());
+
+				CoreGameRoot.ExecuteTurnNext ();
+
+				Publish (new NetRaiseEvent () {
+					EventCode = GameService.EventCode.PassAndTurnNext
+				});
+
+				CoreGameRoot.ExecuteRefreshCoreGame ();
+			}
+		}
+
+		public override void ButtonDealClicked (PlayerViewModel viewModel)
+		{
+			base.ButtonDealClicked (viewModel);
+			if (viewModel.Status is MatchDeal) {
+
+				List<CardInfo> cardInfoList = viewModel.HandCards.Where (cardVM => cardVM.IsSelected).Select (_ => _.Info).ToList ();
+
+				Hashtable ht2 = new Hashtable ();
+				ht2.Add ("current_cards", JsonConvert.SerializeObject (cardInfoList));
+				ht2.Add ("current_cards_actor_id", viewModel.ActorId);
+
+				Publish (new NetSetRoomProperties () {
+					PropertiesToSet = ht2
+				});
+
+				CoreGameRoot.ExecuteTurnNext ();
+
+				Publish (new NetRaiseEvent () {
+					EventCode = GameService.EventCode.ShowCardAndTurnNext
+				});
+
+				viewModel.ExecuteShowCardsToPile ();
+				CoreGameRoot.ExecuteRefreshCoreGame ();
+
+			}
+		}
+
+		public override void ShowCardsToPile (PlayerViewModel viewModel)
+		{
+			base.ShowCardsToPile (viewModel);
+
+			List<CardInfo> cardInfoList = JsonConvert.DeserializeObject<List<CardInfo>> (
+				                              Convert.ToString (Network.Client.CurrentRoom.CustomProperties ["current_cards"])
+			                              );
+
+			// 清除牌堆原有的牌
+			CoreGameRoot.Pile.Cards.Clear ();
+
+			foreach (CardInfo ci in cardInfoList) {
+				// 1.查找手牌的这一张
+				CardViewModel card = viewModel.HandCards.Where (cardVM => CardInfo.ValueEqual (cardVM.Info, ci)).FirstOrDefault ();
+				if (card != null) {
+
+					// 1.1.还原一些属性
+					card.ExecuteDeselectCard ();
+					card.OwnerActorId = -1;
+
+					// 2.牌堆中加入相同的这一张牌
+					CoreGameRoot.Pile.Cards.Add (card);
+
+					// 3.删除手牌这一张
+					viewModel.HandCards.Remove (card);
+				}
+			}
+
+			viewModel.ExecuteReorder ();
+			CoreGameRoot.Pile.ExecutePileCardsReorder ();
+
 		}
 	}
 }

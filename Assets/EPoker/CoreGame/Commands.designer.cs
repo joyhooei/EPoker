@@ -38,6 +38,9 @@ namespace yigame.epoker {
     public partial class CalcPosIdAndReposCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class TurnNextCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class SelectCardCommand : uFrame.MVVM.ViewModelCommand {
     }
     
@@ -87,6 +90,21 @@ namespace yigame.epoker {
     }
     
     public partial class ReorderCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class ButtonPassClickedCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class ButtonDealClickedCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class ButtonTurnNextCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class ShowCardsToPileCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class PileCardsReorderCommand : uFrame.MVVM.ViewModelCommand {
     }
     
     public partial class AddCardsCommand : ViewModelCommand {

@@ -36,7 +36,7 @@ namespace yigame.epoker
 						vm.ExecuteDeselectCard ();
 					}
 
-					Debug.Log ("OnTouchStart " + vm.CardInfoStr);
+//					Debug.Log ("OnTouchStart " + vm.CardInfoStr);
 				}
 			}
 		}
@@ -52,7 +52,7 @@ namespace yigame.epoker
 					vm.ExecuteDeselectCard ();
 				}
 
-				Debug.Log ("OnTouchDown " + vm.CardInfoStr);
+//				Debug.Log ("OnTouchDown " + vm.CardInfoStr);
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace yigame.epoker
 		{
 			CardViewModel vm = GetCard (gesture);
 			if (vm != null) {
-				Debug.Log ("OnTouchUp " + vm.CardInfoStr);
+//				Debug.Log ("OnTouchUp " + vm.CardInfoStr);
 			}
 
 			CurrentSelectMode = CardSelectMode.None;

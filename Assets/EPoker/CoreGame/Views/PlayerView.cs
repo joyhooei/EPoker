@@ -92,11 +92,21 @@ namespace yigame.epoker
 		{
 			base.OnMatchPrepare ();
 			Player.PlayerNodeMode = PlayerNodeMode.Playing;
+
+
+			bool my_turn = Convert.ToBoolean (Player.LBPlayer.CustomProperties ["my_turn"]);
+			if (my_turn) {
+				Player.ExecuteBeganToPlay ();
+			} else {
+				Player.ExecuteBeganToWait ();
+			}
 		}
 
 		public override void OnMatchDeal ()
 		{
-			PlayingCanvasNode.SetActive (true);
+			if (Player.IsSelf) {
+				PlayingCanvasNode.SetActive (true);
+			}
 			base.OnMatchDeal ();
 		}
 
@@ -194,9 +204,8 @@ namespace yigame.epoker
 				throw new ArgumentOutOfRangeException ();
 			}
 		}
-
-		public override void ReorderExecuted (ReorderCommand command)
-		{
-		}
+    
+    public override void ShowCardsToPileExecuted(ShowCardsToPileCommand command) {
+    }
 	}
 }

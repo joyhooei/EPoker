@@ -197,6 +197,10 @@ namespace yigame.epoker {
             CoreGameRoot.CalcPosIdAndRepos.OnNext(new CalcPosIdAndReposCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteTurnNext() {
+            CoreGameRoot.TurnNext.OnNext(new TurnNextCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -225,6 +229,11 @@ namespace yigame.epoker {
         public virtual void ExecuteCalcPosIdAndRepos(CalcPosIdAndReposCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.CalcPosIdAndRepos.OnNext(command);
+        }
+        
+        public virtual void ExecuteTurnNext(TurnNextCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.TurnNext.OnNext(command);
         }
     }
     
@@ -476,6 +485,11 @@ namespace yigame.epoker {
         [UnityEngine.SerializeField()]
         [UFGroup("View Model Properties")]
         [UnityEngine.HideInInspector()]
+        public Int32 _OrderIdx;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
         public RoomIdentity _PlayerRoomIdentity;
         
         [UnityEngine.SerializeField()]
@@ -593,9 +607,29 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerNodeModeonlyWhenChanged")]
         protected bool _PlayerNodeModeOnlyWhenChanged;
         
-        [UFToggleGroup("Reorder")]
+        [UFToggleGroup("ButtonPassClicked")]
         [UnityEngine.HideInInspector()]
-        public bool _BindReorder = true;
+        public bool _BindButtonPassClicked = true;
+        
+        [UFGroup("ButtonPassClicked")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonPassClickedbutton")]
+        protected UnityEngine.UI.Button _ButtonPassClickedButton;
+        
+        [UFToggleGroup("ButtonDealClicked")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindButtonDealClicked = true;
+        
+        [UFGroup("ButtonDealClicked")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonDealClickedbutton")]
+        protected UnityEngine.UI.Button _ButtonDealClickedButton;
+        
+        [UFToggleGroup("ShowCardsToPile")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindShowCardsToPile = true;
         
         public override string DefaultIdentifier {
             get {
@@ -630,6 +664,7 @@ namespace yigame.epoker {
             playerview.Id = this._Id;
             playerview.ActorId = this._ActorId;
             playerview.PosId = this._PosId;
+            playerview.OrderIdx = this._OrderIdx;
             playerview.PlayerRoomIdentity = this._PlayerRoomIdentity;
             playerview.PlayerName = this._PlayerName;
             playerview.IsSelf = this._IsSelf;
@@ -670,8 +705,14 @@ namespace yigame.epoker {
             if (_BindPlayerNodeMode) {
                 this.BindProperty(this.Player.PlayerNodeModeProperty, this.PlayerNodeModeChanged, _PlayerNodeModeOnlyWhenChanged);
             }
-            if (_BindReorder) {
-                this.BindCommandExecuted(this.Player.Reorder, this.ReorderExecuted);
+            if (_BindButtonPassClicked) {
+                this.BindButtonToCommand(_ButtonPassClickedButton, this.Player.ButtonPassClicked);
+            }
+            if (_BindButtonDealClicked) {
+                this.BindButtonToCommand(_ButtonDealClickedButton, this.Player.ButtonDealClicked);
+            }
+            if (_BindShowCardsToPile) {
+                this.BindCommandExecuted(this.Player.ShowCardsToPile, this.ShowCardsToPileExecuted);
             }
         }
         
@@ -748,7 +789,7 @@ namespace yigame.epoker {
         public virtual void PlayerNodeModeChanged(PlayerNodeMode arg1) {
         }
         
-        public virtual void ReorderExecuted(ReorderCommand command) {
+        public virtual void ShowCardsToPileExecuted(ShowCardsToPileCommand command) {
         }
         
         public virtual void ExecutePlayerReady() {
@@ -809,6 +850,22 @@ namespace yigame.epoker {
         
         public virtual void ExecuteReorder() {
             Player.Reorder.OnNext(new ReorderCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonPassClicked() {
+            Player.ButtonPassClicked.OnNext(new ButtonPassClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonDealClicked() {
+            Player.ButtonDealClicked.OnNext(new ButtonDealClickedCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteButtonTurnNext() {
+            Player.ButtonTurnNext.OnNext(new ButtonTurnNextCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteShowCardsToPile() {
+            Player.ShowCardsToPile.OnNext(new ShowCardsToPileCommand() { Sender = Player });
         }
         
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
@@ -895,6 +952,26 @@ namespace yigame.epoker {
             command.Sender = Player;
             Player.Reorder.OnNext(command);
         }
+        
+        public virtual void ExecuteButtonPassClicked(ButtonPassClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonPassClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonDealClicked(ButtonDealClickedCommand command) {
+            command.Sender = Player;
+            Player.ButtonDealClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonTurnNext(ButtonTurnNextCommand command) {
+            command.Sender = Player;
+            Player.ButtonTurnNext.OnNext(command);
+        }
+        
+        public virtual void ExecuteShowCardsToPile(ShowCardsToPileCommand command) {
+            command.Sender = Player;
+            Player.ShowCardsToPile.OnNext(command);
+        }
     }
     
     public class CardsPileViewBase : uFrame.MVVM.ViewBase {
@@ -958,6 +1035,15 @@ namespace yigame.epoker {
         }
         
         public virtual void CardsRemoved(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void ExecutePileCardsReorder() {
+            CardsPile.PileCardsReorder.OnNext(new PileCardsReorderCommand() { Sender = CardsPile });
+        }
+        
+        public virtual void ExecutePileCardsReorder(PileCardsReorderCommand command) {
+            command.Sender = CardsPile;
+            CardsPile.PileCardsReorder.OnNext(command);
         }
     }
 }

@@ -1238,6 +1238,10 @@ MonoBehaviour:
   _BindPlayerNodeMode: 1
   _PlayerNodeModeOnlyWhenChanged: 0
   _BindReorder: 1
+  _BindButtonPassClicked: 1
+  _ButtonPassClickedButton: {fileID: 11477224}
+  _BindButtonDealClicked: 1
+  _ButtonDealClickedButton: {fileID: 11445020}
   GameService: {fileID: 0}
   ReadyButton: {fileID: 11483436}
   StartButton: {fileID: 11487144}

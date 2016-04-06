@@ -20,7 +20,9 @@ namespace yigame.epoker
 
 		public static class EventCode
 		{
-			public static byte MatchBegan = 10;
+			public const byte MatchBegan = 10;
+			public const byte ShowCardAndTurnNext = 11;
+			public const byte PassAndTurnNext = 12;
 		}
 
 		public static List<CardInfo> GetDeck (bool disorder)
@@ -70,7 +72,28 @@ namespace yigame.epoker
 		{
 			base.OnCoreGameEventHandler (data);
 
-			CoreGameRoot.PlayerCollection.ToList ().ForEach (pvm => pvm.ExecuteMatchBegan ());
+			switch (data.EventCode) {
+			case EventCode.MatchBegan:
+				{
+					CoreGameRoot.PlayerCollection.ToList ().ForEach (pvm => pvm.ExecuteMatchBegan ());
+					break;
+				}
+			case EventCode.ShowCardAndTurnNext:
+				{
+					int current_cards_actor_id = Convert.ToInt32 (Network.Client.CurrentRoom.CustomProperties ["current_cards_actor_id"]);
+					PlayerViewModel currentCardsPlayer = CoreGameRoot.PlayerCollection.SingleOrDefault (vm => vm.ActorId == current_cards_actor_id);
+					currentCardsPlayer.ExecuteShowCardsToPile ();
+					CoreGameRoot.ExecuteRefreshCoreGame ();
+					break;
+				}
+			case EventCode.PassAndTurnNext:
+				{
+					CoreGameRoot.ExecuteRefreshCoreGame ();
+					break;
+				}
+			default:
+				break;
+			}
 		}
 	}
 }

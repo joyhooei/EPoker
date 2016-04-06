@@ -80,6 +80,7 @@ namespace yigame.epoker {
             viewModel.PlayerJoin.Action = this.PlayerJoinHandler;
             viewModel.PlayerLeave.Action = this.PlayerLeaveHandler;
             viewModel.CalcPosIdAndRepos.Action = this.CalcPosIdAndReposHandler;
+            viewModel.TurnNext.Action = this.TurnNextHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -106,6 +107,9 @@ namespace yigame.epoker {
         public virtual void CalcPosIdAndRepos(CoreGameRootViewModel viewModel) {
         }
         
+        public virtual void TurnNext(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void RefreshCoreGameHandler(RefreshCoreGameCommand command) {
             this.RefreshCoreGame(command.Sender as CoreGameRootViewModel);
         }
@@ -128,6 +132,10 @@ namespace yigame.epoker {
         
         public virtual void CalcPosIdAndReposHandler(CalcPosIdAndReposCommand command) {
             this.CalcPosIdAndRepos(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void TurnNextHandler(TurnNextCommand command) {
+            this.TurnNext(command.Sender as CoreGameRootViewModel);
         }
     }
     
@@ -341,6 +349,10 @@ namespace yigame.epoker {
             viewModel.AddCards.Action = this.AddCardsHandler;
             viewModel.RemoveCards.Action = this.RemoveCardsHandler;
             viewModel.Reorder.Action = this.ReorderHandler;
+            viewModel.ButtonPassClicked.Action = this.ButtonPassClickedHandler;
+            viewModel.ButtonDealClicked.Action = this.ButtonDealClickedHandler;
+            viewModel.ButtonTurnNext.Action = this.ButtonTurnNextHandler;
+            viewModel.ShowCardsToPile.Action = this.ShowCardsToPileHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
@@ -392,6 +404,18 @@ namespace yigame.epoker {
         }
         
         public virtual void Reorder(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void ButtonPassClicked(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void ButtonDealClicked(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void ButtonTurnNext(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void ShowCardsToPile(PlayerViewModel viewModel) {
         }
         
         public virtual void PlayerReadyHandler(PlayerReadyCommand command) {
@@ -462,6 +486,22 @@ namespace yigame.epoker {
             this.Reorder(command.Sender as PlayerViewModel);
         }
         
+        public virtual void ButtonPassClickedHandler(ButtonPassClickedCommand command) {
+            this.ButtonPassClicked(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void ButtonDealClickedHandler(ButtonDealClickedCommand command) {
+            this.ButtonDealClicked(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void ButtonTurnNextHandler(ButtonTurnNextCommand command) {
+            this.ButtonTurnNext(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void ShowCardsToPileHandler(ShowCardsToPileCommand command) {
+            this.ShowCardsToPile(command.Sender as PlayerViewModel);
+        }
+        
         public virtual void AddCards(PlayerViewModel viewModel, AddCardsCommand arg) {
         }
         
@@ -522,12 +562,20 @@ namespace yigame.epoker {
         
         public virtual void InitializeCardsPile(CardsPileViewModel viewModel) {
             // This is called when a CardsPileViewModel is created
+            viewModel.PileCardsReorder.Action = this.PileCardsReorderHandler;
             CardsPileViewModelManager.Add(viewModel);
         }
         
         public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
             base.DisposingViewModel(viewModel);
             CardsPileViewModelManager.Remove(viewModel);
+        }
+        
+        public virtual void PileCardsReorder(CardsPileViewModel viewModel) {
+        }
+        
+        public virtual void PileCardsReorderHandler(PileCardsReorderCommand command) {
+            this.PileCardsReorder(command.Sender as CardsPileViewModel);
         }
     }
 }

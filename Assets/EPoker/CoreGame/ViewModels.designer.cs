@@ -53,6 +53,8 @@ namespace yigame.epoker {
         
         private Signal<CalcPosIdAndReposCommand> _CalcPosIdAndRepos;
         
+        private Signal<TurnNextCommand> _TurnNext;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -246,6 +248,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<TurnNextCommand> TurnNext {
+            get {
+                return _TurnNext;
+            }
+            set {
+                _TurnNext = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
@@ -254,6 +265,7 @@ namespace yigame.epoker {
             this.PlayerJoin = new Signal<PlayerJoinCommand>(this);
             this.PlayerLeave = new Signal<PlayerLeaveCommand>(this);
             this.CalcPosIdAndRepos = new Signal<CalcPosIdAndReposCommand>(this);
+            this.TurnNext = new Signal<TurnNextCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PileProperty = new P<CardsPileViewModel>(this, "Pile");
@@ -288,6 +300,10 @@ namespace yigame.epoker {
             this.CalcPosIdAndRepos.OnNext(new CalcPosIdAndReposCommand());
         }
         
+        public virtual void ExecuteTurnNext() {
+            this.TurnNext.OnNext(new TurnNextCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
@@ -319,6 +335,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("PlayerJoin", PlayerJoin) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("PlayerLeave", PlayerLeave) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("CalcPosIdAndRepos", CalcPosIdAndRepos) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("TurnNext", TurnNext) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -722,6 +739,8 @@ namespace yigame.epoker {
         
         private P<String> _PosIdProperty;
         
+        private P<Int32> _OrderIdxProperty;
+        
         private P<RoomIdentity> _PlayerRoomIdentityProperty;
         
         private P<String> _PlayerNameProperty;
@@ -770,6 +789,14 @@ namespace yigame.epoker {
         
         private Signal<ReorderCommand> _Reorder;
         
+        private Signal<ButtonPassClickedCommand> _ButtonPassClicked;
+        
+        private Signal<ButtonDealClickedCommand> _ButtonDealClicked;
+        
+        private Signal<ButtonTurnNextCommand> _ButtonTurnNext;
+        
+        private Signal<ShowCardsToPileCommand> _ShowCardsToPile;
+        
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -816,6 +843,15 @@ namespace yigame.epoker {
             }
             set {
                 _PosIdProperty = value;
+            }
+        }
+        
+        public virtual P<Int32> OrderIdxProperty {
+            get {
+                return _OrderIdxProperty;
+            }
+            set {
+                _OrderIdxProperty = value;
             }
         }
         
@@ -897,6 +933,15 @@ namespace yigame.epoker {
             }
             set {
                 PosIdProperty.Value = value;
+            }
+        }
+        
+        public virtual Int32 OrderIdx {
+            get {
+                return OrderIdxProperty.Value;
+            }
+            set {
+                OrderIdxProperty.Value = value;
             }
         }
         
@@ -1116,6 +1161,42 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<ButtonPassClickedCommand> ButtonPassClicked {
+            get {
+                return _ButtonPassClicked;
+            }
+            set {
+                _ButtonPassClicked = value;
+            }
+        }
+        
+        public virtual Signal<ButtonDealClickedCommand> ButtonDealClicked {
+            get {
+                return _ButtonDealClicked;
+            }
+            set {
+                _ButtonDealClicked = value;
+            }
+        }
+        
+        public virtual Signal<ButtonTurnNextCommand> ButtonTurnNext {
+            get {
+                return _ButtonTurnNext;
+            }
+            set {
+                _ButtonTurnNext = value;
+            }
+        }
+        
+        public virtual Signal<ShowCardsToPileCommand> ShowCardsToPile {
+            get {
+                return _ShowCardsToPile;
+            }
+            set {
+                _ShowCardsToPile = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.PlayerReady = new Signal<PlayerReadyCommand>(this);
@@ -1135,9 +1216,14 @@ namespace yigame.epoker {
             this.AddCards = new Signal<AddCardsCommand>(this);
             this.RemoveCards = new Signal<RemoveCardsCommand>(this);
             this.Reorder = new Signal<ReorderCommand>(this);
+            this.ButtonPassClicked = new Signal<ButtonPassClickedCommand>(this);
+            this.ButtonDealClicked = new Signal<ButtonDealClickedCommand>(this);
+            this.ButtonTurnNext = new Signal<ButtonTurnNextCommand>(this);
+            this.ShowCardsToPile = new Signal<ShowCardsToPileCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
+            _OrderIdxProperty = new P<Int32>(this, "OrderIdx");
             _PlayerRoomIdentityProperty = new P<RoomIdentity>(this, "PlayerRoomIdentity");
             _PlayerNameProperty = new P<String>(this, "PlayerName");
             _IsSelfProperty = new P<Boolean>(this, "IsSelf");
@@ -1218,6 +1304,22 @@ namespace yigame.epoker {
             this.Reorder.OnNext(new ReorderCommand());
         }
         
+        public virtual void ExecuteButtonPassClicked() {
+            this.ButtonPassClicked.OnNext(new ButtonPassClickedCommand());
+        }
+        
+        public virtual void ExecuteButtonDealClicked() {
+            this.ButtonDealClicked.OnNext(new ButtonDealClickedCommand());
+        }
+        
+        public virtual void ExecuteButtonTurnNext() {
+            this.ButtonTurnNext.OnNext(new ButtonTurnNextCommand());
+        }
+        
+        public virtual void ExecuteShowCardsToPile() {
+            this.ShowCardsToPile.OnNext(new ShowCardsToPileCommand());
+        }
+        
         public virtual void Execute(AddCardsCommand argument) {
             this.AddCards.OnNext(argument);
         }
@@ -1230,6 +1332,7 @@ namespace yigame.epoker {
             base.Read(stream);
             this.ActorId = stream.DeserializeInt("ActorId");;
             this._StatusProperty.SetState(stream.DeserializeString("Status"));
+            this.OrderIdx = stream.DeserializeInt("OrderIdx");;
             this.PlayerRoomIdentity = (RoomIdentity)stream.DeserializeInt("PlayerRoomIdentity");;
             this.IsSelf = stream.DeserializeBool("IsSelf");;
             this.PlayerNodeMode = (PlayerNodeMode)stream.DeserializeInt("PlayerNodeMode");;
@@ -1243,6 +1346,7 @@ namespace yigame.epoker {
             base.Write(stream);
             stream.SerializeInt("ActorId", this.ActorId);
             stream.SerializeString("Status", this.Status.Name);;
+            stream.SerializeInt("OrderIdx", this.OrderIdx);
             stream.SerializeInt("PlayerRoomIdentity", (int)this.PlayerRoomIdentity);;
             stream.SerializeBool("IsSelf", this.IsSelf);
             stream.SerializeInt("PlayerNodeMode", (int)this.PlayerNodeMode);;
@@ -1268,6 +1372,10 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("AddCards", AddCards) { ParameterType = typeof(AddCardsCommand) });
             list.Add(new ViewModelCommandInfo("RemoveCards", RemoveCards) { ParameterType = typeof(RemoveCardsCommand) });
             list.Add(new ViewModelCommandInfo("Reorder", Reorder) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ButtonPassClicked", ButtonPassClicked) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ButtonDealClicked", ButtonDealClicked) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ButtonTurnNext", ButtonTurnNext) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ShowCardsToPile", ShowCardsToPile) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -1280,6 +1388,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_StatusProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PosIdProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_OrderIdxProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PlayerRoomIdentityProperty, false, false, true, false));
             // PropertiesChildItem
@@ -1307,6 +1417,8 @@ namespace yigame.epoker {
         
         private ModelCollection<CardViewModel> _Cards;
         
+        private Signal<PileCardsReorderCommand> _PileCardsReorder;
+        
         public CardsPileViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -1320,9 +1432,23 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<PileCardsReorderCommand> PileCardsReorder {
+            get {
+                return _PileCardsReorder;
+            }
+            set {
+                _PileCardsReorder = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
+            this.PileCardsReorder = new Signal<PileCardsReorderCommand>(this);
             _Cards = new ModelCollection<CardViewModel>(this, "Cards");
+        }
+        
+        public virtual void ExecutePileCardsReorder() {
+            this.PileCardsReorder.OnNext(new PileCardsReorderCommand());
         }
         
         public override void Read(ISerializerStream stream) {
@@ -1340,6 +1466,7 @@ namespace yigame.epoker {
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
             base.FillCommands(list);
+            list.Add(new ViewModelCommandInfo("PileCardsReorder", PileCardsReorder) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

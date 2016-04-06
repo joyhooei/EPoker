@@ -128,9 +128,58 @@ namespace yigame.epoker
 				.ToList ()
 				.ForEach (kv => {
 				int idx_in_players = (kv._idx + count - idx) % count;
+				kv.vm.OrderIdx = kv._idx;
 				kv.vm.PosId = jArrangeItem [idx_in_players].Value<string> ();
 				kv.vm.PlayerRoomIdentity = kv.vm.LBPlayer.IsMasterClient ? RoomIdentity.RoomMaster : RoomIdentity.RoomGuest;
 			});
+		}
+
+		public override void TurnNext (CoreGameRootViewModel viewModel)
+		{
+			base.TurnNext (viewModel);
+			int active_actor_id = Convert.ToInt32 (Network.Client.CurrentRoom.CustomProperties ["active_actor_id"]);
+
+			Hashtable ht1 = new Hashtable ();
+			ht1.Add ("my_turn", false);
+			Publish (new NetSetPlayerProperties () {
+				ActorId = active_actor_id,
+				PropertiesToSet = ht1
+			});
+
+			int actor_id = active_actor_id;
+			int player_count = viewModel.PlayerCollection.Count;
+			do {
+				int orderIdx = viewModel.PlayerCollection.SingleOrDefault (playerVM => playerVM.ActorId == actor_id).OrderIdx;
+				orderIdx++;
+				if (orderIdx >= player_count) {
+					orderIdx = 0;
+				}
+				actor_id = viewModel.PlayerCollection.SingleOrDefault (playerVM => playerVM.OrderIdx == orderIdx).ActorId;
+
+				bool correct = true;
+				if (Convert.ToBoolean (Network.Client.CurrentRoom.GetPlayer (actor_id).CustomProperties ["is_win"])) {
+					correct = false;
+				}
+
+				if (correct) {
+					break;
+				}
+
+			} while(actor_id != active_actor_id);
+
+			Hashtable ht2 = new Hashtable ();
+			ht2.Add ("my_turn", true);
+			Publish (new NetSetPlayerProperties () {
+				ActorId = actor_id,
+				PropertiesToSet = ht2
+			});
+
+			Hashtable ht = new Hashtable ();
+			ht.Add ("active_actor_id", actor_id);
+			Publish (new NetSetRoomProperties () {
+				PropertiesToSet = ht
+			});
+
 		}
 	}
 }
