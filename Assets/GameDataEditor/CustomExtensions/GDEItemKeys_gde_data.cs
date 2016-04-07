@@ -15,8 +15,6 @@ namespace GameDataEditor
 {
     public partial class GDEItemKeys
     {
-        public static string TestSchema_TestSchema001 = "TestSchema001";
-        public static string TestSchema_TestSchema002 = "TestSchema002";
-        public static string Test2Schema_Test2Schema001 = "Test2Schema001";
+        public static string SDebug_DefaultDebug = "DefaultDebug";
     }
 }

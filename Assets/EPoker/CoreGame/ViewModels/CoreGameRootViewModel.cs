@@ -11,8 +11,8 @@ namespace yigame.epoker
 	using uFrame.Serialization;
 	using UnityEngine;
 	using UniRx;
+	using GameDataEditor;
 
-    
 	public partial class CoreGameRootViewModel : CoreGameRootViewModelBase
 	{
 		[Inject] public Network Network;
@@ -27,7 +27,8 @@ namespace yigame.epoker
 
 		public bool CanMatchBegan {
 			get {
-				if (SinglePlayerStartForTest) {
+				GDESDebugData dd = new GDESDebugData (GDEItemKeys.SDebug_DefaultDebug);
+				if (dd.SinglePlayerStartForTest) {
 					return IsAllReady;
 				} else {
 					return IsAllReady && Network.Client.CurrentRoom.PlayerCount > 1;

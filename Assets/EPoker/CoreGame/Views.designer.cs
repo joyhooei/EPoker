@@ -53,11 +53,6 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public ExitGames.Client.Photon.LoadBalancing.Room _LBRoom;
         
-        [UnityEngine.SerializeField()]
-        [UFGroup("View Model Properties")]
-        [UnityEngine.HideInInspector()]
-        public Boolean _SinglePlayerStartForTest;
-        
         [UFToggleGroup("PlayerCollection")]
         [UnityEngine.HideInInspector()]
         public bool _BindPlayerCollection = true;
@@ -129,7 +124,6 @@ namespace yigame.epoker {
             coregamerootview.Pile = this._Pile == null ? null :  ViewService.FetchViewModel(this._Pile) as CardsPileViewModel;
             coregamerootview.PlayerName = this._PlayerName;
             coregamerootview.LBRoom = this._LBRoom;
-            coregamerootview.SinglePlayerStartForTest = this._SinglePlayerStartForTest;
         }
         
         public override void Bind() {
