@@ -42,8 +42,19 @@ namespace yigame.epoker
 		{
 			base.RootMatchBegan (viewModel);
 
+			viewModel.Pile.Cards.Clear ();
+
 			viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
 				playerVM.ExecuteMatchBegan ();
+			});
+		}
+
+		public override void RootMatchOver (CoreGameRootViewModel viewModel)
+		{
+			base.RootMatchOver (viewModel);
+
+			viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
+				playerVM.ExecuteOver ();
 			});
 		}
 
@@ -167,19 +178,37 @@ namespace yigame.epoker
 
 			} while(actor_id != active_actor_id);
 
-			Hashtable ht2 = new Hashtable ();
-			ht2.Add ("my_turn", true);
-			Publish (new NetSetPlayerProperties () {
-				ActorId = actor_id,
-				PropertiesToSet = ht2
-			});
+			if (viewModel.WinPlayersCount == Network.Client.CurrentRoom.PlayerCount - 1) {
 
-			Hashtable ht = new Hashtable ();
-			ht.Add ("active_actor_id", actor_id);
-			Publish (new NetSetRoomProperties () {
-				PropertiesToSet = ht
-			});
+				Hashtable ht = new Hashtable ();
+				ht.Add ("active_actor_id", -1);
+				Publish (new NetSetRoomProperties () {
+					PropertiesToSet = ht
+				});
+
+				Publish (new NetRaiseEvent () {
+					EventCode = GameService.EventCode.MatchOver
+				});
+
+				viewModel.ExecuteRootMatchOver ();
+
+			} else {
+
+				Hashtable ht2 = new Hashtable ();
+				ht2.Add ("my_turn", true);
+				Publish (new NetSetPlayerProperties () {
+					ActorId = actor_id,
+					PropertiesToSet = ht2
+				});
+
+				Hashtable ht = new Hashtable ();
+				ht.Add ("active_actor_id", actor_id);
+				Publish (new NetSetRoomProperties () {
+					PropertiesToSet = ht
+				});
+			}
 
 		}
+
 	}
 }

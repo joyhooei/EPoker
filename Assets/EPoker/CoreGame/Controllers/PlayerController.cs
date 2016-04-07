@@ -59,6 +59,15 @@ namespace yigame.epoker
 		{
 			base.MatchBegan (viewModel);
 
+			viewModel.HandCards.Clear ();
+
+			Hashtable ht = new Hashtable ();
+			ht.Add ("is_ready", false);
+			Publish (new NetSetPlayerProperties () {
+				ActorId = viewModel.ActorId,
+				PropertiesToSet = ht
+			});
+
 			string hand_cards_str = Convert.ToString (viewModel.LBPlayer.CustomProperties ["hand_cards"]);
 			List<CardInfo> card_info_list = JsonConvert.DeserializeObject<List<CardInfo>> (hand_cards_str);
 
@@ -124,7 +133,16 @@ namespace yigame.epoker
 			object my_turn = false;
 			if (viewModel.LBPlayer.CustomProperties.TryGetValue ("my_turn", out my_turn)) {
 				if (viewModel.Status is MatchDeal && Convert.ToBoolean (my_turn) == false) {
-					viewModel.ExecuteTurnOff ();
+
+					object is_win = false;
+					if (viewModel.LBPlayer.CustomProperties.TryGetValue ("is_win", out is_win)) {
+						if (Convert.ToBoolean (is_win)) {
+							viewModel.ExecuteWin ();
+						} else {
+							viewModel.ExecuteTurnOff ();
+						}
+					}
+
 				} else if (viewModel.Status is MatchIdle && Convert.ToBoolean (my_turn)) {
 					viewModel.ExecuteTurnOn ();
 				}
@@ -136,7 +154,7 @@ namespace yigame.epoker
 		{
 			base.ButtonReadyClicked (viewModel);
 
-			if (viewModel.Status is Wait || viewModel.Status is Init) {
+			if (viewModel.Status is Wait || viewModel.Status is Init || viewModel.Status is MatchOver) {
 				viewModel.ExecutePlayerReady ();	
 			} else if (viewModel.Status is Ready) {
 				viewModel.ExecutePlayerCancel ();
@@ -226,9 +244,7 @@ namespace yigame.epoker
 					EventCode = GameService.EventCode.MatchBegan
 				});
 
-				viewModel.CoreGameRoot.PlayerCollection.ToList ().ForEach (vm => {
-					vm.ExecuteMatchBegan ();
-				});
+				CoreGameRoot.ExecuteRootMatchBegan ();
 
 			}
 
@@ -310,6 +326,16 @@ namespace yigame.epoker
 			if (viewModel.Status is MatchDeal) {
 
 				List<CardInfo> cardInfoList = viewModel.HandCards.Where (cardVM => cardVM.IsSelected).Select (_ => _.Info).ToList ();
+
+				// 检查是否需要设置is_win 标志
+				if (viewModel.HandCards.Count == cardInfoList.Count) {
+					Hashtable ht = new Hashtable ();
+					ht.Add ("is_win", true);
+					Publish (new NetSetPlayerProperties () {
+						ActorId = viewModel.ActorId,
+						PropertiesToSet = ht
+					});
+				}
 
 				Hashtable ht2 = new Hashtable ();
 				ht2.Add ("current_cards", JsonConvert.SerializeObject (cardInfoList));

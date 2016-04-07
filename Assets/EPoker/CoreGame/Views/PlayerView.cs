@@ -29,6 +29,7 @@ namespace yigame.epoker
 		public GameObject WaitingNode;
 		public GameObject PlayingNode;
 		public GameObject PlayingCanvasNode;
+		public GameObject WinNode;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
@@ -123,15 +124,16 @@ namespace yigame.epoker
 		public override void OnMatchWin ()
 		{
 			base.OnMatchWin ();
-			Player.PlayerNodeMode = PlayerNodeMode.Waiting;
+			Player.PlayerNodeMode = PlayerNodeMode.WinWaiting;
 		}
 
 		public override void OnMatchOver ()
 		{
 			base.OnMatchOver ();
 			Player.PlayerNodeMode = PlayerNodeMode.Waiting;
+			Player.ReadyStatusText = string.Format ("{0}|{1} Wait...", Player.ActorId, Player.PlayerName);
+			ReadyButton.gameObject.Child ("Text").GetComponent<Text> ().text = "Ready";
 		}
-
 
 		#endregion
 
@@ -202,18 +204,21 @@ namespace yigame.epoker
 			case PlayerNodeMode.Waiting:
 				WaitingNode.SetActive (true);
 				PlayingNode.SetActive (false);
+				WinNode.SetActive (false);
 				break;
 			case PlayerNodeMode.Playing:
 				WaitingNode.SetActive (false);
 				PlayingNode.SetActive (true);
+				WinNode.SetActive (false);
+				break;
+			case PlayerNodeMode.WinWaiting:
+				WaitingNode.SetActive (false);
+				PlayingNode.SetActive (false);
+				WinNode.SetActive (true);
 				break;
 			default:
 				throw new ArgumentOutOfRangeException ();
 			}
-		}
-
-		public override void ShowCardsToPileExecuted (ShowCardsToPileCommand command)
-		{
 		}
 	}
 }

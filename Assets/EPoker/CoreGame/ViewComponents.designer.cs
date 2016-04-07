@@ -56,6 +56,10 @@ namespace yigame.epoker {
             CoreGameRoot.TurnNext.OnNext(new TurnNextCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteRootMatchOver() {
+            CoreGameRoot.RootMatchOver.OnNext(new RootMatchOverCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -89,6 +93,11 @@ namespace yigame.epoker {
         public virtual void ExecuteTurnNext(TurnNextCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.TurnNext.OnNext(command);
+        }
+        
+        public virtual void ExecuteRootMatchOver(RootMatchOverCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RootMatchOver.OnNext(command);
         }
     }
     

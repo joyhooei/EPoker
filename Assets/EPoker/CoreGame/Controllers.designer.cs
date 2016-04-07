@@ -81,6 +81,7 @@ namespace yigame.epoker {
             viewModel.PlayerLeave.Action = this.PlayerLeaveHandler;
             viewModel.CalcPosIdAndRepos.Action = this.CalcPosIdAndReposHandler;
             viewModel.TurnNext.Action = this.TurnNextHandler;
+            viewModel.RootMatchOver.Action = this.RootMatchOverHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -110,6 +111,9 @@ namespace yigame.epoker {
         public virtual void TurnNext(CoreGameRootViewModel viewModel) {
         }
         
+        public virtual void RootMatchOver(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void RefreshCoreGameHandler(RefreshCoreGameCommand command) {
             this.RefreshCoreGame(command.Sender as CoreGameRootViewModel);
         }
@@ -136,6 +140,10 @@ namespace yigame.epoker {
         
         public virtual void TurnNextHandler(TurnNextCommand command) {
             this.TurnNext(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void RootMatchOverHandler(RootMatchOverCommand command) {
+            this.RootMatchOver(command.Sender as CoreGameRootViewModel);
         }
     }
     

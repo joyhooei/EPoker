@@ -322,8 +322,11 @@ namespace yigame.epoker {
             Transitions.Add(MatchDeal.Win);
             MatchDeal.TurnOff = new StateTransition("TurnOff", MatchDeal, MatchIdle);
             Transitions.Add(MatchDeal.TurnOff);
+            MatchDeal.Over = new StateTransition("Over", MatchDeal, MatchOver);
+            Transitions.Add(MatchDeal.Over);
             MatchDeal.AddTrigger(Win, MatchDeal.Win);
             MatchDeal.AddTrigger(TurnOff, MatchDeal.TurnOff);
+            MatchDeal.AddTrigger(Over, MatchDeal.Over);
             MatchDeal.StateMachine = this;
             states.Add(MatchDeal);
             MatchWin.Over = new StateTransition("Over", MatchWin, MatchOver);
@@ -506,6 +509,8 @@ namespace yigame.epoker {
         
         private Invert.StateMachine.StateTransition _TurnOff;
         
+        private Invert.StateMachine.StateTransition _Over;
+        
         public Invert.StateMachine.StateTransition Win {
             get {
                 return _Win;
@@ -524,6 +529,15 @@ namespace yigame.epoker {
             }
         }
         
+        public Invert.StateMachine.StateTransition Over {
+            get {
+                return _Over;
+            }
+            set {
+                _Over = value;
+            }
+        }
+        
         public override string Name {
             get {
                 return "MatchDeal";
@@ -536,6 +550,10 @@ namespace yigame.epoker {
         
         public virtual void TurnOffTransition() {
             this.Transition(this.TurnOff);
+        }
+        
+        public virtual void OverTransition() {
+            this.Transition(this.Over);
         }
     }
     

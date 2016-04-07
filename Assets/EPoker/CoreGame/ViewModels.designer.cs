@@ -55,6 +55,8 @@ namespace yigame.epoker {
         
         private Signal<TurnNextCommand> _TurnNext;
         
+        private Signal<RootMatchOverCommand> _RootMatchOver;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -257,6 +259,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RootMatchOverCommand> RootMatchOver {
+            get {
+                return _RootMatchOver;
+            }
+            set {
+                _RootMatchOver = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
@@ -266,6 +277,7 @@ namespace yigame.epoker {
             this.PlayerLeave = new Signal<PlayerLeaveCommand>(this);
             this.CalcPosIdAndRepos = new Signal<CalcPosIdAndReposCommand>(this);
             this.TurnNext = new Signal<TurnNextCommand>(this);
+            this.RootMatchOver = new Signal<RootMatchOverCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PileProperty = new P<CardsPileViewModel>(this, "Pile");
@@ -304,6 +316,10 @@ namespace yigame.epoker {
             this.TurnNext.OnNext(new TurnNextCommand());
         }
         
+        public virtual void ExecuteRootMatchOver() {
+            this.RootMatchOver.OnNext(new RootMatchOverCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
@@ -336,6 +352,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("PlayerLeave", PlayerLeave) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("CalcPosIdAndRepos", CalcPosIdAndRepos) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("TurnNext", TurnNext) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RootMatchOver", RootMatchOver) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {

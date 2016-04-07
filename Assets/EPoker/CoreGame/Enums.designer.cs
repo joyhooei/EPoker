@@ -20,6 +20,8 @@ namespace yigame.epoker {
         Waiting,
         
         Playing,
+        
+        WinWaiting,
     }
     
     public enum CardSelectMode {

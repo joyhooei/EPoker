@@ -41,6 +41,9 @@ namespace yigame.epoker {
     public partial class TurnNextCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class RootMatchOverCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class SelectCardCommand : uFrame.MVVM.ViewModelCommand {
     }
     

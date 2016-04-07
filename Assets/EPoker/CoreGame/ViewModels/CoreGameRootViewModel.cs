@@ -39,5 +39,11 @@ namespace yigame.epoker
 		{
 			return PlayerCollection.Where (vm => vm.ActorId == actorId).SingleOrDefault ();
 		}
+
+		public int WinPlayersCount {
+			get {
+				return Network.Client.CurrentRoom.Players.Count (kv => Convert.ToBoolean (kv.Value.CustomProperties ["is_win"]));
+			}
+		}
 	}
 }

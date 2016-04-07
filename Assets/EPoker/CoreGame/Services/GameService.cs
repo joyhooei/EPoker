@@ -23,6 +23,7 @@ namespace yigame.epoker
 			public const byte MatchBegan = 10;
 			public const byte ShowCardAndTurnNext = 11;
 			public const byte PassAndTurnNext = 12;
+			public const byte MatchOver = 13;
 		}
 
 		public static List<CardInfo> GetDeck (bool disorder)
@@ -75,7 +76,7 @@ namespace yigame.epoker
 			switch (data.EventCode) {
 			case EventCode.MatchBegan:
 				{
-					CoreGameRoot.PlayerCollection.ToList ().ForEach (pvm => pvm.ExecuteMatchBegan ());
+					CoreGameRoot.ExecuteRootMatchBegan ();
 					break;
 				}
 			case EventCode.ShowCardAndTurnNext:
@@ -89,6 +90,12 @@ namespace yigame.epoker
 			case EventCode.PassAndTurnNext:
 				{
 					CoreGameRoot.ExecuteRefreshCoreGame ();
+					break;
+				}
+
+			case EventCode.MatchOver:
+				{
+					CoreGameRoot.ExecuteRootMatchOver ();
 					break;
 				}
 			default:

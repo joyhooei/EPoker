@@ -182,6 +182,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -273,6 +274,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1291,7 +1293,7 @@ MonoBehaviour:
   _PlayerCount: 0
   _Pile: {fileID: 1707614486}
   _PlayerName: 
-  _SinglePlayerStartForTest: 1
+  _SinglePlayerStartForTest: 0
   _BindPlayerCollection: 1
   _PlayerCollectionParent: {fileID: 1615951201}
   _PlayerCollectionViewFirst: 0

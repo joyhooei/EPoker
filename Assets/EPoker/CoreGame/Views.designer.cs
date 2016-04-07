@@ -201,6 +201,10 @@ namespace yigame.epoker {
             CoreGameRoot.TurnNext.OnNext(new TurnNextCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteRootMatchOver() {
+            CoreGameRoot.RootMatchOver.OnNext(new RootMatchOverCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -234,6 +238,11 @@ namespace yigame.epoker {
         public virtual void ExecuteTurnNext(TurnNextCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.TurnNext.OnNext(command);
+        }
+        
+        public virtual void ExecuteRootMatchOver(RootMatchOverCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RootMatchOver.OnNext(command);
         }
     }
     
@@ -627,10 +636,6 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonDealClickedbutton")]
         protected UnityEngine.UI.Button _ButtonDealClickedButton;
         
-        [UFToggleGroup("ShowCardsToPile")]
-        [UnityEngine.HideInInspector()]
-        public bool _BindShowCardsToPile = true;
-        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -711,9 +716,6 @@ namespace yigame.epoker {
             if (_BindButtonDealClicked) {
                 this.BindButtonToCommand(_ButtonDealClickedButton, this.Player.ButtonDealClicked);
             }
-            if (_BindShowCardsToPile) {
-                this.BindCommandExecuted(this.Player.ShowCardsToPile, this.ShowCardsToPileExecuted);
-            }
         }
         
         public virtual void StatusChanged(Invert.StateMachine.State arg1) {
@@ -787,9 +789,6 @@ namespace yigame.epoker {
         }
         
         public virtual void PlayerNodeModeChanged(PlayerNodeMode arg1) {
-        }
-        
-        public virtual void ShowCardsToPileExecuted(ShowCardsToPileCommand command) {
         }
         
         public virtual void ExecutePlayerReady() {
