@@ -53,6 +53,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public ExitGames.Client.Photon.LoadBalancing.Room _LBRoom;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _ShowSummary;
+        
         [UFToggleGroup("PlayerCollection")]
         [UnityEngine.HideInInspector()]
         public bool _BindPlayerCollection = true;
@@ -89,6 +94,42 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_QuitCoreGamebutton")]
         protected UnityEngine.UI.Button _QuitCoreGameButton;
         
+        [UFToggleGroup("SummaryPlayersList")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindSummaryPlayersList = true;
+        
+        [UFGroup("SummaryPlayersList")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SummaryPlayersListparent")]
+        protected UnityEngine.Transform _SummaryPlayersListParent;
+        
+        [UFGroup("SummaryPlayersList")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_SummaryPlayersListviewFirst")]
+        protected bool _SummaryPlayersListViewFirst;
+        
+        [UFToggleGroup("ShowSummary")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindShowSummary = true;
+        
+        [UFGroup("ShowSummary")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ShowSummaryonlyWhenChanged")]
+        protected bool _ShowSummaryOnlyWhenChanged;
+        
+        [UFToggleGroup("ButtonCloseSummaryClicked")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindButtonCloseSummaryClicked = true;
+        
+        [UFGroup("ButtonCloseSummaryClicked")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonCloseSummaryClickedbutton")]
+        protected UnityEngine.UI.Button _ButtonCloseSummaryClickedButton;
+        
         public override string DefaultIdentifier {
             get {
                 return "CoreGameRoot";
@@ -124,6 +165,7 @@ namespace yigame.epoker {
             coregamerootview.Pile = this._Pile == null ? null :  ViewService.FetchViewModel(this._Pile) as CardsPileViewModel;
             coregamerootview.PlayerName = this._PlayerName;
             coregamerootview.LBRoom = this._LBRoom;
+            coregamerootview.ShowSummary = this._ShowSummary;
         }
         
         public override void Bind() {
@@ -139,6 +181,15 @@ namespace yigame.epoker {
             }
             if (_BindQuitCoreGame) {
                 this.BindButtonToCommand(_QuitCoreGameButton, this.CoreGameRoot.QuitCoreGame);
+            }
+            if (_BindSummaryPlayersList) {
+                this.BindToViewCollection(this.CoreGameRoot.SummaryPlayersList, this.SummaryPlayersListCreateView, this.SummaryPlayersListAdded, this.SummaryPlayersListRemoved, _SummaryPlayersListParent, _SummaryPlayersListViewFirst);
+            }
+            if (_BindShowSummary) {
+                this.BindProperty(this.CoreGameRoot.ShowSummaryProperty, this.ShowSummaryChanged, _ShowSummaryOnlyWhenChanged);
+            }
+            if (_BindButtonCloseSummaryClicked) {
+                this.BindButtonToCommand(_ButtonCloseSummaryClickedButton, this.CoreGameRoot.ButtonCloseSummaryClicked);
             }
         }
         
@@ -165,6 +216,19 @@ namespace yigame.epoker {
         }
         
         public virtual void OnPlaying() {
+        }
+        
+        public virtual uFrame.MVVM.ViewBase SummaryPlayersListCreateView(uFrame.MVVM.ViewModel viewModel) {
+            return InstantiateView(viewModel);
+        }
+        
+        public virtual void SummaryPlayersListAdded(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void SummaryPlayersListRemoved(uFrame.MVVM.ViewBase view) {
+        }
+        
+        public virtual void ShowSummaryChanged(Boolean arg1) {
         }
         
         public virtual void ExecuteRefreshCoreGame() {
@@ -197,6 +261,14 @@ namespace yigame.epoker {
         
         public virtual void ExecuteRootMatchOver() {
             CoreGameRoot.RootMatchOver.OnNext(new RootMatchOverCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteButtonCloseSummaryClicked() {
+            CoreGameRoot.ButtonCloseSummaryClicked.OnNext(new ButtonCloseSummaryClickedCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteRefreshSummaryPlayersList() {
+            CoreGameRoot.RefreshSummaryPlayersList.OnNext(new RefreshSummaryPlayersListCommand() { Sender = CoreGameRoot });
         }
         
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
@@ -237,6 +309,16 @@ namespace yigame.epoker {
         public virtual void ExecuteRootMatchOver(RootMatchOverCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RootMatchOver.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonCloseSummaryClicked(ButtonCloseSummaryClickedCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.ButtonCloseSummaryClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshSummaryPlayersList(RefreshSummaryPlayersListCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RefreshSummaryPlayersList.OnNext(command);
         }
     }
     
@@ -520,6 +602,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public PlayerNodeMode _PlayerNodeMode;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _Rank;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -630,6 +717,16 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonDealClickedbutton")]
         protected UnityEngine.UI.Button _ButtonDealClickedButton;
         
+        [UFToggleGroup("Rank")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRank = true;
+        
+        [UFGroup("Rank")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_RankonlyWhenChanged")]
+        protected bool _RankOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -670,6 +767,7 @@ namespace yigame.epoker {
             playerview.ReadyStatusText = this._ReadyStatusText;
             playerview.LBPlayer = this._LBPlayer;
             playerview.PlayerNodeMode = this._PlayerNodeMode;
+            playerview.Rank = this._Rank;
         }
         
         public override void Bind() {
@@ -709,6 +807,9 @@ namespace yigame.epoker {
             }
             if (_BindButtonDealClicked) {
                 this.BindButtonToCommand(_ButtonDealClickedButton, this.Player.ButtonDealClicked);
+            }
+            if (_BindRank) {
+                this.BindProperty(this.Player.RankProperty, this.RankChanged, _RankOnlyWhenChanged);
             }
         }
         
@@ -783,6 +884,9 @@ namespace yigame.epoker {
         }
         
         public virtual void PlayerNodeModeChanged(PlayerNodeMode arg1) {
+        }
+        
+        public virtual void RankChanged(Int32 arg1) {
         }
         
         public virtual void ExecutePlayerReady() {
@@ -1037,6 +1141,105 @@ namespace yigame.epoker {
         public virtual void ExecutePileCardsReorder(PileCardsReorderCommand command) {
             command.Sender = CardsPile;
             CardsPile.PileCardsReorder.OnNext(command);
+        }
+    }
+    
+    public class SummaryPlayerItemViewBase : uFrame.MVVM.ViewBase {
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _Rank;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public String _PlayerName;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _IsMe;
+        
+        [UFToggleGroup("PlayerName")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindPlayerName = true;
+        
+        [UFGroup("PlayerName")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_PlayerNameinput")]
+        protected UnityEngine.UI.Text _PlayerNameInput;
+        
+        [UFToggleGroup("Rank")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindRank = true;
+        
+        [UFGroup("Rank")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_RankonlyWhenChanged")]
+        protected bool _RankOnlyWhenChanged;
+        
+        [UFToggleGroup("IsMe")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindIsMe = true;
+        
+        [UFGroup("IsMe")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_IsMeonlyWhenChanged")]
+        protected bool _IsMeOnlyWhenChanged;
+        
+        public override string DefaultIdentifier {
+            get {
+                return base.DefaultIdentifier;
+            }
+        }
+        
+        public override System.Type ViewModelType {
+            get {
+                return typeof(SummaryPlayerItemViewModel);
+            }
+        }
+        
+        public SummaryPlayerItemViewModel SummaryPlayerItem {
+            get {
+                return (SummaryPlayerItemViewModel)ViewModelObject;
+            }
+        }
+        
+        protected override void InitializeViewModel(uFrame.MVVM.ViewModel model) {
+            base.InitializeViewModel(model);
+            // NOTE: this method is only invoked if the 'Initialize ViewModel' is checked in the inspector.
+            // var vm = model as SummaryPlayerItemViewModel;
+            // This method is invoked when applying the data from the inspector to the viewmodel.  Add any view-specific customizations here.
+            var summaryplayeritemview = ((SummaryPlayerItemViewModel)model);
+            summaryplayeritemview.Rank = this._Rank;
+            summaryplayeritemview.PlayerName = this._PlayerName;
+            summaryplayeritemview.IsMe = this._IsMe;
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            // Use this.SummaryPlayerItem to access the viewmodel.
+            // Use this method to subscribe to the view-model.
+            // Any designer bindings are created in the base implementation.
+            if (_BindPlayerName) {
+                this.BindTextToProperty(_PlayerNameInput, this.SummaryPlayerItem.PlayerNameProperty);
+            }
+            if (_BindRank) {
+                this.BindProperty(this.SummaryPlayerItem.RankProperty, this.RankChanged, _RankOnlyWhenChanged);
+            }
+            if (_BindIsMe) {
+                this.BindProperty(this.SummaryPlayerItem.IsMeProperty, this.IsMeChanged, _IsMeOnlyWhenChanged);
+            }
+        }
+        
+        public virtual void RankChanged(Int32 arg1) {
+        }
+        
+        public virtual void IsMeChanged(Boolean arg1) {
         }
     }
 }

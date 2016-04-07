@@ -47,11 +47,15 @@ namespace yigame.epoker
 			viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
 				playerVM.ExecuteMatchBegan ();
 			});
+
+			viewModel.ShowSummary = false;
 		}
 
 		public override void RootMatchOver (CoreGameRootViewModel viewModel)
 		{
 			base.RootMatchOver (viewModel);
+
+			viewModel.ExecuteRefreshSummaryPlayersList ();
 
 			viewModel.PlayerCollection.ToList ().ForEach (playerVM => {
 				playerVM.ExecuteOver ();
@@ -180,6 +184,13 @@ namespace yigame.epoker
 
 			if (viewModel.WinPlayersCount == Network.Client.CurrentRoom.PlayerCount - 1) {
 
+				Hashtable ht2 = new Hashtable ();
+				ht2.Add ("rank", (int)Network.Client.CurrentRoom.PlayerCount);
+				Publish (new NetSetPlayerProperties () {
+					ActorId = actor_id,
+					PropertiesToSet = ht2
+				});
+
 				Hashtable ht = new Hashtable ();
 				ht.Add ("active_actor_id", -1);
 				Publish (new NetSetRoomProperties () {
@@ -210,5 +221,29 @@ namespace yigame.epoker
 
 		}
 
+    
+		public override void ButtonCloseSummaryClicked (CoreGameRootViewModel viewModel)
+		{
+			base.ButtonCloseSummaryClicked (viewModel);
+			viewModel.ShowSummary = false;
+		}
+
+		public override void RefreshSummaryPlayersList (CoreGameRootViewModel viewModel)
+		{
+			base.RefreshSummaryPlayersList (viewModel);
+
+			viewModel.SummaryPlayersList.Clear ();
+
+			Network.Client.CurrentRoom.Players.Where (kv => Convert.ToInt32 (kv.Value.CustomProperties ["rank"]) > 0)
+				.OrderBy (kv2 => Convert.ToInt32 (kv2.Value.CustomProperties ["rank"]))
+				.ToList ().ForEach (_ => {
+				SummaryPlayerItemViewModel vm = this.CreateViewModel<SummaryPlayerItemViewModel> ();
+				vm.Rank = Convert.ToInt32 (_.Value.CustomProperties ["rank"]);
+				vm.PlayerName = _.Value.Name;
+				vm.IsMe = _.Value.IsLocal;
+
+				viewModel.SummaryPlayersList.Add (vm);
+			});
+		}
 	}
 }

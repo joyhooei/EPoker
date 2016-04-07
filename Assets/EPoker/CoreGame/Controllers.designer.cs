@@ -82,6 +82,8 @@ namespace yigame.epoker {
             viewModel.CalcPosIdAndRepos.Action = this.CalcPosIdAndReposHandler;
             viewModel.TurnNext.Action = this.TurnNextHandler;
             viewModel.RootMatchOver.Action = this.RootMatchOverHandler;
+            viewModel.ButtonCloseSummaryClicked.Action = this.ButtonCloseSummaryClickedHandler;
+            viewModel.RefreshSummaryPlayersList.Action = this.RefreshSummaryPlayersListHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -114,6 +116,12 @@ namespace yigame.epoker {
         public virtual void RootMatchOver(CoreGameRootViewModel viewModel) {
         }
         
+        public virtual void ButtonCloseSummaryClicked(CoreGameRootViewModel viewModel) {
+        }
+        
+        public virtual void RefreshSummaryPlayersList(CoreGameRootViewModel viewModel) {
+        }
+        
         public virtual void RefreshCoreGameHandler(RefreshCoreGameCommand command) {
             this.RefreshCoreGame(command.Sender as CoreGameRootViewModel);
         }
@@ -144,6 +152,14 @@ namespace yigame.epoker {
         
         public virtual void RootMatchOverHandler(RootMatchOverCommand command) {
             this.RootMatchOver(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void ButtonCloseSummaryClickedHandler(ButtonCloseSummaryClickedCommand command) {
+            this.ButtonCloseSummaryClicked(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void RefreshSummaryPlayersListHandler(RefreshSummaryPlayersListCommand command) {
+            this.RefreshSummaryPlayersList(command.Sender as CoreGameRootViewModel);
         }
     }
     
@@ -584,6 +600,68 @@ namespace yigame.epoker {
         
         public virtual void PileCardsReorderHandler(PileCardsReorderCommand command) {
             this.PileCardsReorder(command.Sender as CardsPileViewModel);
+        }
+    }
+    
+    public class SummaryPlayerItemControllerBase : uFrame.MVVM.Controller {
+        
+        private uFrame.MVVM.IViewModelManager _SummaryPlayerItemViewModelManager;
+        
+        private CoreGameRootViewModel _CoreGameRoot;
+        
+        [uFrame.IOC.InjectAttribute("SummaryPlayerItem")]
+        public uFrame.MVVM.IViewModelManager SummaryPlayerItemViewModelManager {
+            get {
+                return _SummaryPlayerItemViewModelManager;
+            }
+            set {
+                _SummaryPlayerItemViewModelManager = value;
+            }
+        }
+        
+        [uFrame.IOC.InjectAttribute("CoreGameRoot")]
+        public CoreGameRootViewModel CoreGameRoot {
+            get {
+                return _CoreGameRoot;
+            }
+            set {
+                _CoreGameRoot = value;
+            }
+        }
+        
+        public IEnumerable<SummaryPlayerItemViewModel> SummaryPlayerItemViewModels {
+            get {
+                return SummaryPlayerItemViewModelManager.OfType<SummaryPlayerItemViewModel>();
+            }
+        }
+        
+        public override void Setup() {
+            base.Setup();
+            // This is called when the controller is created
+        }
+        
+        public override void Initialize(uFrame.MVVM.ViewModel viewModel) {
+            base.Initialize(viewModel);
+            // This is called when a viewmodel is created
+            this.InitializeSummaryPlayerItem(((SummaryPlayerItemViewModel)(viewModel)));
+        }
+        
+        public virtual SummaryPlayerItemViewModel CreateSummaryPlayerItem() {
+            return ((SummaryPlayerItemViewModel)(this.Create(Guid.NewGuid().ToString())));
+        }
+        
+        public override uFrame.MVVM.ViewModel CreateEmpty() {
+            return new SummaryPlayerItemViewModel(this.EventAggregator);
+        }
+        
+        public virtual void InitializeSummaryPlayerItem(SummaryPlayerItemViewModel viewModel) {
+            // This is called when a SummaryPlayerItemViewModel is created
+            SummaryPlayerItemViewModelManager.Add(viewModel);
+        }
+        
+        public override void DisposingViewModel(uFrame.MVVM.ViewModel viewModel) {
+            base.DisposingViewModel(viewModel);
+            SummaryPlayerItemViewModelManager.Remove(viewModel);
         }
     }
 }

@@ -25,6 +25,7 @@ namespace yigame.epoker
 
 		public Button ReadyButton;
 		public Button StartButton;
+		public Text RankText;
 
 		public GameObject WaitingNode;
 		public GameObject PlayingNode;
@@ -133,6 +134,10 @@ namespace yigame.epoker
 			Player.PlayerNodeMode = PlayerNodeMode.Waiting;
 			Player.ReadyStatusText = string.Format ("{0}|{1} Wait...", Player.ActorId, Player.PlayerName);
 			ReadyButton.gameObject.Child ("Text").GetComponent<Text> ().text = "Ready";
+
+			if (Player.IsSelf) {
+				Player.CoreGameRoot.ShowSummary = true;
+			}
 		}
 
 		#endregion
@@ -218,6 +223,15 @@ namespace yigame.epoker
 				break;
 			default:
 				throw new ArgumentOutOfRangeException ();
+			}
+		}
+
+		public override void RankChanged (Int32 arg1)
+		{
+			if (arg1 <= 0) {
+				RankText.text = "";
+			} else {
+				RankText.text = string.Format ("Rank:{0}", arg1);
 			}
 		}
 	}

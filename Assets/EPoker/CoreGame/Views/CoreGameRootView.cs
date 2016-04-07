@@ -21,6 +21,8 @@ namespace yigame.epoker
 		[Inject] public GameService GameSrv;
 		[Inject] public Network Network;
 
+		public GameObject SummaryPanel;
+
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
 			base.InitializeViewModel (model);
@@ -50,6 +52,25 @@ namespace yigame.epoker
 		{
 			Debug.Log ("PlayerCollectionRemoved");
 			Destroy (view.gameObject);
+		}
+
+		public override uFrame.MVVM.ViewBase SummaryPlayersListCreateView (uFrame.MVVM.ViewModel viewModel)
+		{
+			return InstantiateView (viewModel);
+		}
+
+		public override void SummaryPlayersListAdded (uFrame.MVVM.ViewBase view)
+		{
+		}
+
+		public override void SummaryPlayersListRemoved (uFrame.MVVM.ViewBase view)
+		{
+			Destroy (view.gameObject);
+		}
+
+		public override void ShowSummaryChanged (Boolean arg1)
+		{
+			SummaryPanel.SetActive (arg1);
 		}
 	}
 }

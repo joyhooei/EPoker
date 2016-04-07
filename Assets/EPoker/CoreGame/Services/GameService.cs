@@ -12,6 +12,7 @@ namespace yigame.epoker
 	using Newtonsoft.Json;
 	using Newtonsoft.Json.Linq;
 	using ExitGames.Client.Photon.LoadBalancing;
+	using GameDataEditor;
 
 	public class GameService : GameServiceBase
 	{
@@ -37,14 +38,16 @@ namespace yigame.epoker
 			card_info_list.Add (new CardInfo (Suit.SMALL_JOKER, NumericalValue.NV_SMALL_JOKER));
 			card_info_list.Add (new CardInfo (Suit.BIG_JOKER, NumericalValue.NV_BIG_JOKER));
 
-//			card_info_list.ForEach (ci => {
-//				string s = ci.ToString ();
-//				CardInfo ci_p = CardInfo.Parse (s);
-//				Debug.Log (JsonConvert.SerializeObject (ci_p));
-//			});
-
 			if (disorder) {
 				card_info_list = card_info_list.OrderBy (x => Guid.NewGuid ()).ToList ();
+			}
+
+			int force_card_count = card_info_list.Count;
+			GDESDebugData dd = new GDESDebugData (GDEItemKeys.SDebug_DefaultDebug);
+			if (dd.LessCardsCountForTest > 0) {
+				force_card_count = Math.Min (dd.LessCardsCountForTest, card_info_list.Count);
+
+				card_info_list = card_info_list.GetRange (0, force_card_count);
 			}
 
 			return card_info_list;

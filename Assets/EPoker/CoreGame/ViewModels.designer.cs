@@ -37,7 +37,11 @@ namespace yigame.epoker {
         
         private P<ExitGames.Client.Photon.LoadBalancing.Room> _LBRoomProperty;
         
+        private P<Boolean> _ShowSummaryProperty;
+        
         private ModelCollection<PlayerViewModel> _PlayerCollection;
+        
+        private ModelCollection<SummaryPlayerItemViewModel> _SummaryPlayersList;
         
         private Signal<RefreshCoreGameCommand> _RefreshCoreGame;
         
@@ -54,6 +58,10 @@ namespace yigame.epoker {
         private Signal<TurnNextCommand> _TurnNext;
         
         private Signal<RootMatchOverCommand> _RootMatchOver;
+        
+        private Signal<ButtonCloseSummaryClickedCommand> _ButtonCloseSummaryClicked;
+        
+        private Signal<RefreshSummaryPlayersListCommand> _RefreshSummaryPlayersList;
         
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -122,6 +130,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Boolean> ShowSummaryProperty {
+            get {
+                return _ShowSummaryProperty;
+            }
+            set {
+                _ShowSummaryProperty = value;
+            }
+        }
+        
         public virtual BackGroundViewModel BackGround {
             get {
                 return BackGroundProperty.Value;
@@ -167,12 +184,30 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Boolean ShowSummary {
+            get {
+                return ShowSummaryProperty.Value;
+            }
+            set {
+                ShowSummaryProperty.Value = value;
+            }
+        }
+        
         public virtual ModelCollection<PlayerViewModel> PlayerCollection {
             get {
                 return _PlayerCollection;
             }
             set {
                 _PlayerCollection = value;
+            }
+        }
+        
+        public virtual ModelCollection<SummaryPlayerItemViewModel> SummaryPlayersList {
+            get {
+                return _SummaryPlayersList;
+            }
+            set {
+                _SummaryPlayersList = value;
             }
         }
         
@@ -248,6 +283,24 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<ButtonCloseSummaryClickedCommand> ButtonCloseSummaryClicked {
+            get {
+                return _ButtonCloseSummaryClicked;
+            }
+            set {
+                _ButtonCloseSummaryClicked = value;
+            }
+        }
+        
+        public virtual Signal<RefreshSummaryPlayersListCommand> RefreshSummaryPlayersList {
+            get {
+                return _RefreshSummaryPlayersList;
+            }
+            set {
+                _RefreshSummaryPlayersList = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
@@ -258,12 +311,16 @@ namespace yigame.epoker {
             this.CalcPosIdAndRepos = new Signal<CalcPosIdAndReposCommand>(this);
             this.TurnNext = new Signal<TurnNextCommand>(this);
             this.RootMatchOver = new Signal<RootMatchOverCommand>(this);
+            this.ButtonCloseSummaryClicked = new Signal<ButtonCloseSummaryClickedCommand>(this);
+            this.RefreshSummaryPlayersList = new Signal<RefreshSummaryPlayersListCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PileProperty = new P<CardsPileViewModel>(this, "Pile");
             _PlayerNameProperty = new P<String>(this, "PlayerName");
             _LBRoomProperty = new P<ExitGames.Client.Photon.LoadBalancing.Room>(this, "LBRoom");
+            _ShowSummaryProperty = new P<Boolean>(this, "ShowSummary");
             _PlayerCollection = new ModelCollection<PlayerViewModel>(this, "PlayerCollection");
+            _SummaryPlayersList = new ModelCollection<SummaryPlayerItemViewModel>(this, "SummaryPlayersList");
             _CoreGameStatusProperty = new CoreGameSM(this, "CoreGameStatus");
         }
         
@@ -299,15 +356,28 @@ namespace yigame.epoker {
             this.RootMatchOver.OnNext(new RootMatchOverCommand());
         }
         
+        public virtual void ExecuteButtonCloseSummaryClicked() {
+            this.ButtonCloseSummaryClicked.OnNext(new ButtonCloseSummaryClickedCommand());
+        }
+        
+        public virtual void ExecuteRefreshSummaryPlayersList() {
+            this.RefreshSummaryPlayersList.OnNext(new RefreshSummaryPlayersListCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
             this.PlayerCount = stream.DeserializeInt("PlayerCount");;
             this._CoreGameStatusProperty.SetState(stream.DeserializeString("CoreGameStatus"));
             		if (stream.DeepSerialize) this.Pile = stream.DeserializeObject<CardsPileViewModel>("Pile");;
+            this.ShowSummary = stream.DeserializeBool("ShowSummary");;
             if (stream.DeepSerialize) {
                 this.PlayerCollection.Clear();
                 this.PlayerCollection.AddRange(stream.DeserializeObjectArray<PlayerViewModel>("PlayerCollection"));
+            }
+            if (stream.DeepSerialize) {
+                this.SummaryPlayersList.Clear();
+                this.SummaryPlayersList.AddRange(stream.DeserializeObjectArray<SummaryPlayerItemViewModel>("SummaryPlayersList"));
             }
         }
         
@@ -317,7 +387,9 @@ namespace yigame.epoker {
             stream.SerializeInt("PlayerCount", this.PlayerCount);
             stream.SerializeString("CoreGameStatus", this.CoreGameStatus.Name);;
             if (stream.DeepSerialize) stream.SerializeObject("Pile", this.Pile);;
+            stream.SerializeBool("ShowSummary", this.ShowSummary);
             if (stream.DeepSerialize) stream.SerializeArray("PlayerCollection", this.PlayerCollection);
+            if (stream.DeepSerialize) stream.SerializeArray("SummaryPlayersList", this.SummaryPlayersList);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
@@ -330,6 +402,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("CalcPosIdAndRepos", CalcPosIdAndRepos) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("TurnNext", TurnNext) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RootMatchOver", RootMatchOver) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("ButtonCloseSummaryClicked", ButtonCloseSummaryClicked) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshSummaryPlayersList", RefreshSummaryPlayersList) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -346,7 +420,10 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PlayerNameProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_LBRoomProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_ShowSummaryProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_PlayerCollection, true, true, false, false));
+            list.Add(new ViewModelPropertyInfo(_SummaryPlayersList, true, true, false, false));
         }
     }
     
@@ -745,6 +822,8 @@ namespace yigame.epoker {
         
         private P<PlayerNodeMode> _PlayerNodeModeProperty;
         
+        private P<Int32> _RankProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         private Signal<PlayerReadyCommand> _PlayerReady;
@@ -901,6 +980,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Int32> RankProperty {
+            get {
+                return _RankProperty;
+            }
+            set {
+                _RankProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
@@ -988,6 +1076,15 @@ namespace yigame.epoker {
             }
             set {
                 PlayerNodeModeProperty.Value = value;
+            }
+        }
+        
+        public virtual Int32 Rank {
+            get {
+                return RankProperty.Value;
+            }
+            set {
+                RankProperty.Value = value;
             }
         }
         
@@ -1222,6 +1319,7 @@ namespace yigame.epoker {
             _ReadyStatusTextProperty = new P<String>(this, "ReadyStatusText");
             _LBPlayerProperty = new P<ExitGames.Client.Photon.LoadBalancing.Player>(this, "LBPlayer");
             _PlayerNodeModeProperty = new P<PlayerNodeMode>(this, "PlayerNodeMode");
+            _RankProperty = new P<Int32>(this, "Rank");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -1328,6 +1426,7 @@ namespace yigame.epoker {
             this.PlayerRoomIdentity = (RoomIdentity)stream.DeserializeInt("PlayerRoomIdentity");;
             this.IsSelf = stream.DeserializeBool("IsSelf");;
             this.PlayerNodeMode = (PlayerNodeMode)stream.DeserializeInt("PlayerNodeMode");;
+            this.Rank = stream.DeserializeInt("Rank");;
             if (stream.DeepSerialize) {
                 this.HandCards.Clear();
                 this.HandCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("HandCards"));
@@ -1342,6 +1441,7 @@ namespace yigame.epoker {
             stream.SerializeInt("PlayerRoomIdentity", (int)this.PlayerRoomIdentity);;
             stream.SerializeBool("IsSelf", this.IsSelf);
             stream.SerializeInt("PlayerNodeMode", (int)this.PlayerNodeMode);;
+            stream.SerializeInt("Rank", this.Rank);
             if (stream.DeepSerialize) stream.SerializeArray("HandCards", this.HandCards);
         }
         
@@ -1394,6 +1494,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_LBPlayerProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_PlayerNodeModeProperty, false, false, true, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_RankProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }
@@ -1470,6 +1572,113 @@ namespace yigame.epoker {
     public partial class CardsPileViewModel {
         
         public CardsPileViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+    }
+    
+    public partial class SummaryPlayerItemViewModelBase : uFrame.MVVM.ViewModel {
+        
+        private P<Int32> _RankProperty;
+        
+        private P<String> _PlayerNameProperty;
+        
+        private P<Boolean> _IsMeProperty;
+        
+        public SummaryPlayerItemViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
+                base(aggregator) {
+        }
+        
+        public virtual P<Int32> RankProperty {
+            get {
+                return _RankProperty;
+            }
+            set {
+                _RankProperty = value;
+            }
+        }
+        
+        public virtual P<String> PlayerNameProperty {
+            get {
+                return _PlayerNameProperty;
+            }
+            set {
+                _PlayerNameProperty = value;
+            }
+        }
+        
+        public virtual P<Boolean> IsMeProperty {
+            get {
+                return _IsMeProperty;
+            }
+            set {
+                _IsMeProperty = value;
+            }
+        }
+        
+        public virtual Int32 Rank {
+            get {
+                return RankProperty.Value;
+            }
+            set {
+                RankProperty.Value = value;
+            }
+        }
+        
+        public virtual String PlayerName {
+            get {
+                return PlayerNameProperty.Value;
+            }
+            set {
+                PlayerNameProperty.Value = value;
+            }
+        }
+        
+        public virtual Boolean IsMe {
+            get {
+                return IsMeProperty.Value;
+            }
+            set {
+                IsMeProperty.Value = value;
+            }
+        }
+        
+        public override void Bind() {
+            base.Bind();
+            _RankProperty = new P<Int32>(this, "Rank");
+            _PlayerNameProperty = new P<String>(this, "PlayerName");
+            _IsMeProperty = new P<Boolean>(this, "IsMe");
+        }
+        
+        public override void Read(ISerializerStream stream) {
+            base.Read(stream);
+            this.Rank = stream.DeserializeInt("Rank");;
+            this.IsMe = stream.DeserializeBool("IsMe");;
+        }
+        
+        public override void Write(ISerializerStream stream) {
+            base.Write(stream);
+            stream.SerializeInt("Rank", this.Rank);
+            stream.SerializeBool("IsMe", this.IsMe);
+        }
+        
+        protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
+            base.FillCommands(list);
+        }
+        
+        protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
+            base.FillProperties(list);
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_RankProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_PlayerNameProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_IsMeProperty, false, false, false, false));
+        }
+    }
+    
+    public partial class SummaryPlayerItemViewModel {
+        
+        public SummaryPlayerItemViewModel(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
     }

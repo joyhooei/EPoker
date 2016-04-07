@@ -44,6 +44,12 @@ namespace yigame.epoker {
     public partial class RootMatchOverCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class ButtonCloseSummaryClickedCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
+    public partial class RefreshSummaryPlayersListCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class SelectCardCommand : uFrame.MVVM.ViewModelCommand {
     }
     

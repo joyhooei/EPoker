@@ -138,6 +138,7 @@ namespace yigame.epoker
 					if (viewModel.LBPlayer.CustomProperties.TryGetValue ("is_win", out is_win)) {
 						if (Convert.ToBoolean (is_win)) {
 							viewModel.ExecuteWin ();
+							CoreGameRoot.ExecuteRefreshSummaryPlayersList ();
 						} else {
 							viewModel.ExecuteTurnOff ();
 						}
@@ -222,6 +223,7 @@ namespace yigame.epoker
 					ht.Add ("first_get", actor_id == first_get_actor_id);
 					ht.Add ("my_turn", actor_id == first_turn_actor_id);
 					ht.Add ("is_win", false);
+					ht.Add ("rank", -1);
 
 					Publish (new NetSetPlayerProperties () {
 						ActorId = actor_id,
@@ -331,6 +333,7 @@ namespace yigame.epoker
 				if (viewModel.HandCards.Count == cardInfoList.Count) {
 					Hashtable ht = new Hashtable ();
 					ht.Add ("is_win", true);
+					ht.Add ("rank", CoreGameRoot.WinPlayersCount + 1);
 					Publish (new NetSetPlayerProperties () {
 						ActorId = viewModel.ActorId,
 						PropertiesToSet = ht

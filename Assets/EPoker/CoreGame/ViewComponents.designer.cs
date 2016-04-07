@@ -60,6 +60,14 @@ namespace yigame.epoker {
             CoreGameRoot.RootMatchOver.OnNext(new RootMatchOverCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteButtonCloseSummaryClicked() {
+            CoreGameRoot.ButtonCloseSummaryClicked.OnNext(new ButtonCloseSummaryClickedCommand() { Sender = CoreGameRoot });
+        }
+        
+        public virtual void ExecuteRefreshSummaryPlayersList() {
+            CoreGameRoot.RefreshSummaryPlayersList.OnNext(new RefreshSummaryPlayersListCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -98,6 +106,16 @@ namespace yigame.epoker {
         public virtual void ExecuteRootMatchOver(RootMatchOverCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RootMatchOver.OnNext(command);
+        }
+        
+        public virtual void ExecuteButtonCloseSummaryClicked(ButtonCloseSummaryClickedCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.ButtonCloseSummaryClicked.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshSummaryPlayersList(RefreshSummaryPlayersListCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.RefreshSummaryPlayersList.OnNext(command);
         }
     }
     

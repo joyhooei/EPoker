@@ -32,6 +32,20 @@ namespace GameDataEditor
             }
         }
 
+        static string LessCardsCountForTestKey = "LessCardsCountForTest";
+		int _LessCardsCountForTest;
+        public int LessCardsCountForTest
+        {
+            get { return _LessCardsCountForTest; }
+            set {
+                if (_LessCardsCountForTest != value)
+                {
+                    _LessCardsCountForTest = value;
+					GDEDataManager.SetInt(_key, LessCardsCountForTestKey, _LessCardsCountForTest);
+                }
+            }
+        }
+
         public GDESDebugData(string key) : base(key)
         {
             GDEDataManager.RegisterItem(this.SchemaName(), key);
@@ -42,6 +56,7 @@ namespace GameDataEditor
 			dict.Add(GDMConstants.SchemaKey, "SDebug");
 			
             dict.Merge(true, SinglePlayerStartForTest.ToGDEDict(SinglePlayerStartForTestKey));
+            dict.Merge(true, LessCardsCountForTest.ToGDEDict(LessCardsCountForTestKey));
             return dict;
 		}
 
@@ -58,6 +73,7 @@ namespace GameDataEditor
 			else
 			{
                 dict.TryGetBool(SinglePlayerStartForTestKey, out _SinglePlayerStartForTest);
+                dict.TryGetInt(LessCardsCountForTestKey, out _LessCardsCountForTest);
                 LoadFromSavedData(dataKey);
 			}
 		}
@@ -67,6 +83,7 @@ namespace GameDataEditor
 			_key = dataKey;
 			
             _SinglePlayerStartForTest = GDEDataManager.GetBool(_key, SinglePlayerStartForTestKey, _SinglePlayerStartForTest);
+            _LessCardsCountForTest = GDEDataManager.GetInt(_key, LessCardsCountForTestKey, _LessCardsCountForTest);
         }
 
         public GDESDebugData ShallowClone()
@@ -75,6 +92,7 @@ namespace GameDataEditor
 			GDESDebugData newClone = new GDESDebugData(newKey);
 
             newClone.SinglePlayerStartForTest = SinglePlayerStartForTest;
+            newClone.LessCardsCountForTest = LessCardsCountForTest;
 
             return newClone;
 		}
@@ -94,9 +112,19 @@ namespace GameDataEditor
             dict.TryGetBool(SinglePlayerStartForTestKey, out _SinglePlayerStartForTest);
         }
 
+        public void Reset_LessCardsCountForTest()
+        {
+            GDEDataManager.ResetToDefault(_key, LessCardsCountForTestKey);
+
+            Dictionary<string, object> dict;
+            GDEDataManager.Get(_key, out dict);
+            dict.TryGetInt(LessCardsCountForTestKey, out _LessCardsCountForTest);
+        }
+
         public void ResetAll()
         {
             GDEDataManager.ResetToDefault(_key, SinglePlayerStartForTestKey);
+            GDEDataManager.ResetToDefault(_key, LessCardsCountForTestKey);
 
 
             Dictionary<string, object> dict;
