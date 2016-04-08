@@ -36,5 +36,7 @@ namespace yigame.epoker {
     public enum GameMode {
         
         m_2p_r40c,
+        
+        m_3p_spade_ace,
     }
 }

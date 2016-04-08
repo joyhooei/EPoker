@@ -1307,6 +1307,10 @@ MonoBehaviour:
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\",
     \"Name\":\"m_2p_r40c\", \"Identifier\":\"07e728e4-c6c0-4d7d-b648-4dd5780d370d\",
     \"Precompiled\":false, \"Flags\":{\"_CLRType\":true}, \"DataBag\":{\"_CLRType\":\"Invert.Core.GraphDesigner.DataBag,
+    Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\"}},
+    {\"_CLRType\":\"EnumChildItem, Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral,
+    PublicKeyToken=null\", \"Name\":\"m_3p_spade_ace\", \"Identifier\":\"44619a51-e5d6-49a1-ba02-8078817de1e9\",
+    \"Precompiled\":false, \"Flags\":{\"_CLRType\":true}, \"DataBag\":{\"_CLRType\":\"Invert.Core.GraphDesigner.DataBag,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\"}}
     ], \"CollapsedValues\":{}, \"Flags\":{\"_CLRType\":true}, \"DataBag\":{\"_CLRType\":\"Invert.Core.GraphDesigner.DataBag,
     Invert.Core.GraphDesigner, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null\"},

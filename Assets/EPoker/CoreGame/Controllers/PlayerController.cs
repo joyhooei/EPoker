@@ -203,6 +203,12 @@ namespace yigame.epoker
 				foreach (int actor_id in actor_id_list) {
 					// 2队为普通队;
 					teamDic.Add (actor_id, 2);
+
+					if (GameService.GameMode == GameMode.m_2p_r40c) {
+						if (actor_id_list [0] == actor_id) {
+							teamDic [actor_id] = 1;
+						}
+					}
 				}
 
 				int i = 0;
@@ -221,12 +227,12 @@ namespace yigame.epoker
 //								first_turn_actor_id = actor_id;
 //							}
 
-							if (CardInfo.ValueEqual (ci, new CardInfo (Suit.SPADE, NumericalValue.NV_ACE))) {
-//								if (first_turn_actor_id == -1) {
-//									first_turn_actor_id = actor_id;
-//								}
-								// 1队为黑桃 ACE 队
-								teamDic [actor_id] = 1;
+							// 未测试
+							if (GameService.GameMode == GameMode.m_3p_spade_ace) {
+								if (CardInfo.ValueEqual (ci, new CardInfo (Suit.SPADE, NumericalValue.NV_ACE))) {
+									// 1队为黑桃 ACE 队
+									teamDic [actor_id] = 1;
+								}
 							}
 
 							if (++i >= card_info.Count) {

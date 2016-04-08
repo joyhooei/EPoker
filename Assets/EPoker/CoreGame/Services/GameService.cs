@@ -53,6 +53,10 @@ namespace yigame.epoker
 				card_info_list = card_info_list.GetRange (0, force_card_count);
 			}
 
+			if (GameService.GameMode == GameMode.m_2p_r40c) {
+				card_info_list = card_info_list.GetRange (0, 40);
+			}
+
 			return card_info_list;
 		}
 
