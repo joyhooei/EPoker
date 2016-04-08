@@ -19,6 +19,8 @@ namespace yigame.epoker
 		[Inject] public Network Network;
 		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
 
+		public static GameMode GameMode;
+
 		public static class EventCode
 		{
 			public const byte MatchBegan = 10;

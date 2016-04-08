@@ -16,5 +16,6 @@ namespace GameDataEditor
     public partial class GDESchemaKeys
     {
         public static string SDebug = "SDebug";
+        public static string SConfig = "SConfig";
     }
 }

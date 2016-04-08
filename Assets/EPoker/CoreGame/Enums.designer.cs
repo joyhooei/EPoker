@@ -32,4 +32,9 @@ namespace yigame.epoker {
         
         Deselect,
     }
+    
+    public enum GameMode {
+        
+        m_2p_r40c,
+    }
 }

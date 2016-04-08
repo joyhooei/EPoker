@@ -19,6 +19,13 @@ namespace yigame.epoker
 			base.Setup ();
 
 			GDEDataManager.Init ("gde_data");
+
+			GDESConfigData cd = new GDESConfigData (GDEItemKeys.SConfig_DefaultConfig);
+			string game_mode_str = cd.GameMode;
+
+			GameService.GameMode = (GameMode)Enum.Parse (typeof(GameMode), game_mode_str);
+
+			Debug.Log ("Game mode: " + GameService.GameMode.ToString ());
 		}
 	}
 }

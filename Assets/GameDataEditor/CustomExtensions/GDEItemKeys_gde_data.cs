@@ -16,5 +16,6 @@ namespace GameDataEditor
     public partial class GDEItemKeys
     {
         public static string SDebug_DefaultDebug = "DefaultDebug";
+        public static string SConfig_DefaultConfig = "DefaultConfig";
     }
 }
