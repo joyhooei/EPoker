@@ -32,6 +32,20 @@ namespace GameDataEditor
             }
         }
 
+        static string FreeDealCardsRuleForTestKey = "FreeDealCardsRuleForTest";
+		bool _FreeDealCardsRuleForTest;
+        public bool FreeDealCardsRuleForTest
+        {
+            get { return _FreeDealCardsRuleForTest; }
+            set {
+                if (_FreeDealCardsRuleForTest != value)
+                {
+                    _FreeDealCardsRuleForTest = value;
+					GDEDataManager.SetBool(_key, FreeDealCardsRuleForTestKey, _FreeDealCardsRuleForTest);
+                }
+            }
+        }
+
         static string LessCardsCountForTestKey = "LessCardsCountForTest";
 		int _LessCardsCountForTest;
         public int LessCardsCountForTest
@@ -56,6 +70,7 @@ namespace GameDataEditor
 			dict.Add(GDMConstants.SchemaKey, "SDebug");
 			
             dict.Merge(true, SinglePlayerStartForTest.ToGDEDict(SinglePlayerStartForTestKey));
+            dict.Merge(true, FreeDealCardsRuleForTest.ToGDEDict(FreeDealCardsRuleForTestKey));
             dict.Merge(true, LessCardsCountForTest.ToGDEDict(LessCardsCountForTestKey));
             return dict;
 		}
@@ -73,6 +88,7 @@ namespace GameDataEditor
 			else
 			{
                 dict.TryGetBool(SinglePlayerStartForTestKey, out _SinglePlayerStartForTest);
+                dict.TryGetBool(FreeDealCardsRuleForTestKey, out _FreeDealCardsRuleForTest);
                 dict.TryGetInt(LessCardsCountForTestKey, out _LessCardsCountForTest);
                 LoadFromSavedData(dataKey);
 			}
@@ -83,6 +99,7 @@ namespace GameDataEditor
 			_key = dataKey;
 			
             _SinglePlayerStartForTest = GDEDataManager.GetBool(_key, SinglePlayerStartForTestKey, _SinglePlayerStartForTest);
+            _FreeDealCardsRuleForTest = GDEDataManager.GetBool(_key, FreeDealCardsRuleForTestKey, _FreeDealCardsRuleForTest);
             _LessCardsCountForTest = GDEDataManager.GetInt(_key, LessCardsCountForTestKey, _LessCardsCountForTest);
         }
 
@@ -92,6 +109,7 @@ namespace GameDataEditor
 			GDESDebugData newClone = new GDESDebugData(newKey);
 
             newClone.SinglePlayerStartForTest = SinglePlayerStartForTest;
+            newClone.FreeDealCardsRuleForTest = FreeDealCardsRuleForTest;
             newClone.LessCardsCountForTest = LessCardsCountForTest;
 
             return newClone;
@@ -112,6 +130,15 @@ namespace GameDataEditor
             dict.TryGetBool(SinglePlayerStartForTestKey, out _SinglePlayerStartForTest);
         }
 
+        public void Reset_FreeDealCardsRuleForTest()
+        {
+            GDEDataManager.ResetToDefault(_key, FreeDealCardsRuleForTestKey);
+
+            Dictionary<string, object> dict;
+            GDEDataManager.Get(_key, out dict);
+            dict.TryGetBool(FreeDealCardsRuleForTestKey, out _FreeDealCardsRuleForTest);
+        }
+
         public void Reset_LessCardsCountForTest()
         {
             GDEDataManager.ResetToDefault(_key, LessCardsCountForTestKey);
@@ -125,6 +152,7 @@ namespace GameDataEditor
         {
             GDEDataManager.ResetToDefault(_key, SinglePlayerStartForTestKey);
             GDEDataManager.ResetToDefault(_key, LessCardsCountForTestKey);
+            GDEDataManager.ResetToDefault(_key, FreeDealCardsRuleForTestKey);
 
 
             Dictionary<string, object> dict;

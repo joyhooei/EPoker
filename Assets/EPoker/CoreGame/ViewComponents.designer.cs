@@ -68,6 +68,10 @@ namespace yigame.epoker {
             CoreGameRoot.RefreshSummaryPlayersList.OnNext(new RefreshSummaryPlayersListCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteCalcMatchResult() {
+            CoreGameRoot.CalcMatchResult.OnNext(new CalcMatchResultCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -116,6 +120,11 @@ namespace yigame.epoker {
         public virtual void ExecuteRefreshSummaryPlayersList(RefreshSummaryPlayersListCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshSummaryPlayersList.OnNext(command);
+        }
+        
+        public virtual void ExecuteCalcMatchResult(CalcMatchResultCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.CalcMatchResult.OnNext(command);
         }
     }
     

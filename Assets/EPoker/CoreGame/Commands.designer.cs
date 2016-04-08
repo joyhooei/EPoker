@@ -50,6 +50,9 @@ namespace yigame.epoker {
     public partial class RefreshSummaryPlayersListCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class CalcMatchResultCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class SelectCardCommand : uFrame.MVVM.ViewModelCommand {
     }
     

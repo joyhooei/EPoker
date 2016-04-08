@@ -46,5 +46,20 @@ namespace yigame.epoker
 				return Network.Client.CurrentRoom.Players.Count (kv => Convert.ToBoolean (kv.Value.CustomProperties ["is_win"]));
 			}
 		}
+
+		public int GetTeamPlayersCount (int team_id)
+		{
+			return Network.Client.CurrentRoom.Players.Count (kv => {
+
+				int tid = 0;
+				if (kv.Value.CustomProperties.TryGetInt ("team_id", out tid)) {
+					if (tid == team_id) {
+						return true;
+					}
+				}
+
+				return false;
+			});
+		}
 	}
 }

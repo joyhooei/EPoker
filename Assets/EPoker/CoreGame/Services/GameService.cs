@@ -82,6 +82,11 @@ namespace yigame.epoker
 			}
 		}
 
+		public static int RankToRankScore (int rank, int teamPlayerCount, int totalCount)
+		{
+			return (totalCount + 1 - rank) * (totalCount - teamPlayerCount);
+		}
+
 		public override void OpenCoreGameHandler (OpenCoreGame data)
 		{
 			base.OpenCoreGameHandler (data);

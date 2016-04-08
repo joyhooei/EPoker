@@ -197,6 +197,8 @@ namespace yigame.epoker
 					PropertiesToSet = ht
 				});
 
+				viewModel.ExecuteCalcMatchResult ();
+
 				Publish (new NetRaiseEvent () {
 					EventCode = GameService.EventCode.MatchOver
 				});
@@ -205,6 +207,7 @@ namespace yigame.epoker
 
 			} else {
 
+				// 自己的牌大,重新轮到自己发牌
 				if (Convert.ToInt32 (Network.Client.CurrentRoom.CustomProperties ["current_cards_actor_id"]) == actor_id) {
 					Hashtable ht3 = new Hashtable ();
 					ht3.Add ("current_cards", JsonConvert.SerializeObject (new List<CardInfo> ()));
@@ -232,10 +235,8 @@ namespace yigame.epoker
 					PropertiesToSet = ht
 				});
 			}
-
 		}
 
-    
 		public override void ButtonCloseSummaryClicked (CoreGameRootViewModel viewModel)
 		{
 			base.ButtonCloseSummaryClicked (viewModel);
@@ -255,8 +256,39 @@ namespace yigame.epoker
 				vm.Rank = Convert.ToInt32 (_.Value.CustomProperties ["rank"]);
 				vm.PlayerName = _.Value.Name;
 				vm.IsMe = _.Value.IsLocal;
+				vm.Team = Convert.ToInt32 (_.Value.CustomProperties ["team_id"]);
+				vm.IsWin = Convert.ToBoolean (_.Value.CustomProperties ["is_team_win"]);
 
 				viewModel.SummaryPlayersList.Add (vm);
+			});
+		}
+
+		public override void CalcMatchResult (CoreGameRootViewModel viewModel)
+		{
+			base.CalcMatchResult (viewModel);
+			// 根据 rank 计算结果
+			Dictionary<int, int> dicRankValue = new Dictionary<int, int> ();
+			Network.Client.CurrentRoom.Players.ToList ().ForEach (kv => {
+				int team_id = Convert.ToInt32 (kv.Value.CustomProperties ["team_id"]);
+				int rank = Convert.ToInt32 (kv.Value.CustomProperties ["rank"]);
+				int count = Network.Client.CurrentRoom.PlayerCount;
+				int team_count = viewModel.GetTeamPlayersCount (team_id);
+				if (dicRankValue.ContainsKey (team_id) == false) {
+					dicRankValue.Add (team_id, GameService.RankToRankScore (rank, team_count, count));
+				} else {
+					dicRankValue [team_id] += GameService.RankToRankScore (rank, team_count, count);
+				}
+			});
+			int winner_team_id = dicRankValue.OrderByDescending (kv => kv.Value).First ().Key;
+			Network.Client.CurrentRoom.Players.ToList ().ForEach (kv => {
+				int actor_id = kv.Value.ID;
+				int team_id = Convert.ToInt32 (kv.Value.CustomProperties ["team_id"]);
+				Hashtable ht = new Hashtable ();
+				ht.Add ("is_team_win", winner_team_id == team_id);
+				Publish (new NetSetPlayerProperties () {
+					ActorId = actor_id,
+					PropertiesToSet = ht
+				});
 			});
 		}
 	}

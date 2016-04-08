@@ -53,8 +53,8 @@ namespace yigame.epoker
 
 		public override void FaceChanged (CardFace arg1)
 		{
-			List<SpriteRenderer> sr_front = gameObject.Descendants ("front").OfComponent<SpriteRenderer> ().ToList ();
-			List<SpriteRenderer> sr_back = gameObject.Descendants ("back").OfComponent<SpriteRenderer> ().ToList ();
+			List<SpriteRenderer> sr_front = gameObject.Descendants ("front").DescendantsAndSelf ().OfComponent<SpriteRenderer> ().ToList ();
+			List<SpriteRenderer> sr_back = gameObject.Descendants ("back").DescendantsAndSelf ().OfComponent<SpriteRenderer> ().ToList ();
 
 			if (arg1 == CardFace.FaceUp) {
 				sr_front.ForEach (sr => sr.enabled = true);

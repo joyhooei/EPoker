@@ -63,6 +63,8 @@ namespace yigame.epoker {
         
         private Signal<RefreshSummaryPlayersListCommand> _RefreshSummaryPlayersList;
         
+        private Signal<CalcMatchResultCommand> _CalcMatchResult;
+        
         public CoreGameRootViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -301,6 +303,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<CalcMatchResultCommand> CalcMatchResult {
+            get {
+                return _CalcMatchResult;
+            }
+            set {
+                _CalcMatchResult = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.RefreshCoreGame = new Signal<RefreshCoreGameCommand>(this);
@@ -313,6 +324,7 @@ namespace yigame.epoker {
             this.RootMatchOver = new Signal<RootMatchOverCommand>(this);
             this.ButtonCloseSummaryClicked = new Signal<ButtonCloseSummaryClickedCommand>(this);
             this.RefreshSummaryPlayersList = new Signal<RefreshSummaryPlayersListCommand>(this);
+            this.CalcMatchResult = new Signal<CalcMatchResultCommand>(this);
             _BackGroundProperty = new P<BackGroundViewModel>(this, "BackGround");
             _PlayerCountProperty = new P<Int32>(this, "PlayerCount");
             _PileProperty = new P<CardsPileViewModel>(this, "Pile");
@@ -364,6 +376,10 @@ namespace yigame.epoker {
             this.RefreshSummaryPlayersList.OnNext(new RefreshSummaryPlayersListCommand());
         }
         
+        public virtual void ExecuteCalcMatchResult() {
+            this.CalcMatchResult.OnNext(new CalcMatchResultCommand());
+        }
+        
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             		if (stream.DeepSerialize) this.BackGround = stream.DeserializeObject<BackGroundViewModel>("BackGround");;
@@ -404,6 +420,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("RootMatchOver", RootMatchOver) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ButtonCloseSummaryClicked", ButtonCloseSummaryClicked) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("RefreshSummaryPlayersList", RefreshSummaryPlayersList) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("CalcMatchResult", CalcMatchResult) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -826,6 +843,8 @@ namespace yigame.epoker {
         
         private P<Boolean> _ButtonDealEnableProperty;
         
+        private P<Int32> _TeamIdProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         private Signal<PlayerReadyCommand> _PlayerReady;
@@ -1002,6 +1021,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Int32> TeamIdProperty {
+            get {
+                return _TeamIdProperty;
+            }
+            set {
+                _TeamIdProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
@@ -1107,6 +1135,15 @@ namespace yigame.epoker {
             }
             set {
                 ButtonDealEnableProperty.Value = value;
+            }
+        }
+        
+        public virtual Int32 TeamId {
+            get {
+                return TeamIdProperty.Value;
+            }
+            set {
+                TeamIdProperty.Value = value;
             }
         }
         
@@ -1353,6 +1390,7 @@ namespace yigame.epoker {
             _PlayerNodeModeProperty = new P<PlayerNodeMode>(this, "PlayerNodeMode");
             _RankProperty = new P<Int32>(this, "Rank");
             _ButtonDealEnableProperty = new P<Boolean>(this, "ButtonDealEnable");
+            _TeamIdProperty = new P<Int32>(this, "TeamId");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -1465,6 +1503,7 @@ namespace yigame.epoker {
             this.PlayerNodeMode = (PlayerNodeMode)stream.DeserializeInt("PlayerNodeMode");;
             this.Rank = stream.DeserializeInt("Rank");;
             this.ButtonDealEnable = stream.DeserializeBool("ButtonDealEnable");;
+            this.TeamId = stream.DeserializeInt("TeamId");;
             if (stream.DeepSerialize) {
                 this.HandCards.Clear();
                 this.HandCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("HandCards"));
@@ -1481,6 +1520,7 @@ namespace yigame.epoker {
             stream.SerializeInt("PlayerNodeMode", (int)this.PlayerNodeMode);;
             stream.SerializeInt("Rank", this.Rank);
             stream.SerializeBool("ButtonDealEnable", this.ButtonDealEnable);
+            stream.SerializeInt("TeamId", this.TeamId);
             if (stream.DeepSerialize) stream.SerializeArray("HandCards", this.HandCards);
         }
         
@@ -1538,6 +1578,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_RankProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_ButtonDealEnableProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_TeamIdProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }
@@ -1626,6 +1668,10 @@ namespace yigame.epoker {
         
         private P<Boolean> _IsMeProperty;
         
+        private P<Int32> _TeamProperty;
+        
+        private P<Boolean> _IsWinProperty;
+        
         public SummaryPlayerItemViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
         }
@@ -1657,6 +1703,24 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Int32> TeamProperty {
+            get {
+                return _TeamProperty;
+            }
+            set {
+                _TeamProperty = value;
+            }
+        }
+        
+        public virtual P<Boolean> IsWinProperty {
+            get {
+                return _IsWinProperty;
+            }
+            set {
+                _IsWinProperty = value;
+            }
+        }
+        
         public virtual Int32 Rank {
             get {
                 return RankProperty.Value;
@@ -1684,23 +1748,47 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Int32 Team {
+            get {
+                return TeamProperty.Value;
+            }
+            set {
+                TeamProperty.Value = value;
+            }
+        }
+        
+        public virtual Boolean IsWin {
+            get {
+                return IsWinProperty.Value;
+            }
+            set {
+                IsWinProperty.Value = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             _RankProperty = new P<Int32>(this, "Rank");
             _PlayerNameProperty = new P<String>(this, "PlayerName");
             _IsMeProperty = new P<Boolean>(this, "IsMe");
+            _TeamProperty = new P<Int32>(this, "Team");
+            _IsWinProperty = new P<Boolean>(this, "IsWin");
         }
         
         public override void Read(ISerializerStream stream) {
             base.Read(stream);
             this.Rank = stream.DeserializeInt("Rank");;
             this.IsMe = stream.DeserializeBool("IsMe");;
+            this.Team = stream.DeserializeInt("Team");;
+            this.IsWin = stream.DeserializeBool("IsWin");;
         }
         
         public override void Write(ISerializerStream stream) {
             base.Write(stream);
             stream.SerializeInt("Rank", this.Rank);
             stream.SerializeBool("IsMe", this.IsMe);
+            stream.SerializeInt("Team", this.Team);
+            stream.SerializeBool("IsWin", this.IsWin);
         }
         
         protected override void FillCommands(System.Collections.Generic.List<uFrame.MVVM.ViewModelCommandInfo> list) {
@@ -1715,6 +1803,10 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PlayerNameProperty, false, false, false, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_IsMeProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_TeamProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_IsWinProperty, false, false, false, false));
         }
     }
     

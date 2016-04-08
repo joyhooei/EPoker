@@ -271,6 +271,10 @@ namespace yigame.epoker {
             CoreGameRoot.RefreshSummaryPlayersList.OnNext(new RefreshSummaryPlayersListCommand() { Sender = CoreGameRoot });
         }
         
+        public virtual void ExecuteCalcMatchResult() {
+            CoreGameRoot.CalcMatchResult.OnNext(new CalcMatchResultCommand() { Sender = CoreGameRoot });
+        }
+        
         public virtual void ExecuteRefreshCoreGame(RefreshCoreGameCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshCoreGame.OnNext(command);
@@ -319,6 +323,11 @@ namespace yigame.epoker {
         public virtual void ExecuteRefreshSummaryPlayersList(RefreshSummaryPlayersListCommand command) {
             command.Sender = CoreGameRoot;
             CoreGameRoot.RefreshSummaryPlayersList.OnNext(command);
+        }
+        
+        public virtual void ExecuteCalcMatchResult(CalcMatchResultCommand command) {
+            command.Sender = CoreGameRoot;
+            CoreGameRoot.CalcMatchResult.OnNext(command);
         }
     }
     
@@ -612,6 +621,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public Boolean _ButtonDealEnable;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _TeamId;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -784,6 +798,7 @@ namespace yigame.epoker {
             playerview.PlayerNodeMode = this._PlayerNodeMode;
             playerview.Rank = this._Rank;
             playerview.ButtonDealEnable = this._ButtonDealEnable;
+            playerview.TeamId = this._TeamId;
         }
         
         public override void Bind() {
@@ -1192,6 +1207,16 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public Boolean _IsMe;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Int32 _Team;
+        
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _IsWin;
+        
         [UFToggleGroup("PlayerName")]
         [UnityEngine.HideInInspector()]
         public bool _BindPlayerName = true;
@@ -1222,6 +1247,26 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_IsMeonlyWhenChanged")]
         protected bool _IsMeOnlyWhenChanged;
         
+        [UFToggleGroup("Team")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindTeam = true;
+        
+        [UFGroup("Team")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_TeamonlyWhenChanged")]
+        protected bool _TeamOnlyWhenChanged;
+        
+        [UFToggleGroup("IsWin")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindIsWin = true;
+        
+        [UFGroup("IsWin")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_IsWinonlyWhenChanged")]
+        protected bool _IsWinOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -1249,6 +1294,8 @@ namespace yigame.epoker {
             summaryplayeritemview.Rank = this._Rank;
             summaryplayeritemview.PlayerName = this._PlayerName;
             summaryplayeritemview.IsMe = this._IsMe;
+            summaryplayeritemview.Team = this._Team;
+            summaryplayeritemview.IsWin = this._IsWin;
         }
         
         public override void Bind() {
@@ -1265,12 +1312,24 @@ namespace yigame.epoker {
             if (_BindIsMe) {
                 this.BindProperty(this.SummaryPlayerItem.IsMeProperty, this.IsMeChanged, _IsMeOnlyWhenChanged);
             }
+            if (_BindTeam) {
+                this.BindProperty(this.SummaryPlayerItem.TeamProperty, this.TeamChanged, _TeamOnlyWhenChanged);
+            }
+            if (_BindIsWin) {
+                this.BindProperty(this.SummaryPlayerItem.IsWinProperty, this.IsWinChanged, _IsWinOnlyWhenChanged);
+            }
         }
         
         public virtual void RankChanged(Int32 arg1) {
         }
         
         public virtual void IsMeChanged(Boolean arg1) {
+        }
+        
+        public virtual void TeamChanged(Int32 arg1) {
+        }
+        
+        public virtual void IsWinChanged(Boolean arg1) {
         }
     }
 }

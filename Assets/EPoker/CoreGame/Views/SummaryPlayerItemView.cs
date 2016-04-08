@@ -18,6 +18,8 @@ namespace yigame.epoker
         
 		public Text RankText;
 		public Text NameText;
+		public Text TeamText;
+		public Text WinText;
 
 		protected override void InitializeViewModel (uFrame.MVVM.ViewModel model)
 		{
@@ -53,6 +55,24 @@ namespace yigame.epoker
 
 			RankText.color = c;
 			NameText.color = c;
+		}
+
+		public override void TeamChanged (Int32 arg1)
+		{
+			if (arg1 == 1) {
+				TeamText.text = "Ace Team";
+			} else {
+				TeamText.text = "";
+			}
+		}
+
+		public override void IsWinChanged (Boolean arg1)
+		{
+			if (arg1) {
+				WinText.text = "Win";
+			} else {
+				WinText.text = "Lose";
+			}
 		}
 	}
 }

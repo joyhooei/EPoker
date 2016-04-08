@@ -13,6 +13,7 @@ namespace yigame.epoker
 	using ExitGames.Client.Photon.LoadBalancing;
 	using Newtonsoft.Json;
 	using Newtonsoft.Json.Linq;
+	using GameDataEditor;
 
 	#if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_DASHBOARD_WIDGET || UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WII || UNITY_IPHONE || UNITY_ANDROID || UNITY_PS3 || UNITY_XBOX360 || UNITY_NACL  || UNITY_FLASH  || UNITY_BLACKBERRY
 	using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -190,6 +191,20 @@ namespace yigame.epoker
 
 				int first_turn_actor_id = -1;
 
+				try {
+					first_turn_actor_id = Network.Client.CurrentRoom.Players.Where (kv => {
+						return kv.Value.CustomProperties.ContainsKey ("rank");
+					}).OrderBy (_ => Convert.ToInt32 (_.Value.CustomProperties ["rank"])).Select (kv2 => kv2.Value.ID).First ();
+				} catch (Exception ex) {
+					UnityEngine.Debug.Log ("没有指定先出牌的 actorid, 使用 先抓牌者 的 actorid: " + ex.Message);
+				}
+
+				Dictionary<int, int> teamDic = new Dictionary<int, int> ();
+				foreach (int actor_id in actor_id_list) {
+					// 2队为普通队;
+					teamDic.Add (actor_id, 2);
+				}
+
 				int i = 0;
 				while (i < card_info.Count) {
 
@@ -202,8 +217,16 @@ namespace yigame.epoker
 							CardInfo ci = card_info [i];
 							card_info_dic [actor_id].Add (ci);
 
-							if (ci.NumericalValue == NumericalValue.NV_BIG_JOKER && first_turn_actor_id == -1) {
-								first_turn_actor_id = actor_id;
+//							if (ci.NumericalValue == NumericalValue.NV_BIG_JOKER && first_turn_actor_id == -1) {
+//								first_turn_actor_id = actor_id;
+//							}
+
+							if (CardInfo.ValueEqual (ci, new CardInfo (Suit.SPADE, NumericalValue.NV_ACE))) {
+//								if (first_turn_actor_id == -1) {
+//									first_turn_actor_id = actor_id;
+//								}
+								// 1队为黑桃 ACE 队
+								teamDic [actor_id] = 1;
 							}
 
 							if (++i >= card_info.Count) {
@@ -221,10 +244,13 @@ namespace yigame.epoker
 
 					Hashtable ht = new Hashtable ();
 					ht.Add ("hand_cards", JsonConvert.SerializeObject (card_info_dic [actor_id]));
-					ht.Add ("first_get", actor_id == first_get_actor_id);
+					ht.Add ("first_get", false);
 					ht.Add ("my_turn", actor_id == first_turn_actor_id);
 					ht.Add ("is_win", false);
 					ht.Add ("rank", -1);
+					ht.Add ("team_id", teamDic [actor_id]);
+					ht.Add ("is_team_win", false);
+					ht.Add ("first_deal", false);
 
 					Publish (new NetSetPlayerProperties () {
 						ActorId = actor_id,
@@ -267,7 +293,13 @@ namespace yigame.epoker
 			foreach (CardInfo ci in arg.CardInfos) {
 				CardViewModel card = MVVMKernelExtensions.CreateViewModel<CardViewModel> ();
 				card.Info = ci;
-				card.Face = CardFace.FaceUp;
+
+				if (viewModel.IsSelf) {
+					card.Face = CardFace.FaceUp;
+				} else {
+					card.Face = CardFace.FaceDown;
+				}
+
 				card.Place = CardPlace.Floor;
 				card.OwnerActorId = viewModel.ActorId;
 				viewModel.HandCards.Add (card);
@@ -332,9 +364,16 @@ namespace yigame.epoker
 
 				// 检查是否需要设置is_win 标志
 				if (viewModel.HandCards.Count == cardInfoList.Count) {
+
+					int rank = CoreGameRoot.WinPlayersCount + 1;
+
 					Hashtable ht = new Hashtable ();
 					ht.Add ("is_win", true);
-					ht.Add ("rank", CoreGameRoot.WinPlayersCount + 1);
+					ht.Add ("rank", rank);
+					if (rank == 1) {
+						ht.Add ("first_get", true);
+					}
+
 					Publish (new NetSetPlayerProperties () {
 						ActorId = viewModel.ActorId,
 						PropertiesToSet = ht
@@ -380,6 +419,7 @@ namespace yigame.epoker
 					// 1.1.还原一些属性
 					card.ExecuteDeselectCard ();
 					card.OwnerActorId = -1;
+					card.Face = CardFace.FaceUp;
 
 					// 2.牌堆中加入相同的这一张牌
 					CoreGameRoot.Pile.Cards.Add (card);
@@ -421,6 +461,11 @@ namespace yigame.epoker
 					List<CardInfo> current_selected_cards = viewModel.CurrentSelectedCards;
 
 					bool is_larger = GameService.IsLargerCards (current_selected_cards, current_cards);
+
+					GDESDebugData dd = new GDESDebugData (GDEItemKeys.SDebug_DefaultDebug);
+					if (dd.FreeDealCardsRuleForTest) {
+						is_larger = true;
+					}
 
 					viewModel.ButtonDealEnable = is_larger;
 				}

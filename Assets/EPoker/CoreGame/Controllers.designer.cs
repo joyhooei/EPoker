@@ -84,6 +84,7 @@ namespace yigame.epoker {
             viewModel.RootMatchOver.Action = this.RootMatchOverHandler;
             viewModel.ButtonCloseSummaryClicked.Action = this.ButtonCloseSummaryClickedHandler;
             viewModel.RefreshSummaryPlayersList.Action = this.RefreshSummaryPlayersListHandler;
+            viewModel.CalcMatchResult.Action = this.CalcMatchResultHandler;
             CoreGameRootViewModelManager.Add(viewModel);
         }
         
@@ -120,6 +121,9 @@ namespace yigame.epoker {
         }
         
         public virtual void RefreshSummaryPlayersList(CoreGameRootViewModel viewModel) {
+        }
+        
+        public virtual void CalcMatchResult(CoreGameRootViewModel viewModel) {
         }
         
         public virtual void RefreshCoreGameHandler(RefreshCoreGameCommand command) {
@@ -160,6 +164,10 @@ namespace yigame.epoker {
         
         public virtual void RefreshSummaryPlayersListHandler(RefreshSummaryPlayersListCommand command) {
             this.RefreshSummaryPlayersList(command.Sender as CoreGameRootViewModel);
+        }
+        
+        public virtual void CalcMatchResultHandler(CalcMatchResultCommand command) {
+            this.CalcMatchResult(command.Sender as CoreGameRootViewModel);
         }
     }
     
