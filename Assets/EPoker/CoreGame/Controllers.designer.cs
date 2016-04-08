@@ -377,6 +377,7 @@ namespace yigame.epoker {
             viewModel.ButtonDealClicked.Action = this.ButtonDealClickedHandler;
             viewModel.ButtonTurnNext.Action = this.ButtonTurnNextHandler;
             viewModel.ShowCardsToPile.Action = this.ShowCardsToPileHandler;
+            viewModel.RefreshButtonDealEnabled.Action = this.RefreshButtonDealEnabledHandler;
             PlayerViewModelManager.Add(viewModel);
         }
         
@@ -440,6 +441,9 @@ namespace yigame.epoker {
         }
         
         public virtual void ShowCardsToPile(PlayerViewModel viewModel) {
+        }
+        
+        public virtual void RefreshButtonDealEnabled(PlayerViewModel viewModel) {
         }
         
         public virtual void PlayerReadyHandler(PlayerReadyCommand command) {
@@ -524,6 +528,10 @@ namespace yigame.epoker {
         
         public virtual void ShowCardsToPileHandler(ShowCardsToPileCommand command) {
             this.ShowCardsToPile(command.Sender as PlayerViewModel);
+        }
+        
+        public virtual void RefreshButtonDealEnabledHandler(RefreshButtonDealEnabledCommand command) {
+            this.RefreshButtonDealEnabled(command.Sender as PlayerViewModel);
         }
         
         public virtual void AddCards(PlayerViewModel viewModel, AddCardsCommand arg) {

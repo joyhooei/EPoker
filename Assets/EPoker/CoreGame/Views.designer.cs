@@ -607,6 +607,11 @@ namespace yigame.epoker {
         [UnityEngine.HideInInspector()]
         public Int32 _Rank;
         
+        [UnityEngine.SerializeField()]
+        [UFGroup("View Model Properties")]
+        [UnityEngine.HideInInspector()]
+        public Boolean _ButtonDealEnable;
+        
         [UFToggleGroup("Status")]
         [UnityEngine.HideInInspector()]
         public bool _BindStatus = true;
@@ -727,6 +732,16 @@ namespace yigame.epoker {
         [UnityEngine.Serialization.FormerlySerializedAsAttribute("_RankonlyWhenChanged")]
         protected bool _RankOnlyWhenChanged;
         
+        [UFToggleGroup("ButtonDealEnable")]
+        [UnityEngine.HideInInspector()]
+        public bool _BindButtonDealEnable = true;
+        
+        [UFGroup("ButtonDealEnable")]
+        [UnityEngine.SerializeField()]
+        [UnityEngine.HideInInspector()]
+        [UnityEngine.Serialization.FormerlySerializedAsAttribute("_ButtonDealEnableonlyWhenChanged")]
+        protected bool _ButtonDealEnableOnlyWhenChanged;
+        
         public override string DefaultIdentifier {
             get {
                 return base.DefaultIdentifier;
@@ -768,6 +783,7 @@ namespace yigame.epoker {
             playerview.LBPlayer = this._LBPlayer;
             playerview.PlayerNodeMode = this._PlayerNodeMode;
             playerview.Rank = this._Rank;
+            playerview.ButtonDealEnable = this._ButtonDealEnable;
         }
         
         public override void Bind() {
@@ -810,6 +826,9 @@ namespace yigame.epoker {
             }
             if (_BindRank) {
                 this.BindProperty(this.Player.RankProperty, this.RankChanged, _RankOnlyWhenChanged);
+            }
+            if (_BindButtonDealEnable) {
+                this.BindProperty(this.Player.ButtonDealEnableProperty, this.ButtonDealEnableChanged, _ButtonDealEnableOnlyWhenChanged);
             }
         }
         
@@ -889,6 +908,9 @@ namespace yigame.epoker {
         public virtual void RankChanged(Int32 arg1) {
         }
         
+        public virtual void ButtonDealEnableChanged(Boolean arg1) {
+        }
+        
         public virtual void ExecutePlayerReady() {
             Player.PlayerReady.OnNext(new PlayerReadyCommand() { Sender = Player });
         }
@@ -963,6 +985,10 @@ namespace yigame.epoker {
         
         public virtual void ExecuteShowCardsToPile() {
             Player.ShowCardsToPile.OnNext(new ShowCardsToPileCommand() { Sender = Player });
+        }
+        
+        public virtual void ExecuteRefreshButtonDealEnabled() {
+            Player.RefreshButtonDealEnabled.OnNext(new RefreshButtonDealEnabledCommand() { Sender = Player });
         }
         
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
@@ -1068,6 +1094,11 @@ namespace yigame.epoker {
         public virtual void ExecuteShowCardsToPile(ShowCardsToPileCommand command) {
             command.Sender = Player;
             Player.ShowCardsToPile.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshButtonDealEnabled(RefreshButtonDealEnabledCommand command) {
+            command.Sender = Player;
+            Player.RefreshButtonDealEnabled.OnNext(command);
         }
     }
     

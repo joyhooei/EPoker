@@ -22,7 +22,7 @@ namespace yigame.epoker
 	{
 		[Inject] public Network Network;
 		[Inject] public GameService GameService;
-		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+		//		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
 
 		public override void InitializePlayer (PlayerViewModel viewModel)
 		{
@@ -90,6 +90,7 @@ namespace yigame.epoker
 		public override void TurnOn (PlayerViewModel viewModel)
 		{
 			base.TurnOn (viewModel);
+			viewModel.ExecuteRefreshButtonDealEnabled ();
 		}
 
 		public override void TurnOff (PlayerViewModel viewModel)
@@ -327,7 +328,7 @@ namespace yigame.epoker
 			base.ButtonDealClicked (viewModel);
 			if (viewModel.Status is MatchDeal) {
 
-				List<CardInfo> cardInfoList = viewModel.HandCards.Where (cardVM => cardVM.IsSelected).Select (_ => _.Info).ToList ();
+				List<CardInfo> cardInfoList = viewModel.CurrentSelectedCards;
 
 				// 检查是否需要设置is_win 标志
 				if (viewModel.HandCards.Count == cardInfoList.Count) {
@@ -391,6 +392,39 @@ namespace yigame.epoker
 			viewModel.ExecuteReorder ();
 			CoreGameRoot.Pile.ExecutePileCardsReorder ();
 
+		}
+
+		public override void RefreshButtonDealEnabled (PlayerViewModel viewModel)
+		{
+			base.RefreshButtonDealEnabled (viewModel);
+
+			if (viewModel.IsSelf) {
+
+				int current_cards_actor_id = Convert.ToInt32 (Network.Client.CurrentRoom.CustomProperties ["current_cards_actor_id"]);
+
+				if (current_cards_actor_id == -1) {
+					// 第一手牌
+					List<CardInfo> current_selected_cards = viewModel.CurrentSelectedCards;
+					bool is_deal = GameService.IsDealCards (current_selected_cards);
+					viewModel.ButtonDealEnable = is_deal;
+
+				} else if (current_cards_actor_id == viewModel.ActorId) {
+					// 自己上轮大
+					List<CardInfo> current_selected_cards = viewModel.CurrentSelectedCards;
+					bool is_deal = GameService.IsDealCards (current_selected_cards);
+					viewModel.ButtonDealEnable = is_deal;
+
+				} else {
+					// 需要大过当前牌
+					string current_cards_str = Convert.ToString (Network.Client.CurrentRoom.CustomProperties ["current_cards"]);
+					List<CardInfo> current_cards = JsonConvert.DeserializeObject<List<CardInfo>> (current_cards_str);
+					List<CardInfo> current_selected_cards = viewModel.CurrentSelectedCards;
+
+					bool is_larger = GameService.IsLargerCards (current_selected_cards, current_cards);
+
+					viewModel.ButtonDealEnable = is_larger;
+				}
+			}
 		}
 	}
 }

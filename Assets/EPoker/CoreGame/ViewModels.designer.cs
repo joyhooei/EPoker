@@ -824,6 +824,8 @@ namespace yigame.epoker {
         
         private P<Int32> _RankProperty;
         
+        private P<Boolean> _ButtonDealEnableProperty;
+        
         private ModelCollection<CardViewModel> _HandCards;
         
         private Signal<PlayerReadyCommand> _PlayerReady;
@@ -867,6 +869,8 @@ namespace yigame.epoker {
         private Signal<ButtonTurnNextCommand> _ButtonTurnNext;
         
         private Signal<ShowCardsToPileCommand> _ShowCardsToPile;
+        
+        private Signal<RefreshButtonDealEnabledCommand> _RefreshButtonDealEnabled;
         
         public PlayerViewModelBase(uFrame.Kernel.IEventAggregator aggregator) : 
                 base(aggregator) {
@@ -989,6 +993,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual P<Boolean> ButtonDealEnableProperty {
+            get {
+                return _ButtonDealEnableProperty;
+            }
+            set {
+                _ButtonDealEnableProperty = value;
+            }
+        }
+        
         public virtual String Id {
             get {
                 return IdProperty.Value;
@@ -1085,6 +1098,15 @@ namespace yigame.epoker {
             }
             set {
                 RankProperty.Value = value;
+            }
+        }
+        
+        public virtual Boolean ButtonDealEnable {
+            get {
+                return ButtonDealEnableProperty.Value;
+            }
+            set {
+                ButtonDealEnableProperty.Value = value;
             }
         }
         
@@ -1286,6 +1308,15 @@ namespace yigame.epoker {
             }
         }
         
+        public virtual Signal<RefreshButtonDealEnabledCommand> RefreshButtonDealEnabled {
+            get {
+                return _RefreshButtonDealEnabled;
+            }
+            set {
+                _RefreshButtonDealEnabled = value;
+            }
+        }
+        
         public override void Bind() {
             base.Bind();
             this.PlayerReady = new Signal<PlayerReadyCommand>(this);
@@ -1309,6 +1340,7 @@ namespace yigame.epoker {
             this.ButtonDealClicked = new Signal<ButtonDealClickedCommand>(this);
             this.ButtonTurnNext = new Signal<ButtonTurnNextCommand>(this);
             this.ShowCardsToPile = new Signal<ShowCardsToPileCommand>(this);
+            this.RefreshButtonDealEnabled = new Signal<RefreshButtonDealEnabledCommand>(this);
             _IdProperty = new P<String>(this, "Id");
             _ActorIdProperty = new P<Int32>(this, "ActorId");
             _PosIdProperty = new P<String>(this, "PosId");
@@ -1320,6 +1352,7 @@ namespace yigame.epoker {
             _LBPlayerProperty = new P<ExitGames.Client.Photon.LoadBalancing.Player>(this, "LBPlayer");
             _PlayerNodeModeProperty = new P<PlayerNodeMode>(this, "PlayerNodeMode");
             _RankProperty = new P<Int32>(this, "Rank");
+            _ButtonDealEnableProperty = new P<Boolean>(this, "ButtonDealEnable");
             _HandCards = new ModelCollection<CardViewModel>(this, "HandCards");
             _StatusProperty = new PlayerStatus(this, "Status");
             PlayerReady.Subscribe(_ => StatusProperty.PlayerReady.OnNext(true));
@@ -1410,6 +1443,10 @@ namespace yigame.epoker {
             this.ShowCardsToPile.OnNext(new ShowCardsToPileCommand());
         }
         
+        public virtual void ExecuteRefreshButtonDealEnabled() {
+            this.RefreshButtonDealEnabled.OnNext(new RefreshButtonDealEnabledCommand());
+        }
+        
         public virtual void Execute(AddCardsCommand argument) {
             this.AddCards.OnNext(argument);
         }
@@ -1427,6 +1464,7 @@ namespace yigame.epoker {
             this.IsSelf = stream.DeserializeBool("IsSelf");;
             this.PlayerNodeMode = (PlayerNodeMode)stream.DeserializeInt("PlayerNodeMode");;
             this.Rank = stream.DeserializeInt("Rank");;
+            this.ButtonDealEnable = stream.DeserializeBool("ButtonDealEnable");;
             if (stream.DeepSerialize) {
                 this.HandCards.Clear();
                 this.HandCards.AddRange(stream.DeserializeObjectArray<CardViewModel>("HandCards"));
@@ -1442,6 +1480,7 @@ namespace yigame.epoker {
             stream.SerializeBool("IsSelf", this.IsSelf);
             stream.SerializeInt("PlayerNodeMode", (int)this.PlayerNodeMode);;
             stream.SerializeInt("Rank", this.Rank);
+            stream.SerializeBool("ButtonDealEnable", this.ButtonDealEnable);
             if (stream.DeepSerialize) stream.SerializeArray("HandCards", this.HandCards);
         }
         
@@ -1468,6 +1507,7 @@ namespace yigame.epoker {
             list.Add(new ViewModelCommandInfo("ButtonDealClicked", ButtonDealClicked) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ButtonTurnNext", ButtonTurnNext) { ParameterType = typeof(void) });
             list.Add(new ViewModelCommandInfo("ShowCardsToPile", ShowCardsToPile) { ParameterType = typeof(void) });
+            list.Add(new ViewModelCommandInfo("RefreshButtonDealEnabled", RefreshButtonDealEnabled) { ParameterType = typeof(void) });
         }
         
         protected override void FillProperties(System.Collections.Generic.List<uFrame.MVVM.ViewModelPropertyInfo> list) {
@@ -1496,6 +1536,8 @@ namespace yigame.epoker {
             list.Add(new ViewModelPropertyInfo(_PlayerNodeModeProperty, false, false, true, false));
             // PropertiesChildItem
             list.Add(new ViewModelPropertyInfo(_RankProperty, false, false, false, false));
+            // PropertiesChildItem
+            list.Add(new ViewModelPropertyInfo(_ButtonDealEnableProperty, false, false, false, false));
             list.Add(new ViewModelPropertyInfo(_HandCards, true, true, false, false));
         }
     }

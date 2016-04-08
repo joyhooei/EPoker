@@ -25,6 +25,9 @@ namespace yigame.epoker
 
 		public Button ReadyButton;
 		public Button StartButton;
+		public Button DealButton;
+		public Text DealButtonText;
+
 		public Text RankText;
 
 		public GameObject WaitingNode;
@@ -233,6 +236,11 @@ namespace yigame.epoker
 			} else {
 				RankText.text = string.Format ("Rank:{0}", arg1);
 			}
+		}
+
+		public override void ButtonDealEnableChanged (Boolean arg1)
+		{
+			DealButton.interactable = arg1;
 		}
 	}
 }

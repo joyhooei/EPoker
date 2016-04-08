@@ -113,6 +113,9 @@ namespace yigame.epoker {
     public partial class ShowCardsToPileCommand : uFrame.MVVM.ViewModelCommand {
     }
     
+    public partial class RefreshButtonDealEnabledCommand : uFrame.MVVM.ViewModelCommand {
+    }
+    
     public partial class PileCardsReorderCommand : uFrame.MVVM.ViewModelCommand {
     }
     

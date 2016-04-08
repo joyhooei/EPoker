@@ -880,10 +880,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.5019608, g: 1, b: 0.5019608, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.5882353, g: 0.78431374, b: 0.5882353, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 0.5, b: 0.5, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -1405,6 +1405,7 @@ MonoBehaviour:
   _ReadyStatusText: 
   _PlayerNodeMode: 0
   _Rank: 0
+  _ButtonDealEnable: 0
   _BindStatus: 1
   _StatusOnlyWhenChanged: 0
   _BindReadyStatusText: 1
@@ -1429,9 +1430,13 @@ MonoBehaviour:
   _ButtonDealClickedButton: {fileID: 11445020}
   _BindRank: 1
   _RankOnlyWhenChanged: 0
+  _BindButtonDealEnable: 1
+  _ButtonDealEnableOnlyWhenChanged: 0
   GameService: {fileID: 0}
   ReadyButton: {fileID: 11483436}
   StartButton: {fileID: 11487144}
+  DealButton: {fileID: 11445020}
+  DealButtonText: {fileID: 11462616}
   RankText: {fileID: 11473190}
   WaitingNode: {fileID: 118704}
   PlayingNode: {fileID: 144904}

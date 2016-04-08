@@ -17,5 +17,11 @@ namespace yigame.epoker
 	public partial class PlayerViewModel : PlayerViewModelBase
 	{
 		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+
+		public List<CardInfo> CurrentSelectedCards {
+			get {
+				return HandCards.Where (cardVM => cardVM.IsSelected).Select (_ => _.Info).ToList ();
+			}
+		}
 	}
 }

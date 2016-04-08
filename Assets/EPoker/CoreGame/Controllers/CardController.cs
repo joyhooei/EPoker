@@ -13,7 +13,9 @@ namespace yigame.epoker
     
 	public class CardController : CardControllerBase
 	{
-        
+
+		//		[Inject ("CoreGameRoot")] public CoreGameRootViewModel CoreGameRoot;
+
 		public override void InitializeCard (CardViewModel viewModel)
 		{
 			base.InitializeCard (viewModel);
@@ -22,11 +24,15 @@ namespace yigame.epoker
 		public override void SelectCard (CardViewModel viewModel)
 		{
 			base.SelectCard (viewModel);
+			PlayerViewModel player = CoreGameRoot.GetPlayerByActorId (viewModel.OwnerActorId);
+			player.ExecuteRefreshButtonDealEnabled ();
 		}
 
 		public override void DeselectCard (CardViewModel viewModel)
 		{
 			base.DeselectCard (viewModel);
+			PlayerViewModel player = CoreGameRoot.GetPlayerByActorId (viewModel.OwnerActorId);
+			player.ExecuteRefreshButtonDealEnabled ();
 		}
 	}
 }

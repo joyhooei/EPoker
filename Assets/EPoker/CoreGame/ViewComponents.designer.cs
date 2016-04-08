@@ -203,6 +203,10 @@ namespace yigame.epoker {
             Player.ShowCardsToPile.OnNext(new ShowCardsToPileCommand() { Sender = Player });
         }
         
+        public virtual void ExecuteRefreshButtonDealEnabled() {
+            Player.RefreshButtonDealEnabled.OnNext(new RefreshButtonDealEnabledCommand() { Sender = Player });
+        }
+        
         public virtual void ExecutePlayerReady(PlayerReadyCommand command) {
             command.Sender = Player;
             Player.PlayerReady.OnNext(command);
@@ -306,6 +310,11 @@ namespace yigame.epoker {
         public virtual void ExecuteShowCardsToPile(ShowCardsToPileCommand command) {
             command.Sender = Player;
             Player.ShowCardsToPile.OnNext(command);
+        }
+        
+        public virtual void ExecuteRefreshButtonDealEnabled(RefreshButtonDealEnabledCommand command) {
+            command.Sender = Player;
+            Player.RefreshButtonDealEnabled.OnNext(command);
         }
     }
     

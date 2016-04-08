@@ -25,6 +25,7 @@ namespace yigame.epoker
 			public const byte ShowCardAndTurnNext = 11;
 			public const byte PassAndTurnNext = 12;
 			public const byte MatchOver = 13;
+			public const byte ClearCardsInPile = 14;
 		}
 
 		public static List<CardInfo> GetDeck (bool disorder)
@@ -51,6 +52,34 @@ namespace yigame.epoker
 			}
 
 			return card_info_list;
+		}
+
+		public static bool IsDealCards (List<CardInfo> ci)
+		{
+			if (ci.Count == 0) {
+				return false;
+			} else if (ci.Count == 1) {
+				return true;
+			} else {
+				return ci.Count (_ => _.NumericalValue == ci [0].NumericalValue) == ci.Count;
+			}
+		}
+
+		public static bool IsLargerCards (List<CardInfo> a, List<CardInfo> b)
+		{
+			if (IsDealCards (a) && IsDealCards (b)) {
+				if (b.Count == 0 && a.Count != 0) {
+					return true;
+				} else if (a.Count == 0) {
+					return false;
+				} else if (a.Count != b.Count) {
+					return false;
+				} else {
+					return CardInfo.NumericalValueToCardSize (a [0].NumericalValue) > CardInfo.NumericalValueToCardSize (b [0].NumericalValue);
+				}
+			} else {
+				return false;
+			}
 		}
 
 		public override void OpenCoreGameHandler (OpenCoreGame data)
@@ -99,6 +128,12 @@ namespace yigame.epoker
 			case EventCode.MatchOver:
 				{
 					CoreGameRoot.ExecuteRootMatchOver ();
+					break;
+				}
+
+			case EventCode.ClearCardsInPile:
+				{
+					CoreGameRoot.Pile.Cards.Clear ();
 					break;
 				}
 			default:

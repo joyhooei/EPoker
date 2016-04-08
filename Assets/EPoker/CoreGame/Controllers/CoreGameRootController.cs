@@ -205,6 +205,20 @@ namespace yigame.epoker
 
 			} else {
 
+				if (Convert.ToInt32 (Network.Client.CurrentRoom.CustomProperties ["current_cards_actor_id"]) == actor_id) {
+					Hashtable ht3 = new Hashtable ();
+					ht3.Add ("current_cards", JsonConvert.SerializeObject (new List<CardInfo> ()));
+					Publish (new NetSetRoomProperties () {
+						PropertiesToSet = ht3
+					});
+
+					Publish (new NetRaiseEvent () {
+						EventCode = GameService.EventCode.ClearCardsInPile
+					});
+
+					CoreGameRoot.Pile.Cards.Clear ();
+				}
+
 				Hashtable ht2 = new Hashtable ();
 				ht2.Add ("my_turn", true);
 				Publish (new NetSetPlayerProperties () {
